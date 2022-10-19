@@ -1,0 +1,261 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-ofertas-heading" data-cy="OfertasCreateUpdateHeading">Criar ou editar Ofertas</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_dataPostagem">Data Postagem</label>
+          <div class="d-flex">
+            <input
+              id="field_dataPostagem"
+              data-cy="dataPostagem"
+              type="datetime-local"
+              class="form-control"
+              name="dataPostagem"
+              formControlName="dataPostagem"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+          <div
+            *ngIf="editForm.get('dataPostagem')!.invalid && (editForm.get('dataPostagem')!.dirty || editForm.get('dataPostagem')!.touched)"
+          >
+            <small class="form-text text-danger" *ngIf="editForm.get('dataPostagem')?.errors?.required"> O campo é obrigatório. </small>
+            <small class="form-text text-danger" [hidden]="!editForm.get('dataPostagem')?.errors?.datetimelocal">
+              Este campo é do tipo data/hora.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_quantidade">Quantidade</label>
+          <input
+            type="number"
+            class="form-control"
+            name="quantidade"
+            id="field_quantidade"
+            data-cy="quantidade"
+            formControlName="quantidade"
+          />
+          <div *ngIf="editForm.get('quantidade')!.invalid && (editForm.get('quantidade')!.dirty || editForm.get('quantidade')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('quantidade')?.errors?.required"> O campo é obrigatório. </small>
+            <small class="form-text text-danger" *ngIf="editForm.get('quantidade')?.errors?.min"> Este campo deve ser maior que 1. </small>
+            <small class="form-text text-danger" [hidden]="!editForm.get('quantidade')?.errors?.number">
+              Este campo é do tipo numérico.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_tipoCarga">Tipo Carga</label>
+          <select class="form-control" name="tipoCarga" formControlName="tipoCarga" id="field_tipoCarga" data-cy="tipoCarga">
+            <option [ngValue]="null"></option>
+            <option *ngFor="let tipoCarga of tipoCargaValues" [value]="tipoCarga">tipoCarga</option>
+          </select>
+          <div *ngIf="editForm.get('tipoCarga')!.invalid && (editForm.get('tipoCarga')!.dirty || editForm.get('tipoCarga')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('tipoCarga')?.errors?.required"> O campo é obrigatório. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_localizacaoOrigem">Localizacao Origem</label>
+          <textarea
+            class="form-control"
+            name="localizacaoOrigem"
+            id="field_localizacaoOrigem"
+            data-cy="localizacaoOrigem"
+            formControlName="localizacaoOrigem"
+          ></textarea>
+          <div
+            *ngIf="
+              editForm.get('localizacaoOrigem')!.invalid &&
+              (editForm.get('localizacaoOrigem')!.dirty || editForm.get('localizacaoOrigem')!.touched)
+            "
+          >
+            <small class="form-text text-danger" *ngIf="editForm.get('localizacaoOrigem')?.errors?.required">
+              O campo é obrigatório.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_localizacaoDestino">Localizacao Destino</label>
+          <textarea
+            class="form-control"
+            name="localizacaoDestino"
+            id="field_localizacaoDestino"
+            data-cy="localizacaoDestino"
+            formControlName="localizacaoDestino"
+          ></textarea>
+          <div
+            *ngIf="
+              editForm.get('localizacaoDestino')!.invalid &&
+              (editForm.get('localizacaoDestino')!.dirty || editForm.get('localizacaoDestino')!.touched)
+            "
+          >
+            <small class="form-text text-danger" *ngIf="editForm.get('localizacaoDestino')?.errors?.required">
+              O campo é obrigatório.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_dataColeta">Data Coleta</label>
+          <div class="input-group">
+            <input
+              id="field_dataColeta"
+              data-cy="dataColeta"
+              type="text"
+              class="form-control"
+              name="dataColeta"
+              ngbDatepicker
+              #dataColetaDp="ngbDatepicker"
+              formControlName="dataColeta"
+            />
+            <button type="button" class="btn btn-secondary" (click)="dataColetaDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_dataEntrega">Data Entrega</label>
+          <div class="d-flex">
+            <input
+              id="field_dataEntrega"
+              data-cy="dataEntrega"
+              type="datetime-local"
+              class="form-control"
+              name="dataEntrega"
+              formControlName="dataEntrega"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_dataModificacao">Data Modificacao</label>
+          <div class="d-flex">
+            <input
+              id="field_dataModificacao"
+              data-cy="dataModificacao"
+              type="datetime-local"
+              class="form-control"
+              name="dataModificacao"
+              formControlName="dataModificacao"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_dataFechamento">Data Fechamento</label>
+          <div class="d-flex">
+            <input
+              id="field_dataFechamento"
+              data-cy="dataFechamento"
+              type="datetime-local"
+              class="form-control"
+              name="dataFechamento"
+              formControlName="dataFechamento"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_status">Status</label>
+          <select class="form-control" name="status" formControlName="status" id="field_status" data-cy="status">
+            <option [ngValue]="null"></option>
+            <option *ngFor="let statusOferta of statusOfertaValues" [value]="statusOferta">statusOferta</option>
+          </select>
+          <div *ngIf="editForm.get('status')!.invalid && (editForm.get('status')!.dirty || editForm.get('status')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('status')?.errors?.required"> O campo é obrigatório. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_tipoOferta">Tipo Oferta</label>
+          <select class="form-control" name="tipoOferta" formControlName="tipoOferta" id="field_tipoOferta" data-cy="tipoOferta">
+            <option [ngValue]="null"></option>
+            <option *ngFor="let tipoOferta of tipoOfertaValues" [value]="tipoOferta">tipoOferta</option>
+          </select>
+          <div *ngIf="editForm.get('tipoOferta')!.invalid && (editForm.get('tipoOferta')!.dirty || editForm.get('tipoOferta')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('tipoOferta')?.errors?.required"> O campo é obrigatório. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_tipoTransporte">Tipo Transporte</label>
+          <select
+            class="form-control"
+            name="tipoTransporte"
+            formControlName="tipoTransporte"
+            id="field_tipoTransporte"
+            data-cy="tipoTransporte"
+          >
+            <option [ngValue]="null"></option>
+            <option *ngFor="let tipoTransporteOferta of tipoTransporteOfertaValues" [value]="tipoTransporteOferta">
+              tipoTransporteOferta
+            </option>
+          </select>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_destino">Destino</label>
+          <input type="text" class="form-control" name="destino" id="field_destino" data-cy="destino" formControlName="destino" />
+          <div *ngIf="editForm.get('destino')!.invalid && (editForm.get('destino')!.dirty || editForm.get('destino')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('destino')?.errors?.required"> O campo é obrigatório. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_origem">Origem</label>
+          <input type="text" class="form-control" name="origem" id="field_origem" data-cy="origem" formControlName="origem" />
+          <div *ngIf="editForm.get('origem')!.invalid && (editForm.get('origem')!.dirty || editForm.get('origem')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('origem')?.errors?.required"> O campo é obrigatório. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_perfil">Perfil</label>
+          <select
+            class="form-control"
+            id="field_perfil"
+            data-cy="perfil"
+            name="perfil"
+            formControlName="perfil"
+            [compareWith]="comparePerfil"
+          >
+            <option *ngIf="!editForm.get('perfil')!.value" [ngValue]="null" selected></option>
+            <option [ngValue]="perfilOption" *ngFor="let perfilOption of perfilsSharedCollection">{{ perfilOption.id }}</option>
+          </select>
+        </div>
+        <div *ngIf="editForm.get(['perfil'])!.invalid && (editForm.get(['perfil'])!.dirty || editForm.get(['perfil'])!.touched)">
+          <small class="form-text text-danger" *ngIf="editForm.get(['perfil'])?.errors?.required"> O campo é obrigatório. </small>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Salvar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

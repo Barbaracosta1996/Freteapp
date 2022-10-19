@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+    <property name="floatType" value="float4" dbms="postgresql"/>
+    <property name="clobType" value="longvarchar" dbms="postgresql"/>
+    <property name="blobType" value="bytea" dbms="postgresql"/>
+    <property name="uuidType" value="uuid" dbms="postgresql"/>
+    <property name="datetimeType" value="datetime" dbms="postgresql"/>
+
+    <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20220829041801_added_entity_Perfil.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20220829043426_added_entity_PerfilAnexos.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20220829182941_added_entity_Ofertas.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20220909174617_added_entity_Solicitacao.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20220910141500_added_entity_CategoriaVeiculo.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20220910142131_added_entity_Frota.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20220925224104_added_entity_RotasOfertas.xml" relativeToChangelogFile="false"/>
+    <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
+    <include file="config/liquibase/changelog/20220829043426_added_entity_constraints_PerfilAnexos.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20220829182941_added_entity_constraints_Ofertas.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20220909174617_added_entity_constraints_Solicitacao.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20220910142131_added_entity_constraints_Frota.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20220829041801_added_entity_constraints_Perfil.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20220925224104_added_entity_constraints_RotasOfertas.xml" relativeToChangelogFile="false"/>
+    <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
+    <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
+</databaseChangeLog>

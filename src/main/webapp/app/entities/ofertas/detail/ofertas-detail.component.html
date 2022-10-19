@@ -1,0 +1,90 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="ofertas">
+      <h2 data-cy="ofertasDetailsHeading"><span>Ofertas</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>Código</span></dt>
+        <dd>
+          <span>{{ ofertas.id }}</span>
+        </dd>
+        <dt><span>Data Postagem</span></dt>
+        <dd>
+          <span>{{ ofertas.dataPostagem | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span>Quantidade</span></dt>
+        <dd>
+          <span>{{ ofertas.quantidade }}</span>
+        </dd>
+        <dt><span>Tipo Carga</span></dt>
+        <dd>
+          <span>{{ ofertas.tipoCarga }}</span>
+        </dd>
+        <dt><span>Localizacao Origem</span></dt>
+        <dd>
+          <span>{{ ofertas.localizacaoOrigem }}</span>
+        </dd>
+        <dt><span>Localizacao Destino</span></dt>
+        <dd>
+          <span>{{ ofertas.localizacaoDestino }}</span>
+        </dd>
+        <dt><span>Data Coleta</span></dt>
+        <dd>
+          <span>{{ ofertas.dataColeta | formatMediumDate }}</span>
+        </dd>
+        <dt><span>Data Entrega</span></dt>
+        <dd>
+          <span>{{ ofertas.dataEntrega | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span>Data Modificacao</span></dt>
+        <dd>
+          <span>{{ ofertas.dataModificacao | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span>Data Fechamento</span></dt>
+        <dd>
+          <span>{{ ofertas.dataFechamento | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span>Status</span></dt>
+        <dd>
+          <span>{{ ofertas.status }}</span>
+        </dd>
+        <dt><span>Tipo Oferta</span></dt>
+        <dd>
+          <span>{{ ofertas.tipoOferta }}</span>
+        </dd>
+        <dt><span>Tipo Transporte</span></dt>
+        <dd>
+          <span>{{ ofertas.tipoTransporte }}</span>
+        </dd>
+        <dt><span>Destino</span></dt>
+        <dd>
+          <span>{{ ofertas.destino }}</span>
+        </dd>
+        <dt><span>Origem</span></dt>
+        <dd>
+          <span>{{ ofertas.origem }}</span>
+        </dd>
+        <dt><span>Perfil</span></dt>
+        <dd>
+          <div *ngIf="ofertas.perfil">
+            <a [routerLink]="['/perfil', ofertas.perfil.id, 'view']">{{ ofertas.perfil.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Voltar</span>
+      </button>
+
+      <button type="button" [routerLink]="['/ofertas', ofertas.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Editar</span>
+      </button>
+    </div>
+  </div>
+</div>

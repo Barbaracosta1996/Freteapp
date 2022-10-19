@@ -1,0 +1,98 @@
+<div>
+  <h2 id="page-heading" data-cy="CategoriaVeiculoHeading">
+    <span>Categoria Veiculos</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Atualizar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-categoria-veiculo"
+        [routerLink]="['/categoria-veiculo/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Criar novo Categoria Veiculo </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <jhi-filter [filters]="filters" (filterChange)="navigateToWithComponentValues()"></jhi-filter>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="categoriaVeiculos?.length === 0">
+    <span>Nenhum Categoria Veiculo encontrado</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="categoriaVeiculos && categoriaVeiculos.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id"><span>Código</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="nome"><span>Nome</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let categoriaVeiculo of categoriaVeiculos; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/categoria-veiculo', categoriaVeiculo.id, 'view']">{{ categoriaVeiculo.id }}</a>
+          </td>
+          <td>{{ categoriaVeiculo.nome }}</td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/categoria-veiculo', categoriaVeiculo.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">Visualizar</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/categoria-veiculo', categoriaVeiculo.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Editar</span>
+              </button>
+
+              <button type="submit" (click)="delete(categoriaVeiculo)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Excluir</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="categoriaVeiculos && categoriaVeiculos.length > 0">
+    <div class="d-flex justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [page]="page"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="navigateToPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

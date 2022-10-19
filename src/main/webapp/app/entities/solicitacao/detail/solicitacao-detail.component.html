@@ -1,0 +1,64 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="solicitacao">
+      <h2 data-cy="solicitacaoDetailsHeading"><span>Solicitacao</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>Código</span></dt>
+        <dd>
+          <span>{{ solicitacao.id }}</span>
+        </dd>
+        <dt><span>Data Proposta</span></dt>
+        <dd>
+          <span>{{ solicitacao.dataProposta | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span>Data Modificacao</span></dt>
+        <dd>
+          <span>{{ solicitacao.dataModificacao | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span>Aceitar</span></dt>
+        <dd>
+          <span>{{ solicitacao.aceitar }}</span>
+        </dd>
+        <dt><span>Status</span></dt>
+        <dd>
+          <span>{{ solicitacao.status }}</span>
+        </dd>
+        <dt><span>Obs</span></dt>
+        <dd>
+          <span>{{ solicitacao.obs }}</span>
+        </dd>
+        <dt><span>Valor Frete</span></dt>
+        <dd>
+          <span>{{ solicitacao.valorFrete }}</span>
+        </dd>
+        <dt><span>Ofertas</span></dt>
+        <dd>
+          <div *ngIf="solicitacao.ofertas">
+            <a [routerLink]="['/ofertas', solicitacao.ofertas.id, 'view']">{{ solicitacao.ofertas.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Perfil</span></dt>
+        <dd>
+          <div *ngIf="solicitacao.perfil">
+            <a [routerLink]="['/perfil', solicitacao.perfil.id, 'view']">{{ solicitacao.perfil.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Voltar</span>
+      </button>
+
+      <button type="button" [routerLink]="['/solicitacao', solicitacao.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Editar</span>
+      </button>
+    </div>
+  </div>
+</div>

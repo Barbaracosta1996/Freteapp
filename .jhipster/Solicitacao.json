@@ -1,0 +1,57 @@
+{
+  "changelogDate": "20220909174617",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "dataProposta",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "dataModificacao",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "aceitar",
+      "fieldType": "AnwserStatus",
+      "fieldValidateRules": [],
+      "fieldValues": "SIM,NAO"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "StatusSolicitacao",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "AGUARDANDORESPOSTA,AGUARDANDO,RECUSADO,ACEITOU,CANCELOU"
+    },
+    {
+      "fieldName": "obs",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "valorFrete",
+      "fieldType": "Double",
+      "fieldValidateRules": []
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "Solicitacao",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityField": "id",
+      "otherEntityName": "ofertas",
+      "relationshipName": "ofertas",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": ["required"]
+    },
+    {
+      "otherEntityField": "id",
+      "otherEntityName": "perfil",
+      "relationshipName": "perfil",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": ["required"]
+    }
+  ],
+  "service": "serviceClass"
+}

@@ -1,0 +1,29 @@
+{
+  "changelogDate": "20220925224104",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "rotas",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "RotasOfertas",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "id": false,
+      "otherEntityField": "id",
+      "otherEntityName": "ofertas",
+      "otherEntityRelationshipName": "ofertas",
+      "ownerSide": true,
+      "relationshipName": "ofertas",
+      "relationshipType": "one-to-one",
+      "relationshipValidateRules": ["required"]
+    }
+  ],
+  "service": "serviceClass"
+}

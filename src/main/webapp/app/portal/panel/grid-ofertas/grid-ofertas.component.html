@@ -1,0 +1,35 @@
+<div class="card">
+  <p-table [value]="ofertas!" [paginator]="true" [(first)]="page" [loading]="isLoading"  [pageLinks]="page + 1" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll"
+           currentPageReportTemplate="Mostrar {{page + 1}} - {{itemsPerPage}} de {{totalItems}} ofertas" [rowsPerPageOptions]="[10,25,50]">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Data Viagem</th>
+        <th>Data Entrega</th>
+        <th>Tipo Transporte</th>
+        <th>Quantidade</th>
+        <th>Origem</th>
+        <th>Destino</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-oferta>
+      <tr>
+        <td>{{oferta.dataFechamento | date: 'dd/MM/yyyy hh:mm'}}</td>
+        <td>{{oferta.dataEntrega | date: 'dd/MM/yyyy hh:mm '}}</td>
+        <td>{{getTipoTransport(oferta.tipoTransporte)}}</td>
+        <td>{{oferta.quantidade}}</td>
+        <td>{{oferta.origem}}</td>
+        <td>{{oferta.destino}}</td>
+        <td>{{getStatusOferta(oferta.status)}}</td>
+        <td><button [routerLink]="['/portal', 'indicacao', oferta.id]">Indicações</button></td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorleft">
+      <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+    </ng-template>
+    <ng-template pTemplate="paginatorright">
+      <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text"></p-button>
+    </ng-template>
+  </p-table>
+</div>

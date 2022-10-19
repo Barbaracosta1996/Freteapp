@@ -1,0 +1,38 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="rotasOfertas">
+      <h2 data-cy="rotasOfertasDetailsHeading"><span>Rotas Ofertas</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>Código</span></dt>
+        <dd>
+          <span>{{ rotasOfertas.id }}</span>
+        </dd>
+        <dt><span>Rotas</span></dt>
+        <dd>
+          <span>{{ rotasOfertas.rotas }}</span>
+        </dd>
+        <dt><span>Ofertas</span></dt>
+        <dd>
+          <div *ngIf="rotasOfertas.ofertas">
+            <a [routerLink]="['/ofertas', rotasOfertas.ofertas.id, 'view']">{{ rotasOfertas.ofertas.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Voltar</span>
+      </button>
+
+      <button type="button" [routerLink]="['/rotas-ofertas', rotasOfertas.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Editar</span>
+      </button>
+    </div>
+  </div>
+</div>

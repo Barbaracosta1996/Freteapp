@@ -1,0 +1,120 @@
+<div>
+  <h2 id="page-heading" data-cy="SolicitacaoHeading">
+    <span>Solicitacaos</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Atualizar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-solicitacao"
+        [routerLink]="['/solicitacao/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Criar novo Solicitacao </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <jhi-filter [filters]="filters" (filterChange)="navigateToWithComponentValues()"></jhi-filter>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="solicitacaos?.length === 0">
+    <span>Nenhum Solicitacao encontrado</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="solicitacaos && solicitacaos.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id"><span>Código</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="dataProposta"><span>Data Proposta</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="dataModificacao"><span>Data Modificacao</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="aceitar"><span>Aceitar</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="status"><span>Status</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="obs"><span>Obs</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="valorFrete"><span>Valor Frete</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="ofertas.id"><span>Ofertas</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="perfil.id"><span>Perfil</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let solicitacao of solicitacaos; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/solicitacao', solicitacao.id, 'view']">{{ solicitacao.id }}</a>
+          </td>
+          <td>{{ solicitacao.dataProposta | formatMediumDatetime }}</td>
+          <td>{{ solicitacao.dataModificacao | formatMediumDatetime }}</td>
+          <td>{{ solicitacao.aceitar }}</td>
+          <td>{{ solicitacao.status }}</td>
+          <td>{{ solicitacao.obs }}</td>
+          <td>{{ solicitacao.valorFrete }}</td>
+          <td>
+            <div *ngIf="solicitacao.ofertas">
+              <a [routerLink]="['/ofertas', solicitacao.ofertas.id, 'view']">{{ solicitacao.ofertas.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="solicitacao.perfil">
+              <a [routerLink]="['/perfil', solicitacao.perfil.id, 'view']">{{ solicitacao.perfil.id }}</a>
+            </div>
+          </td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/solicitacao', solicitacao.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">Visualizar</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/solicitacao', solicitacao.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Editar</span>
+              </button>
+
+              <button type="submit" (click)="delete(solicitacao)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Excluir</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="solicitacaos && solicitacaos.length > 0">
+    <div class="d-flex justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [page]="page"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="navigateToPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

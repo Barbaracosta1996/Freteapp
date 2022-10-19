@@ -1,0 +1,65 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="frota">
+      <h2 data-cy="frotaDetailsHeading"><span>Frota</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>Código</span></dt>
+        <dd>
+          <span>{{ frota.id }}</span>
+        </dd>
+        <dt><span>Nome</span></dt>
+        <dd>
+        <dd>
+          <span>{{ frota.nome }}</span>
+        </dd>
+        <dt><span>Modelo</span></dt>
+        <dd>
+          <span>{{ frota.modelo }}</span>
+        </dd>
+        <dt><span>Marca</span></dt>
+        <dd>
+          <span>{{ frota.marca }}</span>
+        </dd>
+        <dt><span>Ano</span></dt>
+        <dd>
+          <span>{{ frota.ano }}</span>
+        </dd>
+        <dt><span>Tipo Categoria</span></dt>
+        <dd>
+          <span>{{ frota.tipoCategoria }}</span>
+        </dd>
+        <dt><span>Obs Categoria Outro</span></dt>
+        <dd>
+          <span>{{ frota.obsCategoriaOutro }}</span>
+        </dd>
+        <dt><span>Perfil</span></dt>
+        <dd>
+          <div *ngIf="frota.perfil">
+            <a [routerLink]="['/perfil', frota.perfil.id, 'view']">{{ frota.perfil.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Categoria Veiculo</span></dt>
+        <dd>
+          <div *ngIf="frota.categoriaVeiculo">
+            <a [routerLink]="['/categoria-veiculo', frota.categoriaVeiculo.id, 'view']">{{ frota.categoriaVeiculo.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Voltar</span>
+      </button>
+
+      <button type="button" [routerLink]="['/frota', frota.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Editar</span>
+      </button>
+    </div>
+  </div>
+</div>

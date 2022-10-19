@@ -1,0 +1,43 @@
+@import "../../../content/scss/colors";
+
+body {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.footer-bg{
+  background-color: $blue-color;
+}
+
+.footer-body{
+  text-align: center;
+  line-break: normal;
+  padding: 0!important;
+  margin: 0!important;
+
+  .address{
+    font-stretch: normal;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 10pt;
+  }
+
+  .phone{
+    margin-bottom: 0;
+    font-size: 10pt;
+    margin-top: 1.3rem!important;
+    font-stretch: normal;
+    font-style: normal;
+    font-weight: 300;
+  }
+
+  .describe{
+    margin: 0;
+    font-size: 10pt;
+    font-stretch: normal;
+    font-style: normal;
+    font-weight: 300;
+  }
+
+}

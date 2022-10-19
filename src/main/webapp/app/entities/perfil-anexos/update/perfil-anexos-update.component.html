@@ -1,0 +1,133 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-perfil-anexos-heading" data-cy="PerfilAnexosCreateUpdateHeading">Criar ou editar Perfil Anexos</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_dataPostagem">Data Postagem</label>
+          <div class="input-group">
+            <input
+              id="field_dataPostagem"
+              data-cy="dataPostagem"
+              type="text"
+              class="form-control"
+              name="dataPostagem"
+              ngbDatepicker
+              #dataPostagemDp="ngbDatepicker"
+              formControlName="dataPostagem"
+            />
+            <button type="button" class="btn btn-secondary" (click)="dataPostagemDp.toggle()">
+              <fa-icon icon="calendar-alt"></fa-icon>
+            </button>
+          </div>
+          <div
+            *ngIf="editForm.get('dataPostagem')!.invalid && (editForm.get('dataPostagem')!.dirty || editForm.get('dataPostagem')!.touched)"
+          >
+            <small class="form-text text-danger" *ngIf="editForm.get('dataPostagem')?.errors?.required"> O campo é obrigatório. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_tipoDocumento">Tipo Documento</label>
+          <select
+            class="form-control"
+            name="tipoDocumento"
+            formControlName="tipoDocumento"
+            id="field_tipoDocumento"
+            data-cy="tipoDocumento"
+          >
+            <option [ngValue]="null"></option>
+            <option *ngFor="let tipoPerfilDocumento of tipoPerfilDocumentoValues" [value]="tipoPerfilDocumento">tipoPerfilDocumento</option>
+          </select>
+          <div
+            *ngIf="
+              editForm.get('tipoDocumento')!.invalid && (editForm.get('tipoDocumento')!.dirty || editForm.get('tipoDocumento')!.touched)
+            "
+          >
+            <small class="form-text text-danger" *ngIf="editForm.get('tipoDocumento')?.errors?.required"> O campo é obrigatório. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_descricao">Descricao</label>
+          <input type="text" class="form-control" name="descricao" id="field_descricao" data-cy="descricao" formControlName="descricao" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_urlFile">Url File</label>
+          <div>
+            <img
+              [src]="'data:' + editForm.get('urlFileContentType')!.value + ';base64,' + editForm.get('urlFile')!.value"
+              style="max-height: 100px"
+              *ngIf="editForm.get('urlFile')!.value"
+              alt="perfilAnexos image"
+            />
+            <div *ngIf="editForm.get('urlFile')!.value" class="form-text text-danger clearfix">
+              <span class="pull-start"
+                >{{ editForm.get('urlFileContentType')!.value }}, {{ byteSize(editForm.get('urlFile')!.value!) }}</span
+              >
+              <button
+                type="button"
+                (click)="clearInputImage('urlFile', 'urlFileContentType', 'file_urlFile')"
+                class="btn btn-secondary btn-xs pull-end"
+              >
+                <fa-icon icon="times"></fa-icon>
+              </button>
+            </div>
+            <input type="file" id="file_urlFile" data-cy="urlFile" (change)="setFileData($event, 'urlFile', true)" accept="image/*" />
+          </div>
+          <input type="hidden" class="form-control" name="urlFile" id="field_urlFile" data-cy="urlFile" formControlName="urlFile" />
+          <input
+            type="hidden"
+            class="form-control"
+            name="urlFileContentType"
+            id="field_urlFileContentType"
+            formControlName="urlFileContentType"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_perfil">Perfil</label>
+          <select
+            class="form-control"
+            id="field_perfil"
+            data-cy="perfil"
+            name="perfil"
+            formControlName="perfil"
+            [compareWith]="comparePerfil"
+          >
+            <option *ngIf="!editForm.get('perfil')!.value" [ngValue]="null" selected></option>
+            <option [ngValue]="perfilOption" *ngFor="let perfilOption of perfilsSharedCollection">{{ perfilOption.id }}</option>
+          </select>
+        </div>
+        <div *ngIf="editForm.get(['perfil'])!.invalid && (editForm.get(['perfil'])!.dirty || editForm.get(['perfil'])!.touched)">
+          <small class="form-text text-danger" *ngIf="editForm.get(['perfil'])?.errors?.required"> O campo é obrigatório. </small>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Salvar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

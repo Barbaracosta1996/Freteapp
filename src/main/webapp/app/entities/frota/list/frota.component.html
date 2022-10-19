@@ -1,0 +1,110 @@
+<div>
+  <h2 id="page-heading" data-cy="FrotaHeading">
+    <span>Frotas</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Atualizar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-frota"
+        [routerLink]="['/frota/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Criar novo Frota </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <jhi-filter [filters]="filters" (filterChange)="navigateToWithComponentValues()"></jhi-filter>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="frotas?.length === 0">
+    <span>Nenhum Frota encontrado</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="frotas && frotas.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id"><span>Código</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="nome"><span>Nome</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="modelo"><span>Modelo</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="marca"><span>Marca</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="ano"><span>Ano</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="tipoCategoria"><span>Tipo Categoria</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="obsCategoriaOutro"><span>Obs Categoria Outro</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="perfil.id"><span>Perfil</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="categoriaVeiculo.id"><span>Categoria Veiculo</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let frota of frotas; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/frota', frota.id, 'view']">{{ frota.id }}</a>
+          </td>
+          <td>{{ frota.nome }}</td>
+          <td>{{ frota.modelo }}</td>
+          <td>{{ frota.marca }}</td>
+          <td>{{ frota.ano }}</td>
+          <td>{{ frota.tipoCategoria }}</td>
+          <td>{{ frota.obsCategoriaOutro }}</td>
+          <td>
+            <div *ngIf="frota.perfil">
+              <a [routerLink]="['/perfil', frota.perfil.id, 'view']">{{ frota.perfil.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="frota.categoriaVeiculo">
+              <a [routerLink]="['/categoria-veiculo', frota.categoriaVeiculo.id, 'view']">{{ frota.categoriaVeiculo.id }}</a>
+            </div>
+          </td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button type="submit" [routerLink]="['/frota', frota.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">Visualizar</span>
+              </button>
+
+              <button type="submit" [routerLink]="['/frota', frota.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Editar</span>
+              </button>
+
+              <button type="submit" (click)="delete(frota)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Excluir</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="frotas && frotas.length > 0">
+    <div class="d-flex justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [page]="page"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="navigateToPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

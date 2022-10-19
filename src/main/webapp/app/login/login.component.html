@@ -1,0 +1,52 @@
+<div class="banner-login">
+</div>
+<div style="margin-top: 15px">
+  <div class="flex flex-column justify-content-center align-content-center align-items-center">
+      <form class="form" role="form" (ngSubmit)="login()" [formGroup]="loginForm">
+        <div class="mb-3">
+          <div class="p-input-icon-right">
+            <i class="pi pi-user"></i>
+            <input type="text" class="w-30rem" pInputText  name="username" id="username"  placeholder="Seu usuário"
+                   formControlName="username"
+                   #username
+                   data-cy="username"/>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <div class="p-input-icon-right">
+            <i class="pi pi-lock"></i>
+            <input type="password" class="w-30rem" pInputText name="password" id="password"  placeholder="Sua Senha"
+                   formControlName="password"
+                   data-cy="password"/>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <div class="form-check">
+            <label class="form-check-label" for="rememberMe">
+              <input class="form-check-input" type="checkbox" name="rememberMe" id="rememberMe" formControlName="rememberMe" />
+              <span>Manter-me logado</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="text-center m-3">
+          <button pButton type="submit" label="Entrar" class="w-20rem"></button>
+        </div>
+      </form>
+
+      <div class="flex-column alert alert-danger" *ngIf="authenticationError" data-cy="loginError">
+        <strong>Erro de autenticação!</strong> Por favor verifique suas credenciais e tente novamente.
+      </div>
+
+      <div class="alert alert-warning w-30rem">
+        <a class="alert-link" routerLink="/account/reset/request" data-cy="forgetYourPasswordSelector">Esqueceu sua senha?</a>
+      </div>
+
+      <div class="flex-row alert alert-warning w-30rem">
+        <span>Não possui uma conta ainda?</span>
+        <a class="alert-link" routerLink="/account/register">Crie uma nova conta</a>
+      </div>
+    </div>
+</div>

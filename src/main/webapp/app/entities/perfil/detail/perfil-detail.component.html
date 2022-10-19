@@ -1,0 +1,84 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="perfil">
+      <h2 data-cy="perfilDetailsHeading"><span>Perfil</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>Código</span></dt>
+        <dd>
+          <span>{{ perfil.id }}</span>
+        </dd>
+        <dt><span>Tipo Conta</span></dt>
+        <dd>
+          <span>{{ perfil.tipoConta }}</span>
+        </dd>
+        <dt><span>Cpf</span></dt>
+        <dd>
+          <span>{{ perfil.cpf }}</span>
+        </dd>
+        <dt><span>Cnpj</span></dt>
+        <dd>
+          <span>{{ perfil.cnpj }}</span>
+        </dd>
+        <dt><span>Rua</span></dt>
+        <dd>
+          <span>{{ perfil.rua }}</span>
+        </dd>
+        <dt><span>Numero</span></dt>
+        <dd>
+          <span>{{ perfil.numero }}</span>
+        </dd>
+        <dt><span>Bairro</span></dt>
+        <dd>
+          <span>{{ perfil.bairro }}</span>
+        </dd>
+        <dt><span>Cidade</span></dt>
+        <dd>
+          <span>{{ perfil.cidade }}</span>
+        </dd>
+        <dt><span>Estado</span></dt>
+        <dd>
+          <span>{{ perfil.estado }}</span>
+        </dd>
+        <dt><span>Cep</span></dt>
+        <dd>
+          <span>{{ perfil.cep }}</span>
+        </dd>
+        <dt><span>Pais</span></dt>
+        <dd>
+          <span>{{ perfil.pais }}</span>
+        </dd>
+        <dt><span>Nome</span></dt>
+        <dd>
+          <span>{{ perfil.nome }}</span>
+        </dd>
+        <dt><span>Razaosocial</span></dt>
+        <dd>
+          <span>{{ perfil.razaosocial }}</span>
+        </dd>
+        <dt><span>Telefone Comercial</span></dt>
+        <dd>
+          <span>{{ perfil.telefoneComercial }}</span>
+        </dd>
+        <dt><span>User</span></dt>
+        <dd>
+          <span>{{ perfil.user?.login }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Voltar</span>
+      </button>
+
+      <button type="button" [routerLink]="['/perfil', perfil.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Editar</span>
+      </button>
+    </div>
+  </div>
+</div>

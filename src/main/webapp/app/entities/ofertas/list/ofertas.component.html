@@ -1,0 +1,130 @@
+<div>
+  <h2 id="page-heading" data-cy="OfertasHeading">
+    <span>Ofertas</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Atualizar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-ofertas"
+        [routerLink]="['/ofertas/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Criar novo Ofertas </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <jhi-filter [filters]="filters" (filterChange)="navigateToWithComponentValues()"></jhi-filter>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="ofertas?.length === 0">
+    <span>Nenhum Ofertas encontrado</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="ofertas && ofertas.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id"><span>Código</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="dataPostagem"><span>Data Postagem</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="quantidade"><span>Quantidade</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="tipoCarga"><span>Tipo Carga</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="localizacaoOrigem"><span>Localizacao Origem</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="localizacaoDestino"><span>Localizacao Destino</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="dataColeta"><span>Data Coleta</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="dataEntrega"><span>Data Entrega</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="dataModificacao"><span>Data Modificacao</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="dataFechamento"><span>Data Fechamento</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="status"><span>Status</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="tipoOferta"><span>Tipo Oferta</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="tipoTransporte"><span>Tipo Transporte</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="destino"><span>Destino</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="origem"><span>Origem</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="perfil.id"><span>Perfil</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ofertas of ofertas; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/ofertas', ofertas.id, 'view']">{{ ofertas.id }}</a>
+          </td>
+          <td>{{ ofertas.dataPostagem | formatMediumDatetime }}</td>
+          <td>{{ ofertas.quantidade }}</td>
+          <td>{{ ofertas.tipoCarga }}</td>
+          <td>{{ ofertas.localizacaoOrigem }}</td>
+          <td>{{ ofertas.localizacaoDestino }}</td>
+          <td>{{ ofertas.dataColeta | formatMediumDate }}</td>
+          <td>{{ ofertas.dataEntrega | formatMediumDatetime }}</td>
+          <td>{{ ofertas.dataModificacao | formatMediumDatetime }}</td>
+          <td>{{ ofertas.dataFechamento | formatMediumDatetime }}</td>
+          <td>{{ ofertas.status }}</td>
+          <td>{{ ofertas.tipoOferta }}</td>
+          <td>{{ ofertas.tipoTransporte }}</td>
+          <td>{{ ofertas.destino }}</td>
+          <td>{{ ofertas.origem }}</td>
+          <td>
+            <div *ngIf="ofertas.perfil">
+              <a [routerLink]="['/perfil', ofertas.perfil.id, 'view']">{{ ofertas.perfil.id }}</a>
+            </div>
+          </td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/ofertas', ofertas.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">Visualizar</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/ofertas', ofertas.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Editar</span>
+              </button>
+
+              <button type="submit" (click)="delete(ofertas)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Excluir</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="ofertas && ofertas.length > 0">
+    <div class="d-flex justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [page]="page"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="navigateToPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

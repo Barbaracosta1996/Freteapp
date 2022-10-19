@@ -1,0 +1,40 @@
+{
+  "changelogDate": "20220829043426",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "dataPostagem",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "tipoDocumento",
+      "fieldType": "TipoPerfilDocumento",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "ANTT,CNH,RG,CNPJ,OUTROS"
+    },
+    {
+      "fieldName": "descricao",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "urlFile",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "image"
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "PerfilAnexos",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityField": "id",
+      "otherEntityName": "perfil",
+      "relationshipName": "perfil",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": ["required"]
+    }
+  ],
+  "service": "serviceClass"
+}

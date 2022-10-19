@@ -1,0 +1,45 @@
+<jhi-panel-menu #menu></jhi-panel-menu>
+
+<div class="flex m-2">
+  <button pButton pRipple type="button" icon="pi pi-bars" class="p-button-rounded p-button-info" (click)="eventMenu()"></button>
+</div>
+
+<div class="p-grid">
+
+  <div class="flex-column">
+<!--    <div class="flex justify-content-center m-2">-->
+<!--      <span class="p-input-icon-left">-->
+<!--          <i class="pi pi-search"></i>-->
+<!--          <input type="text" class="w-20rem" pInputText placeholder="Indo para onde?" [(ngModel)]="pesquisa" />-->
+<!--      </span>-->
+<!--    </div>-->
+    <div class="flex justify-content-center">
+      <h5>Olá {{account?.firstName}} {{account?.lastName}}</h5>
+    </div>
+    <div class="flex justify-content-center">
+      <p>Código Motorista: <strong>#1234</strong></p>
+    </div>
+  </div>
+
+  <div class="flex-grow-1 flex align-items-center justify-content-center font-light p-4 text-white text-4xl px-5 py-3" style="background-color: #312E4E">Suas Vagas</div>
+
+  <div class="card">
+    <div class="flex card-container overflow-hidden ml-7 mt-4 mb-4 w-20rem">
+      <button pButton pRipple type="button" icon="pi pi-plus-circle" iconPos="right" label="Novas Vagas" class="p-button-rounded p-button-info"  [routerLink]="['/portal', 'nova-oferta', 'vagas']"></button>
+    </div>
+  </div>
+
+  <jhi-grid-ofertas [tipoOferta]="'VAGAS'"></jhi-grid-ofertas>
+
+  <div class="flex-grow-1 flex align-items-center justify-content-center font-light p-4 text-white text-4xl px-5 py-3" style="background-color: #312E4E">Suas Cargas</div>
+
+  <div class="card">
+    <div class="flex card-container overflow-hidden ml-7 mt-4 mb-4 w-20rem">
+      <button pButton pRipple type="button" icon="pi pi-plus-circle" iconPos="right" label="Divulgar Cargas" class="p-button-rounded p-button-info"
+              [routerLink]="['/portal', 'nova-oferta', 'carga']"></button>
+    </div>
+  </div>
+
+  <jhi-grid-ofertas [tipoOferta]="'CARGA'"></jhi-grid-ofertas>
+
+</div>

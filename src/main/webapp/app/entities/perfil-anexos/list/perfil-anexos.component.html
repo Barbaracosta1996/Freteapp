@@ -1,0 +1,119 @@
+<div>
+  <h2 id="page-heading" data-cy="PerfilAnexosHeading">
+    <span>Perfil Anexos</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Atualizar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-perfil-anexos"
+        [routerLink]="['/perfil-anexos/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Criar novo Perfil Anexos </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <jhi-filter [filters]="filters" (filterChange)="navigateToWithComponentValues()"></jhi-filter>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="perfilAnexos?.length === 0">
+    <span>Nenhum Perfil Anexos encontrado</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="perfilAnexos && perfilAnexos.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id"><span>Código</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="dataPostagem"><span>Data Postagem</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="tipoDocumento"><span>Tipo Documento</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="descricao"><span>Descricao</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="urlFile"><span>Url File</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="perfil.id"><span>Perfil</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let perfilAnexos of perfilAnexos; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/perfil-anexos', perfilAnexos.id, 'view']">{{ perfilAnexos.id }}</a>
+          </td>
+          <td>{{ perfilAnexos.dataPostagem | formatMediumDate }}</td>
+          <td>{{ perfilAnexos.tipoDocumento }}</td>
+          <td>{{ perfilAnexos.descricao }}</td>
+          <td>
+            <a *ngIf="perfilAnexos.urlFile" (click)="openFile(perfilAnexos.urlFile, perfilAnexos.urlFileContentType)">
+              <img
+                [src]="'data:' + perfilAnexos.urlFileContentType + ';base64,' + perfilAnexos.urlFile"
+                style="max-height: 30px"
+                alt="perfilAnexos image"
+              />
+            </a>
+            <span *ngIf="perfilAnexos.urlFile">{{ perfilAnexos.urlFileContentType }}, {{ byteSize(perfilAnexos.urlFile) }}</span>
+          </td>
+          <td>
+            <div *ngIf="perfilAnexos.perfil">
+              <a [routerLink]="['/perfil', perfilAnexos.perfil.id, 'view']">{{ perfilAnexos.perfil.id }}</a>
+            </div>
+          </td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/perfil-anexos', perfilAnexos.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">Visualizar</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/perfil-anexos', perfilAnexos.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Editar</span>
+              </button>
+
+              <button type="submit" (click)="delete(perfilAnexos)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Excluir</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="perfilAnexos && perfilAnexos.length > 0">
+    <div class="d-flex justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [page]="page"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="navigateToPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

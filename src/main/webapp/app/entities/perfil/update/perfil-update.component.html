@@ -1,0 +1,141 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-perfil-heading" data-cy="PerfilCreateUpdateHeading">Criar ou editar Perfil</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_tipoConta">Tipo Conta</label>
+          <select class="form-control" name="tipoConta" formControlName="tipoConta" id="field_tipoConta" data-cy="tipoConta">
+            <option [ngValue]="null"></option>
+            <option *ngFor="let tipoConta of tipoContaValues" [value]="tipoConta">tipoConta</option>
+          </select>
+          <div *ngIf="editForm.get('tipoConta')!.invalid && (editForm.get('tipoConta')!.dirty || editForm.get('tipoConta')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('tipoConta')?.errors?.required"> O campo é obrigatório. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_cpf">Cpf</label>
+          <input type="text" class="form-control" name="cpf" id="field_cpf" data-cy="cpf" formControlName="cpf" />
+          <div *ngIf="editForm.get('cpf')!.invalid && (editForm.get('cpf')!.dirty || editForm.get('cpf')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('cpf')?.errors?.minlength">
+              Este campo deve ter pelo menos 11 caracteres.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_cnpj">Cnpj</label>
+          <input type="text" class="form-control" name="cnpj" id="field_cnpj" data-cy="cnpj" formControlName="cnpj" />
+          <div *ngIf="editForm.get('cnpj')!.invalid && (editForm.get('cnpj')!.dirty || editForm.get('cnpj')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('cnpj')?.errors?.minlength">
+              Este campo deve ter pelo menos 14 caracteres.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_rua">Rua</label>
+          <input type="text" class="form-control" name="rua" id="field_rua" data-cy="rua" formControlName="rua" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_numero">Numero</label>
+          <input type="text" class="form-control" name="numero" id="field_numero" data-cy="numero" formControlName="numero" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_bairro">Bairro</label>
+          <input type="text" class="form-control" name="bairro" id="field_bairro" data-cy="bairro" formControlName="bairro" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_cidade">Cidade</label>
+          <input type="text" class="form-control" name="cidade" id="field_cidade" data-cy="cidade" formControlName="cidade" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_estado">Estado</label>
+          <input type="text" class="form-control" name="estado" id="field_estado" data-cy="estado" formControlName="estado" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_cep">Cep</label>
+          <input type="text" class="form-control" name="cep" id="field_cep" data-cy="cep" formControlName="cep" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_pais">Pais</label>
+          <input type="text" class="form-control" name="pais" id="field_pais" data-cy="pais" formControlName="pais" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_nome">Nome</label>
+          <input type="text" class="form-control" name="nome" id="field_nome" data-cy="nome" formControlName="nome" />
+          <div *ngIf="editForm.get('nome')!.invalid && (editForm.get('nome')!.dirty || editForm.get('nome')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('nome')?.errors?.required"> O campo é obrigatório. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_razaosocial">Razaosocial</label>
+          <input
+            type="text"
+            class="form-control"
+            name="razaosocial"
+            id="field_razaosocial"
+            data-cy="razaosocial"
+            formControlName="razaosocial"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_telefoneComercial">Telefone Comercial</label>
+          <input
+            type="text"
+            class="form-control"
+            name="telefoneComercial"
+            id="field_telefoneComercial"
+            data-cy="telefoneComercial"
+            formControlName="telefoneComercial"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_user">User</label>
+          <select class="form-control" id="field_user" data-cy="user" name="user" formControlName="user" [compareWith]="compareUser">
+            <option *ngIf="!editForm.get('user')!.value" [ngValue]="null" selected></option>
+            <option [ngValue]="userOption" *ngFor="let userOption of usersSharedCollection">{{ userOption.login }}</option>
+          </select>
+        </div>
+        <div *ngIf="editForm.get(['user'])!.invalid && (editForm.get(['user'])!.dirty || editForm.get(['user'])!.touched)">
+          <small class="form-text text-danger" *ngIf="editForm.get(['user'])?.errors?.required"> O campo é obrigatório. </small>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Salvar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,104 @@
+<div>
+  <h2 id="page-heading" data-cy="RotasOfertasHeading">
+    <span>Rotas Ofertas</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Atualizar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-rotas-ofertas"
+        [routerLink]="['/rotas-ofertas/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Criar novo Rotas Ofertas </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <jhi-filter [filters]="filters" (filterChange)="navigateToWithComponentValues()"></jhi-filter>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="rotasOfertas?.length === 0">
+    <span>Nenhum Rotas Ofertas encontrado</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="rotasOfertas && rotasOfertas.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id"><span>Código</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="rotas"><span>Rotas</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="ofertas.id"><span>Ofertas</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let rotasOfertas of rotasOfertas; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/rotas-ofertas', rotasOfertas.id, 'view']">{{ rotasOfertas.id }}</a>
+          </td>
+          <td>{{ rotasOfertas.rotas }}</td>
+          <td>
+            <div *ngIf="rotasOfertas.ofertas">
+              <a [routerLink]="['/ofertas', rotasOfertas.ofertas.id, 'view']">{{ rotasOfertas.ofertas.id }}</a>
+            </div>
+          </td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/rotas-ofertas', rotasOfertas.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">Visualizar</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/rotas-ofertas', rotasOfertas.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Editar</span>
+              </button>
+
+              <button type="submit" (click)="delete(rotasOfertas)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Excluir</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="rotasOfertas && rotasOfertas.length > 0">
+    <div class="d-flex justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [page]="page"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="navigateToPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

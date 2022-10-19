@@ -1,0 +1,7 @@
+export enum TipoConta {
+  MOTORISTA = 'MOTORISTA',
+
+  TRANSPORTADORA = 'TRANSPORTADORA',
+
+  EMBARCADOR = 'EMBARCADOR',
+}

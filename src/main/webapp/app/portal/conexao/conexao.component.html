@@ -1,0 +1,30 @@
+<div class="card">
+  <p-table [value]="solicitacaos!" [loading]="isLoading" responsiveLayout="scroll">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Solicitação de Transporte</th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-request>
+      <tr>
+        <td>
+          <p>Data Proposta: {{request.dataProposta | date: 'dd/MM/yyyy hh:mm'}}</p>
+          <p>Data Viagem: {{request.dataProposta | date: 'dd/MM/yyyy hh:mm'}}</p>
+          <p>Origem: {{request.ofertas.origem}}</p>
+          <p>Destino: {{request.ofertas.destino}}</p>
+          <p>Transporte: {{request.ofertas.tipoTransporte}}</p>
+          <p>Tipo Carga: {{request.ofertas.tipoCarga}}</p>
+          <p>Quantidade: {{request.ofertas.quantidade}}</p>
+          <p>Quantidade: {{request.perfil.nome}}</p>
+          <p>Contato: {{request.perfil.telefoneComercial}}</p>
+          <button pButton type="button" (click)="enviaResposta(request)"  label="Enviar Resposta" class="p-button-info" icon="pi pi-send"></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<p-confirmDialog [style]="{width: '50vw'}" key="positionDialog" [position]="'center'" [dismissableMask]="false" [baseZIndex]="10000" rejectButtonStyleClass="p-button-outlined"></p-confirmDialog>
+
+<p-toast></p-toast>

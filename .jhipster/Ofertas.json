@@ -1,0 +1,92 @@
+{
+  "changelogDate": "20220829182941",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "dataPostagem",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "quantidade",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "1"
+    },
+    {
+      "fieldName": "tipoCarga",
+      "fieldType": "TipoCarga",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "MOTO,CARRO,CAMINHAO"
+    },
+    {
+      "fieldName": "localizacaoOrigem",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "localizacaoDestino",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "dataColeta",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "dataEntrega",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "dataModificacao",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "dataFechamento",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "StatusOferta",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "AGUARDANDO_PROPOSTA,ATENDIDA_INFOCARGAS,ATENDIDA,CANELADA"
+    },
+    {
+      "fieldName": "tipoOferta",
+      "fieldType": "TipoOferta",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "CARGA,VAGAS"
+    },
+    {
+      "fieldName": "tipoTransporte",
+      "fieldType": "TipoTransporteOferta",
+      "fieldValues": "CEGONHA,RAMPA,GUINCHO"
+    },
+    {
+      "fieldName": "destino",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "origem",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "Ofertas",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityField": "id",
+      "otherEntityName": "perfil",
+      "relationshipName": "perfil",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": ["required"]
+    }
+  ],
+  "service": "serviceClass"
+}

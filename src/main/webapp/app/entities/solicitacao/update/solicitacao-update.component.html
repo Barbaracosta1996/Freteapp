@@ -1,0 +1,142 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-solicitacao-heading" data-cy="SolicitacaoCreateUpdateHeading">Criar ou editar Solicitacao</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_dataProposta">Data Proposta</label>
+          <div class="d-flex">
+            <input
+              id="field_dataProposta"
+              data-cy="dataProposta"
+              type="datetime-local"
+              class="form-control"
+              name="dataProposta"
+              formControlName="dataProposta"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+          <div
+            *ngIf="editForm.get('dataProposta')!.invalid && (editForm.get('dataProposta')!.dirty || editForm.get('dataProposta')!.touched)"
+          >
+            <small class="form-text text-danger" *ngIf="editForm.get('dataProposta')?.errors?.required"> O campo é obrigatório. </small>
+            <small class="form-text text-danger" [hidden]="!editForm.get('dataProposta')?.errors?.datetimelocal">
+              Este campo é do tipo data/hora.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_dataModificacao">Data Modificacao</label>
+          <div class="d-flex">
+            <input
+              id="field_dataModificacao"
+              data-cy="dataModificacao"
+              type="datetime-local"
+              class="form-control"
+              name="dataModificacao"
+              formControlName="dataModificacao"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_aceitar">Aceitar</label>
+          <select class="form-control" name="aceitar" formControlName="aceitar" id="field_aceitar" data-cy="aceitar">
+            <option [ngValue]="null"></option>
+            <option *ngFor="let anwserStatus of anwserStatusValues" [value]="anwserStatus">anwserStatus</option>
+          </select>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_status">Status</label>
+          <select class="form-control" name="status" formControlName="status" id="field_status" data-cy="status">
+            <option [ngValue]="null"></option>
+            <option *ngFor="let statusSolicitacao of statusSolicitacaoValues" [value]="statusSolicitacao">statusSolicitacao</option>
+          </select>
+          <div *ngIf="editForm.get('status')!.invalid && (editForm.get('status')!.dirty || editForm.get('status')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('status')?.errors?.required"> O campo é obrigatório. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_obs">Obs</label>
+          <input type="text" class="form-control" name="obs" id="field_obs" data-cy="obs" formControlName="obs" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_valorFrete">Valor Frete</label>
+          <input
+            type="number"
+            class="form-control"
+            name="valorFrete"
+            id="field_valorFrete"
+            data-cy="valorFrete"
+            formControlName="valorFrete"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_ofertas">Ofertas</label>
+          <select
+            class="form-control"
+            id="field_ofertas"
+            data-cy="ofertas"
+            name="ofertas"
+            formControlName="ofertas"
+            [compareWith]="compareOfertas"
+          >
+            <option *ngIf="!editForm.get('ofertas')!.value" [ngValue]="null" selected></option>
+            <option [ngValue]="ofertasOption" *ngFor="let ofertasOption of ofertasSharedCollection">{{ ofertasOption.id }}</option>
+          </select>
+        </div>
+        <div *ngIf="editForm.get(['ofertas'])!.invalid && (editForm.get(['ofertas'])!.dirty || editForm.get(['ofertas'])!.touched)">
+          <small class="form-text text-danger" *ngIf="editForm.get(['ofertas'])?.errors?.required"> O campo é obrigatório. </small>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_perfil">Perfil</label>
+          <select
+            class="form-control"
+            id="field_perfil"
+            data-cy="perfil"
+            name="perfil"
+            formControlName="perfil"
+            [compareWith]="comparePerfil"
+          >
+            <option *ngIf="!editForm.get('perfil')!.value" [ngValue]="null" selected></option>
+            <option [ngValue]="perfilOption" *ngFor="let perfilOption of perfilsSharedCollection">{{ perfilOption.id }}</option>
+          </select>
+        </div>
+        <div *ngIf="editForm.get(['perfil'])!.invalid && (editForm.get(['perfil'])!.dirty || editForm.get(['perfil'])!.touched)">
+          <small class="form-text text-danger" *ngIf="editForm.get(['perfil'])?.errors?.required"> O campo é obrigatório. </small>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Salvar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

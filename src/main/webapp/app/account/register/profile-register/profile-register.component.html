@@ -24,7 +24,7 @@
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" for="field_nome">{{tipoConta === 'MOTORISTA' ? 'Nome' : 'Nome Fantasia'}}</label>
+          <label class="form-label" for="field_nome">{{ tipoConta === 'MOTORISTA' ? 'Nome' : 'Nome Fantasia' }}</label>
           <input type="text" class="form-control" name="nome" id="field_nome" data-cy="nome" formControlName="nome" />
           <div *ngIf="editForm.get('nome')!.invalid && (editForm.get('nome')!.dirty || editForm.get('nome')!.touched)">
             <small class="form-text text-danger" *ngIf="editForm.get('nome')?.errors?.required"> O campo é obrigatório. </small>
@@ -64,7 +64,6 @@
         </div>
 
         <div *ngIf="tipoConta !== 'MOTORISTA'">
-
           <div class="row mb-3">
             <label class="form-label" for="field_cep">Cep</label>
             <input type="text" class="form-control" name="cep" id="field_cep" data-cy="cep" formControlName="cep" />

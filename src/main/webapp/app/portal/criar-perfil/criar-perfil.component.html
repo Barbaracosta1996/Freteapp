@@ -1,22 +1,21 @@
 <div *ngIf="!tipoConta" class="flex card-container align-content-center justify-content-center">
-
   <div class="flex">
-    <div class="man-side-img">
-  </div>
-  <div class="flex">
-    <p>Você é...</p>
-    <button type="button" id="motorista" class="btn btn-secondary" (click)="setOptions('MOTORISTA')">
-      <span>Motorista</span>
-    </button>
+    <div class="man-side-img"></div>
+    <div class="flex">
+      <p>Você é...</p>
+      <button type="button" id="motorista" class="btn btn-secondary" (click)="setOptions('MOTORISTA')">
+        <span>Motorista</span>
+      </button>
 
-    <button type="button" id="transportador" class="btn btn-secondary" (click)="setOptions('TRANSPORTADORA')">
-      <span>Transportador</span>
-    </button>
+      <button type="button" id="transportador" class="btn btn-secondary" (click)="setOptions('TRANSPORTADORA')">
+        <span>Transportador</span>
+      </button>
 
-    <button type="button" id="embarcador" class="btn btn-secondary" (click)="setOptions('EMBARCADOR')">
-      <span>Embarcador</span>
-    </button>
+      <button type="button" id="embarcador" class="btn btn-secondary" (click)="setOptions('EMBARCADOR')">
+        <span>Embarcador</span>
+      </button>
+    </div>
   </div>
+
+  <jhi-register-profile *ngIf="tipoConta" [tipoConta]="tipoConta"></jhi-register-profile>
 </div>
-
-<jhi-register-profile *ngIf="tipoConta" [tipoConta]="tipoConta"></jhi-register-profile>

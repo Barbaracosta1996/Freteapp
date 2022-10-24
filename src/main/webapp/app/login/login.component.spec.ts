@@ -92,7 +92,6 @@ describe('LoginComponent', () => {
       const node = {
         focus: jest.fn(),
       };
-      comp.username = new ElementRef(node);
 
       // WHEN
       comp.ngAfterViewInit();

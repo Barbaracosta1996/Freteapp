@@ -124,7 +124,7 @@
                 [showClear]="true"
                 [unmask]="true"
                 id="field_cpf"
-                styleClass="w-25rem"
+                styleClass="w-full"
                 name="cpf"
                 placeholder="Seu Telefone Celular"
                 formControlName="cpf"
@@ -193,9 +193,9 @@
                 [showClear]="true"
                 [unmask]="true"
                 id="telefoneComercial"
-                styleClass="w-25rem"
+                styleClass="w-full"
                 name="telefoneComercial"
-                placeholder="Seu Telefone Celular"
+                placeholder="Seu Telefone Comercial"
                 formControlName="telefoneComercial"
                 mask="(99) 9 9999-9999"
                 data-cy="telefoneComercial"
@@ -394,7 +394,7 @@
               </small>
             </div>
 
-            <jhi-password-strength-bar [passwordToCheck]="registerForm.get('password')!.value"></jhi-password-strength-bar>
+            <jhi-password-strength-bar class="w-full" [passwordToCheck]="registerForm.get('password')!.value"></jhi-password-strength-bar>
           </div>
 
           <div class="mb-3">
@@ -468,4 +468,8 @@
       </form>
     </div>
   </div>
+</div>
+
+<div>
+  <img src="/../../../content/images/home/capa.jpg" class="full-img" alt="capa_apresentação" />
 </div>

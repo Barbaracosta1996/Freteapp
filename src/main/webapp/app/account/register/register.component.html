@@ -20,7 +20,7 @@
   </div>
 
   <div class="d-flex justify-content-center">
-    <div class="col-md-8">
+    <div class="md:col-12" id="registro-form">
       <form name="form" role="form" (ngSubmit)="register()" [formGroup]="registerForm" *ngIf="!success">
         <div class="flex flex-wrap justify-content-center card-container gap-3">
           <div class="mb-3">
@@ -436,10 +436,21 @@
 
         <div class="mb-3">
           <div class="field-checkbox mt-4 ml-4 text-600 justify-content-center">
-            <p-checkbox [binary]="true" inputId="binary" id="binary"> </p-checkbox>
-            <label class="w-35rem" for="binary">
+            <p-checkbox formControlName="acceptedTerm" [binary]="true" id="acceptedTerm" name="acceptedTerm"> </p-checkbox>
+            <label class="w-35rem" for="acceptedTerm">
               Eu autorizo o uso dos meus dados de acordo com a <a>Declaração de Privacidade</a> e aceito os <a>Termos e condições</a>.
             </label>
+          </div>
+
+          <div
+            *ngIf="
+              registerForm.get('acceptedTerm')!.invalid &&
+              (registerForm.get('acceptedTerm')!.dirty || registerForm.get('acceptedTerm')!.touched)
+            "
+          >
+            <small class="form-text text-danger" *ngIf="registerForm.get('acceptedTerm')?.errors?.required">
+              É necessário concordar com os <code>Termos de Uso e Privacidade</code>.
+            </small>
           </div>
         </div>
 

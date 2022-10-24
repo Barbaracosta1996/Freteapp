@@ -59,6 +59,10 @@ export class RegisterComponent implements AfterViewInit, OnInit {
     nome: new FormControl('', {}),
     razaosocial: new FormControl('', {}),
     telefoneComercial: new FormControl('', {}),
+    acceptedTerm: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
   });
 
   constructor(
@@ -106,12 +110,10 @@ export class RegisterComponent implements AfterViewInit, OnInit {
       perfil.pais = 'br';
       perfil.tipoConta = this.tipoConta;
 
-      this.registerService
-        .save({ login, email, password, telephoneNumber, langKey: 'pt-br', firstName, lastName, perfil })
-        .subscribe({
-          next: () => this.autentication({ username: login!, password: password, rememberMe: true }),
-          error: response => this.processError(response),
-        });
+      this.registerService.save({ login, email, password, telephoneNumber, langKey: 'pt-br', firstName, lastName, perfil }).subscribe({
+        next: () => this.autentication({ username: login!, password: password, rememberMe: true }),
+        error: response => this.processError(response),
+      });
     }
   }
 

@@ -1,13 +1,16 @@
-<div class="flex-grow-1 flex align-items-center justify-content-center font-light p-5 text-white text-4xl px-5 py-3 mb-3" style="background-color: #312E4E">Divulgar {{editForm.get('tipoOferta')!.value! === 'VAGAS' ? 'Vaga' : 'Carga'}}</div>
+<div
+  class="flex-grow-1 flex align-items-center justify-content-center font-light p-5 text-white text-4xl px-5 py-3 mb-3"
+  style="background-color: #312e4e"
+>
+  Divulgar {{ editForm.get('tipoOferta')!.value! === 'VAGAS' ? 'Vaga' : 'Carga' }}
+</div>
 <div class="d-flex justify-content-center">
-  <div class="col-8">
+  <jhi-alert-error></jhi-alert-error>
+  <div class="col-md-8">
     <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
-<!--      <h2 id="jhi-ofertas-heading" data-cy="OfertasCreateUpdateHeading">Divulgar {{editForm.get('tipoOferta')!.value! === 'VAGAS' ? 'Vaga' : 'Carga'}}</h2>-->
+      <!--      <h2 id="jhi-ofertas-heading" data-cy="OfertasCreateUpdateHeading">Divulgar {{editForm.get('tipoOferta')!.value! === 'VAGAS' ? 'Vaga' : 'Carga'}}</h2>-->
 
-      <jhi-alert-error></jhi-alert-error>
-
-      <div class="grid grid-template">
-
+      <div class="flex flex-wrap justify-content-center card-container gap-3">
         <div class="row mb-3" [hidden]="true">
           <label class="form-label" for="field_id">ID</label>
           <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
@@ -26,24 +29,41 @@
           </div>
         </div>
 
-        <div class="row mb-3 w-max">
-          <label class="form-label" for="field_dataFechamento">Data da Viagem</label>
-          <p-calendar [minDate]="minDate" [dateFormat]="'dd/mm/yy'" [hourFormat]="'24'" [showTime]="true" (onTodayClick)="true" formControlName="dataFechamento" name="dataFechamento" id="field_dataFechamento" [showButtonBar]="true" inputId="field_dataFechamento"></p-calendar>
+        <div class="mb-3">
+          <label class="form-label text-600" for="field_dataFechamento">Data da Viagem</label>
+          <div class="p-inputgroup">
+            <p-calendar
+              class="p-inputtext-lg w-15rem"
+              [minDate]="minDate"
+              [dateFormat]="'dd/mm/yy'"
+              [hourFormat]="'24'"
+              [showTime]="true"
+              (onTodayClick)="(true)"
+              inputStyleClass="w-15rem"
+              formControlName="dataFechamento"
+              name="dataFechamento"
+              id="field_dataFechamento"
+              [showButtonBar]="true"
+              inputId="field_dataFechamento"
+            ></p-calendar>
+            <span class="p-inputgroup-addon"><i class="pi pi-calendar"></i></span>
+          </div>
         </div>
 
-        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
-          <label class="form-label" for="field_dataPostagem">Data Postagem</label>
-          <div class="d-flex">
+        <div class="mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label text-600" for="field_dataPostagem">Data Postagem</label>
+          <div class="p-inputgroup">
             <input
               [readonly]="true"
               id="field_dataPostagem"
               data-cy="dataPostagem"
+              class="p-inputtext-lg w-25rem"
               type="datetime-local"
-              class="form-control"
               name="dataPostagem"
               formControlName="dataPostagem"
               placeholder="YYYY-MM-DD HH:mm"
             />
+            <span class="p-inputgroup-addon"><i class="pi pi-user-edit"></i></span>
           </div>
           <div
             *ngIf="editForm.get('dataPostagem')!.invalid && (editForm.get('dataPostagem')!.dirty || editForm.get('dataPostagem')!.touched)"
@@ -55,14 +75,39 @@
           </div>
         </div>
 
-        <div class="row mb-3">
-          <label class="form-label" for="field_tipoTransporte">Tipo Transporte</label>
-          <p-dropdown [options]="tiposTransportes" formControlName="tipoTransporte" placeholder="Selecione um tipo"  name="tipoTransporte"  id="field_tipoTransporte" optionValue="value" optionLabel="name" [showClear]="true"></p-dropdown>
+        <div class="mb-3">
+          <label class="form-label text-600" for="field_tipoTransporte">Tipo Transporte</label>
+          <div class="p-inputgroup">
+            <p-dropdown
+              styleClass="w-15rem"
+              class="p-inputtext-lg w-15rem"
+              panelStyleClass="w-15rem"
+              [options]="tiposTransportes"
+              formControlName="tipoTransporte"
+              placeholder="Selecione"
+              name="tipoTransporte"
+              id="field_tipoTransporte"
+              optionValue="value"
+              optionLabel="name"
+              [showClear]="true"
+            ></p-dropdown>
+            <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
+          </div>
         </div>
 
-        <div class="row mb-3">
-          <label class="form-label" for="field_quantidade">Quantidade</label>
-          <p-inputNumber [showButtons]="true" inputId="stacked" name="quantidade" id="field_quantidade" formControlName="quantidade"></p-inputNumber>
+        <div class="mb-3">
+          <label class="form-label text-600" for="field_quantidade">Quantidade</label>
+          <div class="p-inputgroup">
+            <p-inputNumber
+              class="p-inputtext-lg w-10rem"
+              [showButtons]="true"
+              inputId="stacked"
+              name="quantidade"
+              id="field_quantidade"
+              formControlName="quantidade"
+            >
+            </p-inputNumber>
+          </div>
 
           <div *ngIf="editForm.get('quantidade')!.invalid && (editForm.get('quantidade')!.dirty || editForm.get('quantidade')!.touched)">
             <small class="form-text text-danger" *ngIf="editForm.get('quantidade')?.errors?.required"> O campo é obrigatório. </small>
@@ -73,17 +118,49 @@
           </div>
         </div>
 
-        <div class="row mb-3">
-          <label class="form-label" for="field_tipoCarga">Tipo de Carga</label>
-          <p-dropdown [options]="tiposCargas" formControlName="tipoCarga" placeholder="Selecione um tipo"  name="tipoCarga"  id="field_tipoCarga" optionValue="value" optionLabel="name" [showClear]="true"></p-dropdown>
+        <div class="mb-3">
+          <label class="form-label text-600" for="field_tipoCarga">Tipo de Carga</label>
+          <div class="p-inputgroup">
+            <p-dropdown
+              styleClass="w-15rem"
+              class="p-inputtext-lg w-15rem"
+              panelStyleClass="w-15rem"
+              [options]="tiposCargas"
+              formControlName="tipoCarga"
+              placeholder="Selecione"
+              name="tipoCarga"
+              id="field_tipoCarga"
+              optionValue="value"
+              optionLabel="name"
+              [showClear]="true"
+            ></p-dropdown>
+            <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
+          </div>
           <div *ngIf="editForm.get('tipoCarga')!.invalid && (editForm.get('tipoCarga')!.dirty || editForm.get('tipoCarga')!.touched)">
             <small class="form-text text-danger" *ngIf="editForm.get('tipoCarga')?.errors?.required"> O campo é obrigatório. </small>
           </div>
         </div>
 
-        <div class="row mb-3">
-          <label class="form-label" for="field_localizacaoOrigem">Localizacao Origem</label>
-          <p-autoComplete name="localizacaoOrigem" id="field_localizacaoOrigem"  formControlName="localizacaoOrigem" [showEmptyMessage]="true" [suggestions]="filteredOrigem" (completeMethod)="filtrarOrigem($event)" field="description" [minLength]="1"></p-autoComplete>
+        <div class="mb-3">
+          <label class="form-label text-600" for="field_localizacaoOrigem">Localizacao Origem</label>
+
+          <div class="p-inputgroup">
+            <p-autoComplete
+              styleClass="w-25rem"
+              class="p-inputtext-lg w-25rem"
+              inputStyleClass="w-25rem"
+              name="localizacaoOrigem"
+              id="field_localizacaoOrigem"
+              formControlName="localizacaoOrigem"
+              [showEmptyMessage]="true"
+              [suggestions]="filteredOrigem"
+              (completeMethod)="filtrarOrigem($event)"
+              field="description"
+              [minLength]="1"
+            >
+            </p-autoComplete>
+            <span class="p-inputgroup-addon"><i class="pi pi-map-marker"></i></span>
+          </div>
           <div
             *ngIf="
               editForm.get('localizacaoOrigem')!.invalid &&
@@ -96,9 +173,25 @@
           </div>
         </div>
 
-        <div class="row mb-3">
-          <label class="form-label" for="field_localizacaoDestino">Localizacao Destino</label>
-          <p-autoComplete name="localizacaoDestino" id="field_localizacaoDestino"  formControlName="localizacaoDestino" [showEmptyMessage]="true" [suggestions]="filteredDestino" (completeMethod)="filtrarOrigem($event, true)" field="description" [minLength]="1"></p-autoComplete>
+        <div class="mb-3">
+          <label class="form-label text-600" for="field_localizacaoDestino">Localizacao Destino</label>
+          <div class="p-inputgroup">
+            <p-autoComplete
+              styleClass="w-25rem"
+              class="p-inputtext-lg w-25rem"
+              inputStyleClass="w-25rem"
+              name="localizacaoDestino"
+              id="field_localizacaoDestino"
+              formControlName="localizacaoDestino"
+              [showEmptyMessage]="true"
+              [suggestions]="filteredDestino"
+              (completeMethod)="filtrarOrigem($event, true)"
+              field="description"
+              [minLength]="1"
+            >
+            </p-autoComplete>
+            <span class="p-inputgroup-addon"><i class="pi pi-map-marker"></i></span>
+          </div>
           <div
             *ngIf="
               editForm.get('localizacaoDestino')!.invalid &&
@@ -111,39 +204,39 @@
           </div>
         </div>
 
-        <div class="row mb-3">
-          <label class="form-label" for="field_dataColeta">Data Coleta</label>
-          <div class="input-group">
-            <input
-              id="field_dataColeta"
-              data-cy="dataColeta"
-              type="text"
-              class="form-control"
-              name="dataColeta"
-              ngbDatepicker
-              #dataColetaDp="ngbDatepicker"
-              formControlName="dataColeta"
-            />
-            <button type="button" class="btn btn-secondary" (click)="dataColetaDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
-          </div>
-        </div>
+        <!--        <div class="mb-3">-->
+        <!--          <label class="form-label" for="field_dataColeta">Data Coleta</label>-->
+        <!--          <div class="input-group">-->
+        <!--            <input-->
+        <!--              id="field_dataColeta"-->
+        <!--              data-cy="dataColeta"-->
+        <!--              type="text"-->
+        <!--              class="form-control"-->
+        <!--              name="dataColeta"-->
+        <!--              ngbDatepicker-->
+        <!--              #dataColetaDp="ngbDatepicker"-->
+        <!--              formControlName="dataColeta"-->
+        <!--            />-->
+        <!--            <button type="button" class="btn btn-secondary" (click)="dataColetaDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>-->
+        <!--          </div>-->
+        <!--        </div>-->
 
-        <div class="row mb-3">
-          <label class="form-label" for="field_dataEntrega">Data Entrega</label>
-          <div class="d-flex">
-            <input
-              id="field_dataEntrega"
-              data-cy="dataEntrega"
-              type="datetime-local"
-              class="form-control"
-              name="dataEntrega"
-              formControlName="dataEntrega"
-              placeholder="YYYY-MM-DD HH:mm"
-            />
-          </div>
-        </div>
+        <!--        <div class="mb-3">-->
+        <!--          <label class="form-label" for="field_dataEntrega">Data Entrega</label>-->
+        <!--          <div class="d-flex">-->
+        <!--            <input-->
+        <!--              id="field_dataEntrega"-->
+        <!--              data-cy="dataEntrega"-->
+        <!--              type="datetime-local"-->
+        <!--              class="form-control"-->
+        <!--              name="dataEntrega"-->
+        <!--              formControlName="dataEntrega"-->
+        <!--              placeholder="YYYY-MM-DD HH:mm"-->
+        <!--            />-->
+        <!--          </div>-->
+        <!--        </div>-->
 
-        <div class="row mb-3" [hidden]="true">
+        <div class="mb-3" [hidden]="true">
           <label class="form-label" for="field_dataModificacao">Data Modificacao</label>
           <div class="d-flex">
             <input
@@ -158,7 +251,7 @@
           </div>
         </div>
 
-        <div class="row mb-3" [hidden]="true">
+        <div class="mb-3" [hidden]="true">
           <label class="form-label" for="field_tipoOferta">Tipo Oferta</label>
           <select class="form-control" name="tipoOferta" formControlName="tipoOferta" id="field_tipoOferta" data-cy="tipoOferta">
             <option [ngValue]="null"></option>
@@ -170,7 +263,7 @@
           </div>
         </div>
 
-        <div class="row mb-3" [hidden]="true">
+        <div class="mb-3" [hidden]="true">
           <label class="form-label" for="field_perfil">Perfil</label>
           <select
             class="form-control"
@@ -189,20 +282,27 @@
         </div>
       </div>
 
-      <div>
-        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
-          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancelar</span>
-        </button>
+      <div class="text-center m-4">
+        <button
+          pButton
+          pRipple
+          type="button"
+          label="Cancelar"
+          (click)="previousState()"
+          class="p-button-raised p-button-danger w-15rem"
+          data-cy="submit"
+        ></button>
 
         <button
-          type="submit"
+          pButton
+          pRipple
           id="save-entity"
-          data-cy="entityCreateSaveButton"
+          type="submit"
+          label="Cancelar"
           [disabled]="editForm.invalid || isSaving"
-          class="btn btn-primary"
-        >
-          <fa-icon icon="save"></fa-icon>&nbsp;<span>Salvar</span>
-        </button>
+          class="p-button-raised p-button-info w-15rem"
+          data-cy="entityCreateSaveButton"
+        ></button>
       </div>
     </form>
   </div>

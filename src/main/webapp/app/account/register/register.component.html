@@ -1,7 +1,9 @@
 <div>
   <div class="d-flex justify-content-center">
     <div class="col-md-8">
-      <h1 data-cy="registerTitle">Cadastro {{tipoConta === 'MOTORISTA' ? 'Motorista' : tipoConta === 'TRANSPORTADORA' ? 'Transportadora' : 'Embarcador'}}</h1>
+      <h1 data-cy="registerTitle" class="m-4 text-center text-title font-medium">
+        Cadastro {{ tipoConta === 'MOTORISTA' ? 'Motorista' : tipoConta === 'TRANSPORTADORA' ? 'Transportadora' : 'Embarcador' }}
+      </h1>
 
       <div class="alert alert-success" *ngIf="success">
         <strong>Cadastro realizado com sucesso!</strong> Favor verificar seu e-mail para confirmar a conta.
@@ -20,22 +22,28 @@
   <div class="d-flex justify-content-center">
     <div class="col-md-8">
       <form name="form" role="form" (ngSubmit)="register()" [formGroup]="registerForm" *ngIf="!success">
-
-        <div class="grid grid-template">
+        <div class="flex flex-wrap justify-content-center card-container gap-3">
           <div class="mb-3">
-            <label class="form-label" for="firstName">Nome do Usuário</label>
-            <input
-              type="text"
-              class="form-control"
-              id="firstName"
-              name="firstName"
-              placeholder="Seu Nome"
-              formControlName="firstName"
-              data-cy="firstName"
-              #login
-            />
+            <label class="form-label text-600" for="firstName">Nome do Usuário</label>
+            <div class="p-inputgroup">
+              <input
+                pInputText
+                type="text"
+                class="p-inputtext-lg w-25rem"
+                id="firstName"
+                name="firstName"
+                placeholder="Seu Nome"
+                formControlName="firstName"
+                data-cy="firstName"
+              />
+              <span class="p-inputgroup-addon"><i class="pi pi-user-edit"></i></span>
+            </div>
 
-            <div *ngIf="registerForm.get('firstName')!.invalid && (registerForm.get('firstName')!.dirty || registerForm.get('firstName')!.touched)">
+            <div
+              *ngIf="
+                registerForm.get('firstName')!.invalid && (registerForm.get('firstName')!.dirty || registerForm.get('firstName')!.touched)
+              "
+            >
               <small class="form-text text-danger" *ngIf="registerForm.get('firstName')?.errors?.required"> O nome é obrigatório. </small>
 
               <small class="form-text text-danger" *ngIf="registerForm.get('firstName')?.errors?.maxlength">
@@ -45,19 +53,29 @@
           </div>
 
           <div class="mb-3">
-            <label class="form-label" for="lastName">Sobrenome</label>
-            <input
-              type="text"
-              class="form-control"
-              id="lastName"
-              name="lastName"
-              placeholder="Seu sobrenome"
-              formControlName="lastName"
-              data-cy="lastName"
-            />
+            <label class="form-label text-600" for="lastName">Sobrenome</label>
+            <div class="p-inputgroup">
+              <input
+                pInputText
+                type="text"
+                class="p-inputtext-lg w-25rem"
+                id="lastName"
+                name="lastName"
+                placeholder="Seu sobrenome"
+                formControlName="lastName"
+                data-cy="lastName"
+              />
+              <span class="p-inputgroup-addon"><i class="pi pi-user-edit"></i></span>
+            </div>
 
-            <div *ngIf="registerForm.get('lastName')!.invalid && (registerForm.get('lastName')!.dirty || registerForm.get('lastName')!.touched)">
-              <small class="form-text text-danger" *ngIf="registerForm.get('lastName')?.errors?.required"> O sobrenome é obrigatório. </small>
+            <div
+              *ngIf="
+                registerForm.get('lastName')!.invalid && (registerForm.get('lastName')!.dirty || registerForm.get('lastName')!.touched)
+              "
+            >
+              <small class="form-text text-danger" *ngIf="registerForm.get('lastName')?.errors?.required">
+                O sobrenome é obrigatório.
+              </small>
 
               <small class="form-text text-danger" *ngIf="registerForm.get('lastName')?.errors?.maxlength">
                 O sobrenome não pode ter mais de 50 caracteres.
@@ -66,16 +84,20 @@
           </div>
 
           <div class="mb-3">
-            <label class="form-label" for="email">E-mail</label>
-            <input
-              type="email"
-              class="form-control"
-              id="email"
-              name="email"
-              placeholder="Seu e-mail"
-              formControlName="email"
-              data-cy="email"
-            />
+            <label class="form-label text-600" for="email">E-mail</label>
+            <div class="p-inputgroup">
+              <input
+                pInputText
+                type="email"
+                class="p-inputtext-lg w-25rem"
+                id="email"
+                name="email"
+                placeholder="Seu e-mail"
+                formControlName="email"
+                data-cy="email"
+              />
+              <span class="p-inputgroup-addon"><i class="pi pi-envelope"></i></span>
+            </div>
 
             <div *ngIf="registerForm.get('email')!.invalid && (registerForm.get('email')!.dirty || registerForm.get('email')!.touched)">
               <small class="form-text text-danger" *ngIf="registerForm.get('email')?.errors?.required"> O e-mail é obrigatório. </small>
@@ -93,19 +115,61 @@
           </div>
 
           <div class="mb-3">
-            <label class="form-label" for="telephoneNumber">Telefone Celular</label>
-            <input
-              type="number"
-              class="form-control"
-              id="telephoneNumber"
-              name="telephoneNumber"
-              placeholder="Seu Telefone Celular"
-              formControlName="telephoneNumber"
-              data-cy="telephoneNumber"
-            />
+            <label class="form-label form-label text-600" for="field_cpf">CPF</label>
+            <div class="p-inputgroup">
+              <p-inputMask
+                type="text"
+                class="p-inputtext-lg w-25rem"
+                [maxlength]="11"
+                [showClear]="true"
+                [unmask]="true"
+                id="field_cpf"
+                styleClass="w-25rem"
+                name="cpf"
+                placeholder="Seu Telefone Celular"
+                formControlName="cpf"
+                mask="999.999.999-99"
+                data-cy="cpf"
+              ></p-inputMask>
+              <span class="p-inputgroup-addon"><i class="pi pi-id-card"></i></span>
+            </div>
 
-            <div *ngIf="registerForm.get('telephoneNumber')!.invalid && (registerForm.get('telephoneNumber')!.dirty || registerForm.get('telephoneNumber')!.touched)">
-              <small class="form-text text-danger" *ngIf="registerForm.get('telephoneNumber')?.errors?.required"> O Telefone é obrigatório. </small>
+            <div *ngIf="registerForm.get('cpf')!.invalid && (registerForm.get('cpf')!.dirty || registerForm.get('cpf')!.touched)">
+              <small class="form-text text-danger" *ngIf="registerForm.get('cpf')?.errors?.minlength">
+                Este campo deve ter pelo menos 11 caracteres.
+              </small>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label text-600" for="telephoneNumber">Telefone Celular</label>
+            <div class="p-inputgroup">
+              <p-inputMask
+                type="text"
+                class="p-inputtext-lg w-25rem"
+                [maxlength]="11"
+                [showClear]="true"
+                [unmask]="true"
+                id="telephoneNumber"
+                styleClass="w-full"
+                name="telephoneNumber"
+                placeholder="Seu Telefone Celular"
+                formControlName="telephoneNumber"
+                mask="(99) 9 9999-9999"
+                data-cy="telephoneNumber"
+              ></p-inputMask>
+              <span class="p-inputgroup-addon"><i class="pi pi-phone"></i></span>
+            </div>
+
+            <div
+              *ngIf="
+                registerForm.get('telephoneNumber')!.invalid &&
+                (registerForm.get('telephoneNumber')!.dirty || registerForm.get('telephoneNumber')!.touched)
+              "
+            >
+              <small class="form-text text-danger" *ngIf="registerForm.get('telephoneNumber')?.errors?.required">
+                O Telefone é obrigatório.
+              </small>
 
               <small class="form-text text-danger" *ngIf="registerForm.get('telephoneNumber')?.errors?.invalid"> Telefone inválido. </small>
 
@@ -119,51 +183,81 @@
             </div>
           </div>
 
-          <div class="mb-3" *ngIf="tipoConta !== 'MOTORISTA'">
-            <label class="form-label" for="field_razaosocial">Razao Social</label>
-            <input
-              type="text"
-              class="form-control"
-              name="razaosocial"
-              id="field_razaosocial"
-              data-cy="razaosocial"
-              formControlName="razaosocial"
-            />
+          <div class="mb-3">
+            <label class="form-label text-600" for="telefoneComercial">Telefone Comercial</label>
+            <div class="p-inputgroup">
+              <p-inputMask
+                type="text"
+                class="p-inputtext-lg w-25rem"
+                [maxlength]="11"
+                [showClear]="true"
+                [unmask]="true"
+                id="telefoneComercial"
+                styleClass="w-25rem"
+                name="telefoneComercial"
+                placeholder="Seu Telefone Celular"
+                formControlName="telefoneComercial"
+                mask="(99) 9 9999-9999"
+                data-cy="telefoneComercial"
+              ></p-inputMask>
+              <span class="p-inputgroup-addon"><i class="pi pi-phone"></i></span>
+            </div>
           </div>
 
-          <div class="mb-3" *ngIf="tipoConta !== 'MOTORISTA'" >
-            <label class="form-label" for="field_nome">Nome Fantasia</label>
-            <input type="text" class="form-control" name="nome" id="field_nome" data-cy="nome" formControlName="nome" />
+          <div class="mb-3" *ngIf="tipoConta !== 'MOTORISTA'">
+            <label class="form-label text-600" for="field_razaosocial">Razao Social</label>
+            <div class="p-inputgroup">
+              <input
+                pInputText
+                type="text"
+                class="p-inputtext-lg w-25rem"
+                name="razaosocial"
+                id="field_razaosocial"
+                data-cy="razaosocial"
+                formControlName="razaosocial"
+              />
+              <span class="p-inputgroup-addon"><i class="pi pi-building"></i></span>
+            </div>
+          </div>
+
+          <div class="mb-3" *ngIf="tipoConta !== 'MOTORISTA'">
+            <label class="form-label text-600" for="field_nome">Nome Fantasia</label>
+            <div class="p-inputgroup">
+              <input
+                pInputText
+                type="text"
+                class="p-inputtext-lg w-25rem"
+                name="nome"
+                id="field_nome"
+                data-cy="nome"
+                formControlName="nome"
+              />
+              <span class="p-inputgroup-addon"><i class="pi pi-briefcase"></i></span>
+            </div>
             <div *ngIf="registerForm.get('nome')!.invalid && (registerForm.get('nome')!.dirty || registerForm.get('nome')!.touched)">
               <small class="form-text text-danger" *ngIf="registerForm.get('nome')?.errors?.required"> O campo é obrigatório. </small>
             </div>
           </div>
 
-          <div class="mb-3">
-            <label class="form-label" for="field_telefoneComercial">Telefone Comercial</label>
-            <input
-              type="text"
-              class="form-control"
-              name="telefoneComercial"
-              id="field_telefoneComercial"
-              data-cy="telefoneComercial"
-              formControlName="telefoneComercial"
-            />
-          </div>
-
-          <div class="mb-3" *ngIf="tipoConta === 'MOTORISTA'">
-            <label class="form-label" for="field_cpf">Cpf</label>
-            <input type="text" class="form-control" name="cpf" id="field_cpf" data-cy="cpf" formControlName="cpf" />
-            <div *ngIf="registerForm.get('cpf')!.invalid && (registerForm.get('cpf')!.dirty || registerForm.get('cpf')!.touched)">
-              <small class="form-text text-danger" *ngIf="registerForm.get('cpf')?.errors?.minlength">
-                Este campo deve ter pelo menos 11 caracteres.
-              </small>
-            </div>
-          </div>
-
           <div class="mb-3" *ngIf="tipoConta !== 'MOTORISTA'">
-            <label class="form-label" for="field_cnpj">Cnpj</label>
-            <input type="text" class="form-control" name="cnpj" id="field_cnpj" data-cy="cnpj" formControlName="cnpj" />
+            <label class="form-label text-600" for="field_cnpj">Cnpj</label>
+            <div class="p-inputgroup">
+              <p-inputMask
+                type="text"
+                class="p-inputtext-lg w-25rem"
+                [maxlength]="14"
+                [showClear]="true"
+                [unmask]="true"
+                id="field_cnpj"
+                styleClass="w-25rem"
+                name="cnpj"
+                placeholder="CNPJ da Empresa"
+                formControlName="cnpj"
+                mask="99.999.999/9999-99"
+                data-cy="cnpj"
+              ></p-inputMask>
+              <span class="p-inputgroup-addon"><i class="pi pi-id-card"></i></span>
+            </div>
             <div *ngIf="registerForm.get('cnpj')!.invalid && (registerForm.get('cnpj')!.dirty || registerForm.get('cnpj')!.touched)">
               <small class="form-text text-danger" *ngIf="registerForm.get('cnpj')?.errors?.minlength">
                 Este campo deve ter pelo menos 14 caracteres.
@@ -171,51 +265,123 @@
             </div>
           </div>
 
-            <div class="mb-3" *ngIf="tipoConta !== 'MOTORISTA'">
-              <label class="form-label" for="field_cep">Cep</label>
-              <input type="text" class="form-control" name="cep" id="field_cep" data-cy="cep" formControlName="cep" />
-            </div>
-
-            <div class="mb-3" *ngIf="tipoConta !== 'MOTORISTA'">
-              <label class="form-label" for="field_rua">Rua</label>
-              <input type="text" class="form-control" name="rua" id="field_rua" data-cy="rua" formControlName="rua" />
-            </div>
-
-            <div class="mb-3" *ngIf="tipoConta !== 'MOTORISTA'">
-              <label class="form-label" for="field_numero">Número</label>
-              <input type="text" class="form-control" name="numero" id="field_numero" data-cy="numero" formControlName="numero" />
-            </div>
-
-            <div class="mb-3" *ngIf="tipoConta !== 'MOTORISTA'">
-              <label class="form-label" for="field_bairro">Bairro</label>
-              <input type="text" class="form-control" name="bairro" id="field_bairro" data-cy="bairro" formControlName="bairro" />
-            </div>
-
-            <div class="mb-3" *ngIf="tipoConta !== 'MOTORISTA'">
-              <label class="form-label" for="field_cidade">Cidade</label>
-              <input type="text" class="form-control" name="cidade" id="field_cidade" data-cy="cidade" formControlName="cidade" />
-            </div>
-
-            <div class="mb-3" *ngIf="tipoConta !== 'MOTORISTA'">
-              <label class="form-label" for="field_estado">Estado</label>
-              <input type="text" class="form-control" name="estado" id="field_estado" data-cy="estado" formControlName="estado" />
+          <div class="mb-3" *ngIf="tipoConta !== 'MOTORISTA'">
+            <label class="form-label text-600" for="field_cep">Cep</label>
+            <div class="p-inputgroup">
+              <p-inputMask
+                type="text"
+                class="p-inputtext-lg w-25rem"
+                [maxlength]="14"
+                [showClear]="true"
+                [unmask]="true"
+                id="field_cep"
+                styleClass="w-25rem"
+                name="cep"
+                placeholder="CEP"
+                formControlName="cep"
+                mask="99999-999"
+                data-cy="cep"
+              ></p-inputMask>
+              <span class="p-inputgroup-addon"><i class="pi pi-code"></i></span>
             </div>
           </div>
 
+          <div class="mb-3" *ngIf="tipoConta !== 'MOTORISTA'">
+            <label class="form-label text-600" for="field_rua">Rua</label>
+            <div class="p-inputgroup">
+              <input pInputText type="text" class="p-inputtext-lg w-25rem" name="rua" id="field_rua" data-cy="rua" formControlName="rua" />
+              <span class="p-inputgroup-addon"><i class="pi pi-directions"></i></span>
+            </div>
+          </div>
+
+          <div class="mb-3" *ngIf="tipoConta !== 'MOTORISTA'">
+            <label class="form-label text-600" for="field_numero">Número</label>
+            <div class="p-inputgroup">
+              <input
+                pInputText
+                type="text"
+                class="p-inputtext-lg w-25rem"
+                name="numero"
+                id="field_numero"
+                data-cy="numero"
+                formControlName="numero"
+              />
+              <span class="p-inputgroup-addon"><i class="pi pi-sort-numeric-up"></i></span>
+            </div>
+          </div>
+
+          <div class="mb-3" *ngIf="tipoConta !== 'MOTORISTA'">
+            <label class="form-label text-600" for="field_bairro">Bairro</label>
+            <div class="p-inputgroup">
+              <input
+                pInputText
+                type="text"
+                class="p-inputtext-lg w-25rem"
+                name="bairro"
+                id="field_bairro"
+                data-cy="bairro"
+                formControlName="bairro"
+              />
+              <span class="p-inputgroup-addon"><i class="pi pi-directions"></i></span>
+            </div>
+          </div>
+
+          <div class="mb-3" *ngIf="tipoConta !== 'MOTORISTA'">
+            <label class="form-label text-600" for="field_cidade">Cidade</label>
+            <div class="p-inputgroup">
+              <input
+                pInputText
+                type="text"
+                class="p-inputtext-lg w-25rem"
+                name="cidade"
+                id="field_cidade"
+                data-cy="cidade"
+                formControlName="cidade"
+              />
+              <span class="p-inputgroup-addon"><i class="pi pi-map-marker"></i></span>
+            </div>
+          </div>
+
+          <div class="mb-3" *ngIf="tipoConta !== 'MOTORISTA'">
+            <label class="form-label text-600" for="field_estado">Estado</label>
+            <div class="p-inputgroup">
+              <input
+                pInputText
+                type="text"
+                class="p-inputtext-lg w-25rem"
+                name="estado"
+                id="field_estado"
+                data-cy="estado"
+                formControlName="estado"
+              />
+              <span class="p-inputgroup-addon"><i class="pi pi-map-marker"></i></span>
+            </div>
+          </div>
+
+          <div class="mb-3" *ngIf="tipoConta !== 'MOTORISTA'">
+            <div class="p-inputtext-lg w-28rem"></div>
+          </div>
+
           <div class="mb-3">
-            <label class="form-label" for="password">Nova senha</label>
-            <input
-              type="password"
-              class="form-control"
-              id="password"
-              name="password"
-              placeholder="Nova senha"
-              formControlName="password"
-              data-cy="firstPassword"
-            />
+            <label class="form-label text-600" for="password">Nova senha</label>
+            <div class="p-inputgroup">
+              <input
+                pInputText
+                type="password"
+                class="p-inputtext-lg w-25rem"
+                id="password"
+                name="password"
+                placeholder="Nova senha"
+                formControlName="password"
+                data-cy="firstPassword"
+              />
+              <span class="p-inputgroup-addon"><i class="pi pi-lock"></i></span>
+            </div>
 
             <div
-              *ngIf="registerForm.get('password')!.invalid && (registerForm.get('password')!.dirty || registerForm.get('password')!.touched)"
+              *ngIf="
+                registerForm.get('password')!.invalid && (registerForm.get('password')!.dirty || registerForm.get('password')!.touched)
+              "
             >
               <small class="form-text text-danger" *ngIf="registerForm.get('password')?.errors?.required"> A senha é obrigatória. </small>
 
@@ -232,16 +398,20 @@
           </div>
 
           <div class="mb-3">
-            <label class="form-label" for="confirmPassword">Confirmação de nova senha</label>
-            <input
-              type="password"
-              class="form-control"
-              id="confirmPassword"
-              name="confirmPassword"
-              placeholder="Confirme a nova senha"
-              formControlName="confirmPassword"
-              data-cy="secondPassword"
-            />
+            <label class="form-label text-600" for="confirmPassword">Confirmação de nova senha</label>
+            <div class="p-inputgroup">
+              <input
+                pInputText
+                type="password"
+                class="p-inputtext-lg w-25rem"
+                id="confirmPassword"
+                name="confirmPassword"
+                placeholder="Confirme a nova senha"
+                formControlName="confirmPassword"
+                data-cy="secondPassword"
+              />
+              <span class="p-inputgroup-addon"><i class="pi pi-reply"></i></span>
+            </div>
 
             <div
               *ngIf="
@@ -262,19 +432,29 @@
               </small>
             </div>
           </div>
+        </div>
 
+        <div class="mb-3">
+          <div class="field-checkbox mt-4 ml-4 text-600 justify-content-center">
+            <p-checkbox [binary]="true" inputId="binary" id="binary"> </p-checkbox>
+            <label class="w-35rem" for="binary">
+              Eu autorizo o uso dos meus dados de acordo com a <a>Declaração de Privacidade</a> e aceito os <a>Termos e condições</a>.
+            </label>
+          </div>
+        </div>
 
-        <button type="submit" [disabled]="registerForm.invalid" class="btn btn-primary" data-cy="submit">Cadastrar</button>
+        <div class="text-center mt-5 mb-8">
+          <button
+            pButton
+            pRipple
+            type="submit"
+            label="Cadastrar"
+            [disabled]="registerForm.invalid"
+            class="p-button-raised p-button-info p-button-text w-15rem text-white"
+            data-cy="submit"
+          ></button>
+        </div>
       </form>
-
-      <div class="mt-3 alert alert-warning">
-        <span>Se deseja </span>
-        <a class="alert-link" routerLink="/login">entrar</a
-        ><span
-          >, utilize as seguintes contas padrões:<br />- Administrador (usuário="admin" and senha="admin") <br />- Usuário (usuário="user" e
-          senha="user").</span
-        >
-      </div>
     </div>
   </div>
 </div>

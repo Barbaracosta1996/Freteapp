@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { SharedModule } from 'app/shared/shared.module';
@@ -11,25 +11,32 @@ import { PasswordResetFinishComponent } from './password-reset/finish/password-r
 import { SettingsComponent } from './settings/settings.component';
 import { accountState } from './account.route';
 import { ProfileRegisterComponent } from './register/profile-register/profile-register.component';
-import {InputTextModule} from "primeng/inputtext";
+import { InputTextModule } from 'primeng/inputtext';
+import { InputMaskModule } from 'primeng/inputmask';
+import { ButtonModule } from 'primeng/button';
+import { RippleModule } from 'primeng/ripple';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @NgModule({
-    imports: [SharedModule, RouterModule.forChild(accountState), InputTextModule],
-    declarations: [
-        ActivateComponent,
-        RegisterComponent,
-        PasswordComponent,
-        PasswordStrengthBarComponent,
-        PasswordResetInitComponent,
-        PasswordResetFinishComponent,
-        SettingsComponent,
-        ProfileRegisterComponent,
-    ],
-  exports: [
+  imports: [
+    SharedModule,
+    RouterModule.forChild(accountState),
+    InputTextModule,
+    InputMaskModule,
+    ButtonModule,
+    RippleModule,
+    CheckboxModule,
+  ],
+  declarations: [
+    ActivateComponent,
     RegisterComponent,
+    PasswordComponent,
     PasswordStrengthBarComponent,
-    PasswordComponent
-  ]
-
+    PasswordResetInitComponent,
+    PasswordResetFinishComponent,
+    SettingsComponent,
+    ProfileRegisterComponent,
+  ],
+  exports: [RegisterComponent, PasswordStrengthBarComponent, PasswordComponent],
 })
 export class AccountModule {}

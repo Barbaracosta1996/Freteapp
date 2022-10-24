@@ -1,22 +1,21 @@
 /* ==========================================================================
-Main page styles
+HOME page styles
 ========================================================================== */
-@import "../../content/scss/colors";
+@import '../../content/scss/colors';
 
-.body-home{
+.body-home {
   min-width: 300px;
   background-color: $orange-color;
 
-  .bg-blue-500{
-    background-color: $blue-color!important;
+  .bg-blue-500 {
+    background-color: $blue-color !important;
   }
 
-  .border-round{
-    border-radius: 20px!important;
+  .border-round {
+    border-radius: 20px !important;
   }
 
-  .text-home{
-
+  .text-home {
     font-weight: 600;
 
     font-size: 3rem;
@@ -29,37 +28,27 @@ Main page styles
     color: $white-color;
   }
 
-  .text-home-sm{
+  .text-home-sm {
     font-size: 1.8rem;
   }
 
-  a{
+  a {
     text-decoration: none;
     font-stretch: expanded;
     color: $white-color;
   }
-
 }
 
-.background-panel{
+.background-panel {
   background: $orange-color;
 }
 
-.background-panel-blue{
+.background-panel-blue {
   background: $blue-light-color;
 }
 
-.logo-gif-panel{
-  height: 100%;
-  width: 100%;
-  background: $blue-light-color url("../../content/images/home/logo_gif_panel.gif") no-repeat repeat center;
-  background-blend-mode: screen;
-  background-size: contain;
-}
-
-.describe-home{
-
-  .text-title{
+.describe-home {
+  .text-title {
     font-weight: bolder;
     font-size: 2rem;
     line-height: 128%;
@@ -69,52 +58,51 @@ Main page styles
     color: $blue-color;
   }
 
-  .text-describe{
+  .text-describe {
     font-size: 1.2rem;
     font-weight: 400;
   }
 
-  .img{
+  .img {
     width: 100%;
     height: 392px;
     margin-bottom: 1.4rem;
   }
 
-  .driver-img{
+  .driver-img {
     width: 329.62px;
     height: 392.23px;
     background-size: contain;
-    background: url("../../content/images/home/driver_img.svg") no-repeat center;
+    background: url('../../content/images/home/driver_img.svg') no-repeat center;
     padding: 2.4rem;
   }
 
-  .shipper-img{
+  .shipper-img {
     align-content: center;
     width: 336.83px;
     height: 285.71px;
     background-size: contain;
-    background: url("../../content/images/home/shipping_img.svg") no-repeat center;
+    background: url('../../content/images/home/shipping_img.svg') no-repeat center;
     padding: 2.4rem;
   }
 
-  .carrier-img{
+  .carrier-img {
     width: 389.5px;
     height: 244.04px;
     background-size: contain;
-    background: url("../../content/images/home/carrier_img.svg") no-repeat center;
+    background: url('../../content/images/home/carrier_img.svg') no-repeat center;
     padding: 2.4rem;
   }
-
 }
 
-.full-img{
+.full-img {
   min-width: 300px;
   height: 100%;
   width: 100%;
-  background-color: #00ACF2;
+  background-color: #00acf2;
   background-repeat: no-repeat;
   background-position: top;
-  background-image: url("../../content/images/home/capa.jpg");
+  background-image: url('../../content/images/home/capa.jpg');
   background-size: contain;
 }
 
@@ -131,76 +119,69 @@ Main page styles
 }
 
 @media only screen and (max-width: 768px) {
-
   .text-3xl {
     font-size: 1.25rem !important;
   }
 
-  .body-home{
-
-    .w-30rem{
-      width: 15rem!important;
+  .body-home {
+    .w-30rem {
+      width: 15rem !important;
     }
 
-    .text-home{
-
+    .text-home {
       font-weight: 500;
 
       font-size: 2rem;
     }
 
-    .text-home-sm{
+    .text-home-sm {
       font-size: 1.5rem;
     }
 
-    a{
+    a {
       text-decoration: none;
       font-stretch: expanded;
       color: $white-color;
     }
-
   }
 
-  .describe-home{
-
-    .text-title{
+  .describe-home {
+    .text-title {
       font-size: 1.4rem;
     }
 
-    .text-describe{
-      font-size: 1.0rem;
+    .text-describe {
+      font-size: 1rem;
       font-weight: 500;
     }
 
-    .img{
+    .img {
       width: 100%;
       height: 200px;
     }
 
-    .driver-img{
+    .driver-img {
       width: 100%;
       height: 200px;
       background-size: contain;
-      background-image: url("../../content/images/home/driver_img.svg")
+      background-image: url('../../content/images/home/driver_img.svg');
     }
 
-    .shipper-img{
+    .shipper-img {
       width: 100%;
       height: 200px;
       background-size: contain;
-      background-image: url("../../content/images/home/shipping_img.svg");
+      background-image: url('../../content/images/home/shipping_img.svg');
     }
 
     background-repeat: no-repeat;
     background-position: center;
 
-    .carrier-img{
+    .carrier-img {
       width: 100%;
       height: 200px;
       background-size: contain;
-      background-image: url("../../content/images/home/carrier_img.svg");
+      background-image: url('../../content/images/home/carrier_img.svg');
     }
-
   }
 }
-

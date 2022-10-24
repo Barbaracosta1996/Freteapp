@@ -23,8 +23,11 @@ import { NavbarComponent } from './layouts/navbar/navbar.component';
 import { FooterComponent } from './layouts/footer/footer.component';
 import { PageRibbonComponent } from './layouts/profiles/page-ribbon.component';
 import { ErrorComponent } from './layouts/error/error.component';
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {RegisterComponent} from "./account/register/register.component";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ButtonModule } from 'primeng/button';
+import { RippleModule } from 'primeng/ripple';
+import { PanelMenuComponent } from './layouts/main/panel-menu/panel-menu.component';
+import { SidebarModule } from 'primeng/sidebar';
 
 @NgModule({
   imports: [
@@ -37,6 +40,9 @@ import {RegisterComponent} from "./account/register/register.component";
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: false }),
     HttpClientModule,
     NgxWebstorageModule.forRoot({ prefix: 'jhi', separator: '-', caseSensitive: true }),
+    ButtonModule,
+    RippleModule,
+    SidebarModule,
   ],
   providers: [
     Title,
@@ -44,7 +50,7 @@ import {RegisterComponent} from "./account/register/register.component";
     { provide: NgbDateAdapter, useClass: NgbDateDayjsAdapter },
     httpInterceptorProviders,
   ],
-  declarations: [MainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, FooterComponent],
+  declarations: [MainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, FooterComponent, PanelMenuComponent],
   bootstrap: [MainComponent],
 })
 export class AppModule {

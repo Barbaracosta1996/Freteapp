@@ -1,38 +1,35 @@
-import {Component, AfterViewInit, ElementRef, ViewChild, OnInit} from '@angular/core';
+import { Component, AfterViewInit, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from 'app/config/error.constants';
 import { RegisterService } from './register.service';
-import {ActivatedRoute, Router} from "@angular/router";
-import {LoginService} from "../../login/login.service";
-import {Login} from "../../login/login.model";
+import { ActivatedRoute, Router } from '@angular/router';
+import { LoginService } from '../../login/login.service';
+import { Login } from '../../login/login.model';
 
-import {TipoConta} from "../../entities/enumerations/tipo-conta.model";
-import {PerfilService} from "../../entities/perfil/service/perfil.service";
-import {IPerfil} from "../../entities/perfil/perfil.model";
+import { TipoConta } from '../../entities/enumerations/tipo-conta.model';
+import { PerfilService } from '../../entities/perfil/service/perfil.service';
 
 @Component({
   selector: 'jhi-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.scss']
+  styleUrls: ['./register.scss'],
 })
 export class RegisterComponent implements AfterViewInit, OnInit {
-  @ViewChild('login', { static: false })
-  login?: ElementRef;
-
-  tipoConta = TipoConta.MOTORISTA
+  tipoConta = TipoConta.MOTORISTA;
 
   doNotMatch = false;
   error = false;
   errorEmailExists = false;
   errorUserExists = false;
   success = false;
+  acceptedTerms = false;
 
   registerForm = new FormGroup({
     login: new FormControl(''),
-    firstName: new FormControl('', {validators: [Validators.required, Validators.maxLength(50)]}),
-    lastName: new FormControl('', {validators: [Validators.required, Validators.maxLength(50)]}),
+    firstName: new FormControl('', { validators: [Validators.required, Validators.maxLength(50)] }),
+    lastName: new FormControl('', { validators: [Validators.required, Validators.maxLength(50)] }),
     email: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required, Validators.minLength(5), Validators.maxLength(254), Validators.email],
@@ -61,20 +58,18 @@ export class RegisterComponent implements AfterViewInit, OnInit {
     pais: new FormControl('', {}),
     nome: new FormControl('', {}),
     razaosocial: new FormControl('', {}),
-    telefoneComercial: new FormControl('', {})
+    telefoneComercial: new FormControl('', {}),
   });
 
-  constructor(private registerService: RegisterService,
-              public router: Router,
-              private loginService: LoginService,
-              protected activatedRoute: ActivatedRoute,
-              private perfilService: PerfilService) {}
+  constructor(
+    private registerService: RegisterService,
+    public router: Router,
+    private loginService: LoginService,
+    protected activatedRoute: ActivatedRoute,
+    private perfilService: PerfilService
+  ) {}
 
-  ngAfterViewInit(): void {
-    if (this.login) {
-      this.login.nativeElement.focus();
-    }
-  }
+  ngAfterViewInit(): void {}
 
   ngOnInit() {
     this.activatedRoute.data.subscribe(({ tipo }) => {
@@ -112,8 +107,11 @@ export class RegisterComponent implements AfterViewInit, OnInit {
       perfil.tipoConta = this.tipoConta;
 
       this.registerService
-        .save({ login, email, password, telephoneNumber, langKey: 'pt-br', firstName, lastName, perfil})
-        .subscribe({ next: () => this.autentication({username: login!, password: password, rememberMe: true}), error: response => this.processError(response) });
+        .save({ login, email, password, telephoneNumber, langKey: 'pt-br', firstName, lastName, perfil })
+        .subscribe({
+          next: () => this.autentication({ username: login!, password: password, rememberMe: true }),
+          error: response => this.processError(response),
+        });
     }
   }
 

@@ -1,8 +1,18 @@
-.grid{
+@import '~content/scss/colors';
+.grid {
   display: grid;
 }
 
-.grid-template{
+.grid-template {
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
+}
+
+.text-title {
+  color: $blue-color;
+}
+
+.p-button {
+  background-color: $blue-color !important;
+  border-radius: 20px !important;
 }

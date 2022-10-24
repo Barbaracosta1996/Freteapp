@@ -1,0 +1,31 @@
+@import '../../../../content/scss/colors';
+
+.logo-menu {
+  background-image: url('~content/images/portal/menu/logo_white.svg');
+  height: 54px;
+  width: 100%;
+  background-size: cover;
+}
+
+.panel-menu {
+  .p-sidebar {
+    background: #f58220;
+    color: #495057;
+    margin: 10px;
+    width: 79px !important;
+    border-radius: 33px;
+    box-shadow: 1 1px 3px rgb(0 0 0 / 30%);
+  }
+}
+
+.text-menu {
+  p {
+    font-size: 14px;
+    color: white;
+  }
+
+  i {
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+}

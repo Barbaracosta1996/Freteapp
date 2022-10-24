@@ -1,96 +1,93 @@
-@import "../../content/scss/colors";
+@import '../../content/scss/colors';
 
-.banner-login{
+.banner-login {
   width: 100%;
   height: 500px;
-  background-image: url("../../content/images/login/banner_login.jpg");
+  background-image: url('../../content/images/login/banner_login.jpg');
   background-position: top;
   background-repeat: no-repeat;
   background-size: cover;
 }
 
-.p-button{
-  background-color: $blue-color!important;
-  border-radius: 20px!important;
+.p-button {
+  background-color: $blue-color !important;
+  border-radius: 20px !important;
 }
 
-.p-input{
+.p-input {
   border: 1px solid indianred;
 }
 
-.alert-warning{
-  background-color: transparent!important;
-  color: $blue-color!important;
-  --bs-alert-color: transparent!important;
-  --bs-alert-bg:  transparent!important;
-  --bs-alert-border-color: transparent!important;
+.alert-warning {
+  background-color: transparent !important;
+  //color: $blue-color!important;
+  --bs-alert-color: transparent !important;
+  --bs-alert-bg: transparent !important;
+  --bs-alert-border-color: transparent !important;
+
+  a {
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: none !important;
+  }
 
   margin: 0;
   padding: 5px;
   border-radius: 0;
-
-  a{
-    color: $blue-color!important;
-  }
-
 }
 
-@media only screen and (max-width: 768px){
-
-  .banner-login{
+@media only screen and (max-width: 768px) {
+  .banner-login {
     width: 100%;
     height: 300px;
   }
 
-  form{
+  form {
     max-width: 300px;
 
-    input{
+    input {
       max-width: 300px;
     }
 
-    button{
+    button {
       max-width: 300px;
     }
 
-    .w-20rem{
-      width: 200px!important;
+    .w-20rem {
+      width: 200px !important;
     }
-
   }
 
-  .alert-warning{
+  .alert-warning {
     max-width: 300px;
   }
-
 }
 
-@media only screen and (max-width: 281px){
-
-  .banner-login{
+@media only screen and (max-width: 281px) {
+  .banner-login {
     width: 100%;
     height: 200px;
   }
 
-  form{
+  form {
     max-width: 270px;
 
-    input{
+    input {
       max-width: 270px;
     }
 
-    button{
+    button {
       max-width: 270px;
     }
 
-    .w-20rem{
-      width: 170px!important;
+    .w-20rem {
+      width: 170px !important;
     }
-
   }
 
-  .alert-warning{
+  .alert-warning {
     max-width: 270px;
   }
-
 }

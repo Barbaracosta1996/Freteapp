@@ -1,14 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRouteSnapshot, NavigationEnd } from '@angular/router';
 
 import { AccountService } from 'app/core/auth/account.service';
+import { PanelMenuComponent } from './panel-menu/panel-menu.component';
 
 @Component({
   selector: 'jhi-main',
   templateUrl: './main.component.html',
+  styleUrls: ['main.component.scss'],
 })
 export class MainComponent implements OnInit {
+  @ViewChild('menu') menu: PanelMenuComponent | undefined;
   constructor(private accountService: AccountService, private titleService: Title, private router: Router) {}
 
   ngOnInit(): void {
@@ -36,5 +39,9 @@ export class MainComponent implements OnInit {
       pageTitle = 'Freteapp';
     }
     this.titleService.setTitle(pageTitle);
+  }
+
+  eventMenu() {
+    this.menu?.showMenu();
   }
 }

@@ -1,0 +1,28 @@
+/* ==========================================================================
+MAIN page styles
+========================================================================== */
+
+@import '../../../content/scss/colors';
+
+.p-button.p-button-info,
+.p-buttonset.p-button-info > .p-button,
+.p-splitbutton.p-button-info > .p-button {
+  color: #ffffff;
+  background: $blue-light-color;
+  border: 1px solid white;
+}
+
+.bg-btn-menu {
+  position: absolute;
+  float: left;
+  left: 0;
+  padding: 2rem;
+}
+
+.logo-gif-panel {
+  height: 100%;
+  width: 100%;
+  background: $blue-light-color url('../../../content/images/home/logo_gif_panel.gif') no-repeat repeat center;
+  background-blend-mode: screen;
+  background-size: contain;
+}

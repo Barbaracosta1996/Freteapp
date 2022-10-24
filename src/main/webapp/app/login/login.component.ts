@@ -8,12 +8,9 @@ import { AccountService } from 'app/core/auth/account.service';
 @Component({
   selector: 'jhi-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit, AfterViewInit {
-  @ViewChild('username', { static: false })
-  username!: ElementRef;
-
   authenticationError = false;
 
   loginForm = new FormGroup({
@@ -25,7 +22,6 @@ export class LoginComponent implements OnInit, AfterViewInit {
   constructor(private accountService: AccountService, private loginService: LoginService, private router: Router) {}
 
   ngOnInit(): void {
-    // if already authenticated then navigate to home page
     this.accountService.identity().subscribe(() => {
       if (this.accountService.isAuthenticated()) {
         this.router.navigate(['']).then();
@@ -33,16 +29,14 @@ export class LoginComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void {
-    this.username.nativeElement.focus();
-  }
+  ngAfterViewInit(): void {}
 
   login(): void {
     this.loginService.login(this.loginForm.getRawValue()).subscribe({
       next: () => {
         this.authenticationError = false;
         if (!this.router.getCurrentNavigation()) {
-          this.router.navigate(['']).then();
+          this.router.navigate(['/portal']).then();
         }
       },
       error: () => (this.authenticationError = true),

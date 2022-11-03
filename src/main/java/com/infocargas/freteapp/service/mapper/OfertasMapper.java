@@ -9,13 +9,8 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity {@link Ofertas} and its DTO {@link OfertasDTO}.
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { PerfilMapper.class })
 public interface OfertasMapper extends EntityMapper<OfertasDTO, Ofertas> {
-    @Mapping(target = "perfil", source = "perfil", qualifiedByName = "perfilId")
+    @Mapping(target = "perfil", source = "perfil")
     OfertasDTO toDto(Ofertas s);
-
-    @Named("perfilId")
-    @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "id", source = "id")
-    PerfilDTO toDtoPerfilId(Perfil perfil);
 }

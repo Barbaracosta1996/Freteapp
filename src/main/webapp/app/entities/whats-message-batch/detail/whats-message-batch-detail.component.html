@@ -1,0 +1,52 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="whatsMessageBatch">
+      <h2 data-cy="whatsMessageBatchDetailsHeading"><span>Whats Message Batch</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>Código</span></dt>
+        <dd>
+          <span>{{ whatsMessageBatch.id }}</span>
+        </dd>
+        <dt><span>Tipo</span></dt>
+        <dd>
+          <span>{{ whatsMessageBatch.tipo }}</span>
+        </dd>
+        <dt><span>Waid To</span></dt>
+        <dd>
+          <span>{{ whatsMessageBatch.waidTo }}</span>
+        </dd>
+        <dt><span>Perfil ID</span></dt>
+        <dd>
+          <span>{{ whatsMessageBatch.perfilID }}</span>
+        </dd>
+        <dt><span>Status</span></dt>
+        <dd>
+          <span>{{ whatsMessageBatch.status }}</span>
+        </dd>
+        <dt><span>Oferta Id</span></dt>
+        <dd>
+          <span>{{ whatsMessageBatch.ofertaId }}</span>
+        </dd>
+        <dt><span>Tipo Oferta</span></dt>
+        <dd>
+          <span>{{ whatsMessageBatch.tipoOferta }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Voltar</span>
+      </button>
+
+      <button type="button" [routerLink]="['/whats-message-batch', whatsMessageBatch.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Editar</span>
+      </button>
+    </div>
+  </div>
+</div>

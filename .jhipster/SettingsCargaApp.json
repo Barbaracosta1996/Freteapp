@@ -1,0 +1,20 @@
+{
+  "changelogDate": "20221103161730",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "rdCode",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "waToken",
+      "fieldType": "String"
+    }
+  ],
+  "jpaMetamodelFiltering": false,
+  "name": "SettingsCargaApp",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [],
+  "service": "serviceClass"
+}

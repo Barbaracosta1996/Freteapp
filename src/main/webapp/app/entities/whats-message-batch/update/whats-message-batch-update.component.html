@@ -1,0 +1,86 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-whats-message-batch-heading" data-cy="WhatsMessageBatchCreateUpdateHeading">Criar ou editar Whats Message Batch</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_tipo">Tipo</label>
+          <select class="form-control" name="tipo" formControlName="tipo" id="field_tipo" data-cy="tipo">
+            <option [ngValue]="null"></option>
+            <option *ngFor="let whatsAppType of whatsAppTypeValues" [value]="whatsAppType">whatsAppType</option>
+          </select>
+          <div *ngIf="editForm.get('tipo')!.invalid && (editForm.get('tipo')!.dirty || editForm.get('tipo')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('tipo')?.errors?.required"> O campo é obrigatório. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_waidTo">Waid To</label>
+          <input type="text" class="form-control" name="waidTo" id="field_waidTo" data-cy="waidTo" formControlName="waidTo" />
+          <div *ngIf="editForm.get('waidTo')!.invalid && (editForm.get('waidTo')!.dirty || editForm.get('waidTo')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('waidTo')?.errors?.required"> O campo é obrigatório. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_perfilID">Perfil ID</label>
+          <input type="number" class="form-control" name="perfilID" id="field_perfilID" data-cy="perfilID" formControlName="perfilID" />
+          <div *ngIf="editForm.get('perfilID')!.invalid && (editForm.get('perfilID')!.dirty || editForm.get('perfilID')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('perfilID')?.errors?.required"> O campo é obrigatório. </small>
+            <small class="form-text text-danger" [hidden]="!editForm.get('perfilID')?.errors?.number">
+              Este campo é do tipo numérico.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_status">Status</label>
+          <select class="form-control" name="status" formControlName="status" id="field_status" data-cy="status">
+            <option [ngValue]="null"></option>
+            <option *ngFor="let whatsStatus of whatsStatusValues" [value]="whatsStatus">whatsStatus</option>
+          </select>
+          <div *ngIf="editForm.get('status')!.invalid && (editForm.get('status')!.dirty || editForm.get('status')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('status')?.errors?.required"> O campo é obrigatório. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_ofertaId">Oferta Id</label>
+          <input type="number" class="form-control" name="ofertaId" id="field_ofertaId" data-cy="ofertaId" formControlName="ofertaId" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_tipoOferta">Tipo Oferta</label>
+          <select class="form-control" name="tipoOferta" formControlName="tipoOferta" id="field_tipoOferta" data-cy="tipoOferta">
+            <option [ngValue]="null"></option>
+            <option *ngFor="let tipoOferta of tipoOfertaValues" [value]="tipoOferta">tipoOferta</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Salvar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

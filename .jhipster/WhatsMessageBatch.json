@@ -1,0 +1,43 @@
+{
+  "changelogDate": "20221103011613",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "tipo",
+      "fieldType": "WhatsAppType",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "INDICATION_ALERT,LIST_ALERT,LIST_ALERT_CHOOSED,LIST_MATCH_APPROVED,LIST_MATCH_REPROVED,CANCELED_TRAVEL"
+    },
+    {
+      "fieldName": "waidTo",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "perfilID",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "WhatsStatus",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "OPEN,CLOSED,CANCELED"
+    },
+    {
+      "fieldName": "ofertaId",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "tipoOferta",
+      "fieldType": "TipoOferta",
+      "fieldValues": "CARGA,VAGAS"
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "WhatsMessageBatch",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [],
+  "service": "serviceClass"
+}

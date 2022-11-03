@@ -56,6 +56,8 @@ public class CacheConfiguration {
             createCache(cm, com.infocargas.freteapp.domain.CategoriaVeiculo.class.getName());
             createCache(cm, com.infocargas.freteapp.domain.Frota.class.getName());
             createCache(cm, com.infocargas.freteapp.domain.RotasOfertas.class.getName());
+            createCache(cm, com.infocargas.freteapp.domain.WhatsMessageBatch.class.getName());
+            createCache(cm, com.infocargas.freteapp.domain.SettingsCargaApp.class.getName());
             // jhipster-needle-caffeine-add-entry
         };
     }

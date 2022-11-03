@@ -119,6 +119,11 @@ public class PerfilService {
         return perfilRepository.findOneWithEagerRelationships(id).map(perfilMapper::toDto);
     }
 
+    @Transactional(readOnly = true)
+    public Optional<PerfilDTO> findByWaId(String waId) {
+        return perfilRepository.findPerfilByWaId(waId).map(perfilMapper::toDto);
+    }
+
     /**
      * Delete the perfil by id.
      *

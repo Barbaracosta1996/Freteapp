@@ -26,7 +26,9 @@ public interface PerfilRepository extends JpaRepository<Perfil, Long>, JpaSpecif
         return this.findAllWithToOneRelationships(pageable);
     }
 
-   Optional<Perfil> findPerfilByUserLogin(String userLogin);
+    Optional<Perfil> findPerfilByUserLogin(String userLogin);
+
+    Optional<Perfil> findPerfilByWaId(String waid);
 
     @Query(
         value = "select distinct perfil from Perfil perfil left join fetch perfil.user",

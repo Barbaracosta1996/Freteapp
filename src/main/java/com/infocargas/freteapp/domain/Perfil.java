@@ -2,6 +2,7 @@ package com.infocargas.freteapp.domain;
 
 import com.infocargas.freteapp.domain.enumeration.TipoConta;
 import java.io.Serializable;
+import java.util.UUID;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
@@ -66,6 +67,12 @@ public class Perfil implements Serializable {
 
     @Column(name = "telefone_comercial")
     private String telefoneComercial;
+
+    @Column(name = "uuid_rd")
+    private UUID uuidRD;
+
+    @Column(name = "wa_id")
+    private String waId;
 
     @OneToOne(optional = false)
     @NotNull
@@ -267,6 +274,22 @@ public class Perfil implements Serializable {
     public Perfil user(User user) {
         this.setUser(user);
         return this;
+    }
+
+    public UUID getUuidRD() {
+        return uuidRD;
+    }
+
+    public void setUuidRD(UUID uuidRD) {
+        this.uuidRD = uuidRD;
+    }
+
+    public String getWaId() {
+        return waId;
+    }
+
+    public void setWaId(String waId) {
+        this.waId = waId;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

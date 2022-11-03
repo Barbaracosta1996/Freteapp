@@ -39,6 +39,11 @@ import { RouterModule } from '@angular/router';
         data: { pageTitle: 'RotasOfertas' },
         loadChildren: () => import('./rotas-ofertas/rotas-ofertas.module').then(m => m.RotasOfertasModule),
       },
+      {
+        path: 'whats-message-batch',
+        data: { pageTitle: 'WhatsMessageBatches' },
+        loadChildren: () => import('./whats-message-batch/whats-message-batch.module').then(m => m.WhatsMessageBatchModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

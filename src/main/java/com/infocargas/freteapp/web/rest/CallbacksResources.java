@@ -1,17 +1,237 @@
 package com.infocargas.freteapp.web.rest;
 
-import com.infocargas.freteapp.web.rest.vm.ManagedUserVM;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import static com.infocargas.freteapp.config.Constants.TOKEN_CALLBACK;
 
-import javax.validation.Valid;
+import com.infocargas.freteapp.controller.FacebookController;
+import com.infocargas.freteapp.domain.SettingsCargaApp;
+import com.infocargas.freteapp.domain.enumeration.*;
+import com.infocargas.freteapp.response.facebook.FacebookResponse;
+import com.infocargas.freteapp.response.facebook.FacebookSendResponse;
+import com.infocargas.freteapp.service.*;
+import com.infocargas.freteapp.service.dto.*;
+import com.infocargas.freteapp.web.rest.errors.BadRequestAlertException;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
 public class CallbacksResources {
+
+    private final PerfilService perfilService;
+    private final WhatsMessageBatchService whatsMessageBatchService;
+
+    private final FacebookController facebookController;
+
+    private final RotasOfertasService rotasOfertasService;
+
+    private final SolicitacaoService solicitacaoService;
+
+    private final OfertasService ofertasService;
+
+    private final SettingsCargaAppService settingsCargaAppService;
+
+    public CallbacksResources(
+        PerfilService perfilService,
+        WhatsMessageBatchService whatsMessageBatchService,
+        FacebookController facebookController,
+        RotasOfertasService rotasOfertasService,
+        SolicitacaoService solicitacaoService,
+        OfertasService ofertasService,
+        SettingsCargaAppService settingsCargaAppService
+    ) {
+        this.perfilService = perfilService;
+        this.whatsMessageBatchService = whatsMessageBatchService;
+        this.facebookController = facebookController;
+        this.rotasOfertasService = rotasOfertasService;
+        this.solicitacaoService = solicitacaoService;
+        this.ofertasService = ofertasService;
+        this.settingsCargaAppService = settingsCargaAppService;
+    }
+
     @GetMapping("/callbacks/rd/auth")
     @ResponseStatus(HttpStatus.OK)
-    public void registerAccount(){
+    public void registerAccount(@RequestParam(required = false) String code) {
+        var settings = settingsCargaAppService.findOne(1221L);
+        settings.ifPresent(settingsCargaAppDTO -> {
+            settingsCargaAppDTO.setRdCode(code);
+            this.settingsCargaAppService.save(settingsCargaAppDTO);
+        });
+    }
 
+    @PostMapping(value = "/callbacks/wp/returned")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Void> registerAccount(@RequestBody FacebookResponse facebookResponse) {
+        if (facebookResponse != null) {
+            if (
+                !facebookResponse.getEntry().isEmpty() &&
+                !facebookResponse.getEntry().get(0).getChanges().isEmpty() &&
+                facebookResponse.getEntry().get(0).getChanges().get(0).getValue() != null &&
+                !facebookResponse.getEntry().get(0).getChanges().get(0).getValue().getMessages().isEmpty()
+            ) {
+                if (
+                    facebookResponse.getEntry().get(0).getChanges().get(0).getValue().getContacts() != null &&
+                    facebookResponse.getEntry().get(0).getChanges().get(0).getValue().getContacts().size() > 1
+                ) {
+                    String waid = facebookResponse.getEntry().get(0).getChanges().get(0).getValue().getContacts().get(0).getWaId();
+                    Optional<PerfilDTO> perfilDTO = this.perfilService.findByWaId(waid);
+
+                    if (perfilDTO.isPresent()) {
+                        String messageId = facebookResponse.getEntry().get(0).getChanges().get(0).getValue().getMessages().get(0).getId();
+                        Optional<WhatsMessageBatchDTO> message = whatsMessageBatchService.findByMessageId(messageId);
+
+                        if (message.isPresent()) {
+                            switch (message.get().getTipo()) {
+                                case LIST_ALERT:
+                                    var interactive = facebookResponse
+                                        .getEntry()
+                                        .get(0)
+                                        .getChanges()
+                                        .get(0)
+                                        .getValue()
+                                        .getMessages()
+                                        .get(0)
+                                        .getInteractive();
+                                    if (interactive.getListReply() != null) {
+                                        var ofertaPerfil = rotasOfertasService.findByIdOferta(message.get().getOfertaId());
+
+                                        var ofertaId = interactive.getListReply().get("id");
+                                        var requestedOferta = rotasOfertasService.findByIdOferta(Long.valueOf(ofertaId));
+
+                                        requestedOferta.ifPresent(requested -> {
+                                            FacebookSendResponse response;
+
+                                            SolicitacaoDTO solicitacaoDTO = new SolicitacaoDTO();
+                                            solicitacaoDTO.setPerfil(requestedOferta.get().getOfertas().getPerfil());
+                                            solicitacaoDTO.setOfertas(ofertaPerfil.get().getOfertas());
+                                            solicitacaoDTO.setDataProposta(ZonedDateTime.now());
+                                            solicitacaoDTO.setStatus(StatusSolicitacao.AGUARDANDORESPOSTA);
+
+                                            if (ofertaPerfil.get().getOfertas().getTipoOferta() == TipoOferta.CARGA) {
+                                                solicitacaoDTO = solicitacaoService.save(solicitacaoDTO);
+
+                                                response = facebookController.sendRequestCargo(solicitacaoDTO);
+                                            } else {
+                                                response = facebookController.sendRequestVacancies(solicitacaoDTO);
+                                            }
+
+                                            if (response.getError() == null) {
+                                                message.get().setStatus(WhatsStatus.CLOSED);
+                                                whatsMessageBatchService.save(message.get());
+
+                                                var newMessageBatch = new WhatsMessageBatchDTO();
+                                                newMessageBatch.setStatus(WhatsStatus.OPEN);
+                                                newMessageBatch.setTipoOferta(solicitacaoDTO.getOfertas().getTipoOferta());
+                                                newMessageBatch.setOfertaId(solicitacaoDTO.getId());
+                                                newMessageBatch.setPerfilID(solicitacaoDTO.getPerfil().getId().intValue());
+                                                newMessageBatch.setTipo(WhatsAppType.LIST_ALERT_CHOOSED);
+                                                whatsMessageBatchService.save(newMessageBatch);
+                                            }
+                                        });
+                                    }
+                                    break;
+                                case INDICATION_ALERT:
+                                    var buttonIndication = facebookResponse
+                                        .getEntry()
+                                        .get(0)
+                                        .getChanges()
+                                        .get(0)
+                                        .getValue()
+                                        .getMessages()
+                                        .get(0)
+                                        .getButton();
+                                    if (buttonIndication.getPayload() != null && buttonIndication.getPayload().equals("Sim")) {
+                                        var ofertasPerfil = rotasOfertasService.findByIdOferta(message.get().getOfertaId());
+                                        ofertasPerfil.ifPresent(rotasOfertasDTO -> {
+                                            List<OfertasDTO> ofertas = rotasOfertasService.findNearsOfertas(
+                                                rotasOfertasDTO.getOfertas().getId()
+                                            );
+                                            var response = facebookController.sendNearsRouteNotifcation(ofertas, rotasOfertasDTO);
+                                            if (response.getError() == null) {
+                                                message.get().setStatus(WhatsStatus.CLOSED);
+                                                whatsMessageBatchService.save(message.get());
+
+                                                var newMessageBatch = new WhatsMessageBatchDTO();
+                                                newMessageBatch.setStatus(WhatsStatus.OPEN);
+                                                newMessageBatch.setTipoOferta(rotasOfertasDTO.getOfertas().getTipoOferta());
+                                                newMessageBatch.setOfertaId(rotasOfertasDTO.getId());
+                                                newMessageBatch.setPerfilID(perfilDTO.get().getId().intValue());
+                                                newMessageBatch.setTipo(WhatsAppType.LIST_ALERT);
+                                                whatsMessageBatchService.save(newMessageBatch);
+                                            }
+                                        });
+                                    }
+                                    break;
+                                case LIST_ALERT_CHOOSED:
+                                    var buttonChoose = facebookResponse
+                                        .getEntry()
+                                        .get(0)
+                                        .getChanges()
+                                        .get(0)
+                                        .getValue()
+                                        .getMessages()
+                                        .get(0)
+                                        .getButton();
+                                    if (buttonChoose.getPayload() != null) {
+                                        var solicitacaoDTO = solicitacaoService.findOne(message.get().getOfertaId());
+                                        solicitacaoDTO.ifPresent(solicitacao -> {
+                                            solicitacao.setStatus(
+                                                buttonChoose.getPayload().equals("Sim")
+                                                    ? StatusSolicitacao.ACEITOU
+                                                    : StatusSolicitacao.CANCELOU
+                                            );
+                                            solicitacao.setAceitar(
+                                                buttonChoose.getPayload().equals("Sim") ? AnwserStatus.SIM : AnwserStatus.NAO
+                                            );
+
+                                            solicitacao = solicitacaoService.save(solicitacao);
+
+                                            OfertasDTO ofertas = solicitacao.getOfertas();
+
+                                            FacebookSendResponse response;
+
+                                            if (solicitacao.getAceitar() == AnwserStatus.SIM) {
+                                                ofertas.setStatus(StatusOferta.ATENDIDA);
+                                                ofertasService.save(ofertas);
+
+                                                response = facebookController.sendContact(solicitacao);
+                                            } else {
+                                                response = facebookController.sendNegativeMessage(solicitacao);
+                                            }
+
+                                            if (response.getError() == null) {
+                                                message.get().setStatus(WhatsStatus.CLOSED);
+                                                whatsMessageBatchService.save(message.get());
+                                            }
+                                        });
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(value = "/callbacks/wp/returned")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Integer> facebookValid(
+        @RequestParam("hub.mode") String mode,
+        @RequestParam("hub.challenge") Integer challenge,
+        @RequestParam("hub.verify_token") String verify_token
+    ) {
+        if (!TOKEN_CALLBACK.equals(verify_token)) {
+            throw new BadRequestAlertException("Token Invalid", "Callback", "invalidToken");
+        }
+
+        return ResponseEntity.ok().body(challenge);
     }
 }

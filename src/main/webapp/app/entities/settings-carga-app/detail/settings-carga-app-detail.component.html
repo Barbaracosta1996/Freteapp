@@ -1,0 +1,36 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="settingsCargaApp">
+      <h2 data-cy="settingsCargaAppDetailsHeading"><span>Settings Carga App</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>Código</span></dt>
+        <dd>
+          <span>{{ settingsCargaApp.id }}</span>
+        </dd>
+        <dt><span>Rd Code</span></dt>
+        <dd>
+          <span>{{ settingsCargaApp.rdCode }}</span>
+        </dd>
+        <dt><span>Wa Token</span></dt>
+        <dd>
+          <span>{{ settingsCargaApp.waToken }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Voltar</span>
+      </button>
+
+      <button type="button" [routerLink]="['/settings-carga-app', settingsCargaApp.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Editar</span>
+      </button>
+    </div>
+  </div>
+</div>

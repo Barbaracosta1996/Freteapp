@@ -18,6 +18,8 @@
     <include file="config/liquibase/changelog/20220910141500_added_entity_CategoriaVeiculo.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20220910142131_added_entity_Frota.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20220925224104_added_entity_RotasOfertas.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20221103011613_added_entity_WhatsMessageBatch.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20221103161730_added_entity_SettingsCargaApp.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20220829043426_added_entity_constraints_PerfilAnexos.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20220829182941_added_entity_constraints_Ofertas.xml" relativeToChangelogFile="false"/>
@@ -25,6 +27,11 @@
     <include file="config/liquibase/changelog/20220910142131_added_entity_constraints_Frota.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20220829041801_added_entity_constraints_Perfil.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20220925224104_added_entity_constraints_RotasOfertas.xml" relativeToChangelogFile="false"/>
+    <changeSet id="1667441680152-1" author="samuel">
+        <addColumn tableName="perfil">
+            <column name="wa_id" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

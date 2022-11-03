@@ -1,3 +1,3 @@
-id;tipo_conta;cpf;cnpj;rua;numero;bairro;cidade;estado;cep;pais;nome;razaosocial;telefone_comercial;user_id
-1;TRANSPORTADORA;AccountXXXX;Concreto brand;visionary Berkshire Peixe;compress;Lustroso;payment Impressionante override;Algodão Lindo hacking;Aço;Identity Bacon;Camboja architectures;generation;Calças payment;1
-2;MOTORISTA;bypass initiative Avenida;Corporate Future;well-modulated quantify;Pizza Kroon;Product Account;capacitor Pre-emptive Legacy;Eritreia Agent;Atum;cross-platform;Piauí Upgradable;Rodovia;do HTTP sticky;2
+id;tipo_conta;cpf;cnpj;rua;numero;bairro;cidade;estado;cep;pais;nome;razaosocial;telefone_comercial;user_id;uuid_rd;wa_id
+1;TRANSPORTADORA;AccountXXXX;Concreto brand;visionary Berkshire Peixe;compress;Lustroso;payment Impressionante override;Algodão Lindo hacking;Aço;Identity Bacon;Camboja architectures;generation;Calças payment;1;78d2f1c2-ee0b-418d-a1ab-e06296ea9938;09
+2;MOTORISTA;bypass initiative Avenida;Corporate Future;well-modulated quantify;Pizza Kroon;Product Account;capacitor Pre-emptive Legacy;Eritreia Agent;Atum;cross-platform;Piauí Upgradable;Rodovia;do HTTP sticky;2;78d2f1c2-ee0b-418d-a1ab-e06296ea9933;03

@@ -10,17 +10,16 @@ import com.infocargas.freteapp.service.dto.RotasOfertasDTO;
 import com.infocargas.freteapp.service.dto.routes.GoogleLegs;
 import com.infocargas.freteapp.service.dto.routes.GoogleRoutes;
 import com.infocargas.freteapp.utils.GeoUtils;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+import javax.ws.rs.QueryParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.ws.rs.QueryParam;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 
 @RestController
 @RequestMapping("/api")
@@ -29,7 +28,7 @@ public class GeoOfertaResource {
     private final RotasOfertasService ofertasService;
     private final ClickaTellService clickaTellService;
 
-    public GeoOfertaResource(RotasOfertasService ofertasService, ClickaTellService clickaTellService){
+    public GeoOfertaResource(RotasOfertasService ofertasService, ClickaTellService clickaTellService) {
         this.ofertasService = ofertasService;
         this.clickaTellService = clickaTellService;
     }
@@ -40,25 +39,27 @@ public class GeoOfertaResource {
      * @param id the id of the frotaDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the frotaDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping( "/geo-ofertas/{id}")
+    @GetMapping("/geo-ofertas/{id}")
     public ResponseEntity<List<OfertasDTO>> getNearRoute(@PathVariable Long id) {
-
         Optional<RotasOfertasDTO> dto = ofertasService.findByIdOferta(id);
         List<OfertasDTO> selected = new ArrayList<>();
         Gson g = new Gson();
 
-        if (dto.isPresent()){
+        if (dto.isPresent()) {
             RotasOfertasDTO rotasOfertasDTO = dto.get();
             GoogleRoutes[] gRoutesArr = g.fromJson(rotasOfertasDTO.getRotas(), GoogleRoutes[].class);
 
             GoogleRoutes gRoutes = gRoutesArr[0];
 
-            List<RotasOfertasDTO> allRoutes = ofertasService.findAllNotPerfilId(rotasOfertasDTO.getOfertas().getPerfil().getId(),
-                rotasOfertasDTO.getOfertas().getTipoOferta() == TipoOferta.CARGA ? TipoOferta.VAGAS : TipoOferta.CARGA, rotasOfertasDTO.getOfertas().getDataFechamento(), StatusOferta.AGUARDANDO_PROPOSTA);
+            List<RotasOfertasDTO> allRoutes = ofertasService.findAllNotPerfilId(
+                rotasOfertasDTO.getOfertas().getPerfil().getId(),
+                rotasOfertasDTO.getOfertas().getTipoOferta() == TipoOferta.CARGA ? TipoOferta.VAGAS : TipoOferta.CARGA,
+                rotasOfertasDTO.getOfertas().getDataFechamento(),
+                StatusOferta.AGUARDANDO_PROPOSTA
+            );
 
             allRoutes.forEach(oferta -> {
-
-                if (oferta.getId().equals(rotasOfertasDTO.getId())){
+                if (oferta.getId().equals(rotasOfertasDTO.getId())) {
                     return;
                 }
 
@@ -69,40 +70,51 @@ public class GeoOfertaResource {
                 AtomicReference<Double> origem = new AtomicReference<>();
                 AtomicReference<Double> destino = new AtomicReference<>();
 
-                googleLegs.getSteps().forEach(googleSteps -> {
+                googleLegs
+                    .getSteps()
+                    .forEach(googleSteps -> {
+                        if (origem.get() == null) {
+                            double result1 = GeoUtils.geoDistanceInKm(
+                                googleSteps.getStart_location(),
+                                gRoutesOferta[0].getLegs().get(0).getStart_location()
+                            );
+                            double result2 = GeoUtils.geoDistanceInKm(
+                                googleSteps.getEnd_location(),
+                                gRoutesOferta[0].getLegs().get(0).getStart_location()
+                            );
 
-                    if (origem.get() == null){
-                        double result1 = GeoUtils.geoDistanceInKm(googleSteps.getStart_location(), gRoutesOferta[0].getLegs().get(0).getStart_location());
-                        double result2 = GeoUtils.geoDistanceInKm(googleSteps.getEnd_location(), gRoutesOferta[0].getLegs().get(0).getStart_location());
-
-                        if (result1 > 0.0 && result1 <= 100.0){
-                            origem.set(result1);
-                        } else if(result2 > 0.0 && result2 <= 100){
-                            origem.set(result2);
+                            if (result1 > 0.0 && result1 <= 100.0) {
+                                origem.set(result1);
+                            } else if (result2 > 0.0 && result2 <= 100) {
+                                origem.set(result2);
+                            }
                         }
-                    }
 
-                    if (destino.get() == null){
-                        double result1 = GeoUtils.geoDistanceInKm(googleSteps.getStart_location(), gRoutesOferta[0].getLegs().get(0).getEnd_location());
-                        double result2 = GeoUtils.geoDistanceInKm(googleSteps.getEnd_location(), gRoutesOferta[0].getLegs().get(0).getEnd_location());
+                        if (destino.get() == null) {
+                            double result1 = GeoUtils.geoDistanceInKm(
+                                googleSteps.getStart_location(),
+                                gRoutesOferta[0].getLegs().get(0).getEnd_location()
+                            );
+                            double result2 = GeoUtils.geoDistanceInKm(
+                                googleSteps.getEnd_location(),
+                                gRoutesOferta[0].getLegs().get(0).getEnd_location()
+                            );
 
-                        if (result1 > 0.0 && result1 <= 100.0){
-                            destino.set(result1);
-                        } else if (result2 > 0.0 && result2 <= 100.0){
-                            destino.set(result2);
+                            if (result1 > 0.0 && result1 <= 100.0) {
+                                destino.set(result1);
+                            } else if (result2 > 0.0 && result2 <= 100.0) {
+                                destino.set(result2);
+                            }
                         }
-                    }
-                });
+                    });
 
-                if ((origem.get() != null && origem.get() <= 100) && (destino.get() != null && destino.get() <= 100)){
+                if ((origem.get() != null && origem.get() <= 100) && (destino.get() != null && destino.get() <= 100)) {
                     selected.add(oferta.getOfertas());
                 }
-
             });
-
-            if (selected.size() > 0){
-                clickaTellService.sendSms("Encontramos " + selected.size() + " possíveís vagas. Para mais informações acesse: https://freteapp.sp.skdrive.net/portal/indicacao/"+rotasOfertasDTO.getOfertas().getId(), "+55" + rotasOfertasDTO.getOfertas().getPerfil().getTelefoneComercial());
-            }
+            //            if (selected.size() > 0){
+            //                clickaTellService.sendSms("Encontramos " + selected.size() + " possíveís vagas. Para mais informações acesse: https://freteapp.sp.skdrive.net/portal/indicacao/"+rotasOfertasDTO.getOfertas().getId(), "+55" + rotasOfertasDTO.getOfertas().getPerfil().getTelefoneComercial());
+            //            }
 
         }
 
@@ -114,12 +126,15 @@ public class GeoOfertaResource {
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the frotaDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping( "/geo-ofertas")
-    public ResponseEntity<Double> getFrota(@QueryParam("latFirst") Double latFirst, @QueryParam("lngFirst") Double lngFirst, @QueryParam("latSecond") Double latSecond, @QueryParam("lngSecond") Double lngSecond) {
+    @GetMapping("/geo-ofertas")
+    public ResponseEntity<Double> getFrota(
+        @QueryParam("latFirst") Double latFirst,
+        @QueryParam("lngFirst") Double lngFirst,
+        @QueryParam("latSecond") Double latSecond,
+        @QueryParam("lngSecond") Double lngSecond
+    ) {
         Double distance = GeoUtils.geoDistanceInKm(latFirst, lngFirst, latSecond, lngSecond);
 
         return ResponseEntity.ok(distance);
-
     }
-
 }

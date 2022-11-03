@@ -1,7 +1,9 @@
 package com.infocargas.freteapp.service;
 
+import com.infocargas.freteapp.controller.FacebookController;
 import com.infocargas.freteapp.domain.Ofertas;
 import com.infocargas.freteapp.domain.enumeration.TipoOferta;
+import com.infocargas.freteapp.proxy.FacebookApiProxy;
 import com.infocargas.freteapp.repository.OfertasRepository;
 import com.infocargas.freteapp.service.dto.OfertasDTO;
 import com.infocargas.freteapp.service.mapper.OfertasMapper;
@@ -28,17 +30,22 @@ public class OfertasService {
 
     private final RotasOfertasService rotasOfertasService;
 
-    private final ClickaTellService clickaTellService;
+    private final FacebookController facebookController;
 
-    public OfertasService(OfertasRepository ofertasRepository, OfertasMapper ofertasMapper, RotasOfertasService rotasOfertasService, ClickaTellService clickaTellService) {
+    public OfertasService(
+        OfertasRepository ofertasRepository,
+        OfertasMapper ofertasMapper,
+        RotasOfertasService rotasOfertasService,
+        FacebookController facebookController
+    ) {
         this.ofertasRepository = ofertasRepository;
         this.ofertasMapper = ofertasMapper;
-        this.clickaTellService = clickaTellService;
         this.rotasOfertasService = rotasOfertasService;
+        this.facebookController = facebookController;
     }
 
     /**
-     * Save a ofertas.
+     * Save an ofertas.
      *
      * @param ofertasDTO the entity to save.
      * @return the persisted entity.
@@ -50,23 +57,19 @@ public class OfertasService {
         return ofertasMapper.toDto(ofertas);
     }
 
-    public OfertasDTO createPortal(OfertasDTO ofertasDTO){;
+    public OfertasDTO createPortal(OfertasDTO ofertasDTO) {
         OfertasDTO ofertas = save(ofertasDTO);
+        facebookController.createRegistrationOffer(ofertasDTO);
 
-        if (ofertas.getTipoOferta() == TipoOferta.CARGA){
-            clickaTellService.sendSms("Você divulgou uma nova carga em breve vamos lhe notificar possíveis vagas.", "+55" + ofertasDTO.getPerfil().getTelefoneComercial());
-        } else {
-            clickaTellService.sendSms("Você divulgou uma vaga em breve vamos lhe notificar possíveis cargas.", "+55" + ofertasDTO.getPerfil().getTelefoneComercial());
-        }
-
-        if (ofertas.getId() != null){
+        if (ofertas.getId() != null) {
             rotasOfertasService.saveNewRoute(ofertas);
         }
+
         return ofertas;
     }
 
     /**
-     * Update a ofertas.
+     * Update an ofertas.
      *
      * @param ofertasDTO the entity to save.
      * @return the persisted entity.
@@ -79,7 +82,7 @@ public class OfertasService {
     }
 
     /**
-     * Partially update a ofertas.
+     * Partially update an ofertas.
      *
      * @param ofertasDTO the entity to update partially.
      * @return the persisted entity.

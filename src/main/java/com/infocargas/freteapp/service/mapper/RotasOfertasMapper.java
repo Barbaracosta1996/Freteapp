@@ -9,7 +9,7 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity {@link RotasOfertas} and its DTO {@link RotasOfertasDTO}.
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { RotasOfertasMapper.class })
 public interface RotasOfertasMapper extends EntityMapper<RotasOfertasDTO, RotasOfertas> {
     @Mapping(target = "ofertas", source = "ofertas")
     RotasOfertasDTO toDto(RotasOfertas s);

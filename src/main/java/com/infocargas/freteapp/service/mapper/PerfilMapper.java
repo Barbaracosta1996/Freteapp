@@ -18,5 +18,6 @@ public interface PerfilMapper extends EntityMapper<PerfilDTO, Perfil> {
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     @Mapping(target = "login", source = "login")
+    @Mapping(target = "phone", source = "telephoneNumber")
     UserDTO toDtoUserLogin(User user);
 }

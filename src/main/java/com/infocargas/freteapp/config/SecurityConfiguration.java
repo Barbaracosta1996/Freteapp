@@ -78,6 +78,8 @@ public class SecurityConfiguration {
             .antMatchers("/i18n/**").permitAll()
             .antMatchers("/api/callbacks/rd/auth/**").permitAll()
             .antMatchers("/api/callbacks/rd/auth").permitAll()
+            .antMatchers("/api/callbacks/wp/returned").permitAll()
+            .antMatchers("/api/callbacks/wp/returned/**").permitAll()
             .antMatchers("/content/**").permitAll()
             .antMatchers("/swagger-ui/**").permitAll()
             .antMatchers("/test/**").permitAll()

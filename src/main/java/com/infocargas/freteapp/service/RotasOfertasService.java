@@ -1,18 +1,22 @@
 package com.infocargas.freteapp.service;
 
+import com.google.gson.Gson;
 import com.infocargas.freteapp.domain.RotasOfertas;
 import com.infocargas.freteapp.domain.enumeration.StatusOferta;
 import com.infocargas.freteapp.domain.enumeration.TipoOferta;
 import com.infocargas.freteapp.repository.RotasOfertasRepository;
 import com.infocargas.freteapp.service.dto.OfertasDTO;
 import com.infocargas.freteapp.service.dto.RotasOfertasDTO;
+import com.infocargas.freteapp.service.dto.routes.GoogleLegs;
+import com.infocargas.freteapp.service.dto.routes.GoogleRoutes;
 import com.infocargas.freteapp.service.mapper.RotasOfertasMapper;
-
+import com.infocargas.freteapp.utils.GeoUtils;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import com.mashape.unirest.http.exceptions.UnirestException;
+import java.util.concurrent.atomic.AtomicReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -35,7 +39,11 @@ public class RotasOfertasService {
 
     private final GooglePlacesServices googlePlacesServices;
 
-    public RotasOfertasService(RotasOfertasRepository rotasOfertasRepository, RotasOfertasMapper rotasOfertasMapper, GooglePlacesServices googlePlacesServices) {
+    public RotasOfertasService(
+        RotasOfertasRepository rotasOfertasRepository,
+        RotasOfertasMapper rotasOfertasMapper,
+        GooglePlacesServices googlePlacesServices
+    ) {
         this.rotasOfertasRepository = rotasOfertasRepository;
         this.rotasOfertasMapper = rotasOfertasMapper;
         this.googlePlacesServices = googlePlacesServices;
@@ -105,10 +113,16 @@ public class RotasOfertasService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public List<RotasOfertasDTO> findAllNotPerfilId(Long perfilId, TipoOferta tipo, ZonedDateTime dataFechamento, StatusOferta statusOferta) {
+    public List<RotasOfertasDTO> findAllNotPerfilId(
+        Long perfilId,
+        TipoOferta tipo,
+        ZonedDateTime dataFechamento,
+        StatusOferta statusOferta
+    ) {
         log.debug("Request to get all RotasOfertas");
-        return rotasOfertasMapper.toDto(rotasOfertasRepository
-            .findByOfertasPerfilIdIsNotAndOfertasTipoOfertaIsAndOfertasStatusIs(perfilId, tipo, statusOferta));
+        return rotasOfertasMapper.toDto(
+            rotasOfertasRepository.findByOfertasPerfilIdIsNotAndOfertasTipoOfertaIsAndOfertasStatusIs(perfilId, tipo, statusOferta)
+        );
     }
 
     /**
@@ -167,5 +181,82 @@ public class RotasOfertasService {
     public void delete(Long id) {
         log.debug("Request to delete RotasOfertas : {}", id);
         rotasOfertasRepository.deleteById(id);
+    }
+
+    public List<OfertasDTO> findNearsOfertas(Long ofertasId) {
+        Optional<RotasOfertasDTO> dto = findByIdOferta(ofertasId);
+        List<OfertasDTO> selected = new ArrayList<>();
+        Gson g = new Gson();
+
+        if (dto.isPresent()) {
+            RotasOfertasDTO rotasOfertasDTO = dto.get();
+            GoogleRoutes[] gRoutesArr = g.fromJson(rotasOfertasDTO.getRotas(), GoogleRoutes[].class);
+
+            GoogleRoutes gRoutes = gRoutesArr[0];
+
+            List<RotasOfertasDTO> allRoutes = findAllNotPerfilId(
+                rotasOfertasDTO.getOfertas().getPerfil().getId(),
+                rotasOfertasDTO.getOfertas().getTipoOferta() == TipoOferta.CARGA ? TipoOferta.VAGAS : TipoOferta.CARGA,
+                rotasOfertasDTO.getOfertas().getDataFechamento(),
+                StatusOferta.AGUARDANDO_PROPOSTA
+            );
+
+            allRoutes.forEach(oferta -> {
+                if (oferta.getId().equals(rotasOfertasDTO.getId())) {
+                    return;
+                }
+
+                GoogleRoutes[] gRoutesOferta = g.fromJson(oferta.getRotas(), GoogleRoutes[].class);
+
+                GoogleLegs googleLegs = gRoutes.getLegs().get(0);
+
+                AtomicReference<Double> origem = new AtomicReference<>();
+                AtomicReference<Double> destino = new AtomicReference<>();
+
+                googleLegs
+                    .getSteps()
+                    .forEach(googleSteps -> {
+                        if (origem.get() == null) {
+                            double result1 = GeoUtils.geoDistanceInKm(
+                                googleSteps.getStart_location(),
+                                gRoutesOferta[0].getLegs().get(0).getStart_location()
+                            );
+                            double result2 = GeoUtils.geoDistanceInKm(
+                                googleSteps.getEnd_location(),
+                                gRoutesOferta[0].getLegs().get(0).getStart_location()
+                            );
+
+                            if (result1 > 0.0 && result1 <= 100.0) {
+                                origem.set(result1);
+                            } else if (result2 > 0.0 && result2 <= 100) {
+                                origem.set(result2);
+                            }
+                        }
+
+                        if (destino.get() == null) {
+                            double result1 = GeoUtils.geoDistanceInKm(
+                                googleSteps.getStart_location(),
+                                gRoutesOferta[0].getLegs().get(0).getEnd_location()
+                            );
+                            double result2 = GeoUtils.geoDistanceInKm(
+                                googleSteps.getEnd_location(),
+                                gRoutesOferta[0].getLegs().get(0).getEnd_location()
+                            );
+
+                            if (result1 > 0.0 && result1 <= 100.0) {
+                                destino.set(result1);
+                            } else if (result2 > 0.0 && result2 <= 100.0) {
+                                destino.set(result2);
+                            }
+                        }
+                    });
+
+                if ((origem.get() != null && origem.get() <= 100) && (destino.get() != null && destino.get() <= 100)) {
+                    selected.add(oferta.getOfertas());
+                }
+            });
+        }
+
+        return selected;
     }
 }

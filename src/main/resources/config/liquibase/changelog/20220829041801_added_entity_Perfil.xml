@@ -91,7 +91,13 @@
             <column name="razaosocial" type="string"/>
             <column name="telefone_comercial" type="string"/>
             <column name="user_id" type="numeric"/>
+            <column name="uuid_rd" type="uuid"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
+    </changeSet>
+    <changeSet id="1666964732130-1" author="samuel">
+        <addColumn tableName="perfil">
+            <column name="uuid_rd" type="UUID"/>
+        </addColumn>
     </changeSet>
 </databaseChangeLog>

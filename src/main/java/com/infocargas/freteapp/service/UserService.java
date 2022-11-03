@@ -1,20 +1,22 @@
 package com.infocargas.freteapp.service;
 
 import com.infocargas.freteapp.config.Constants;
+import com.infocargas.freteapp.controller.FacebookController;
+import com.infocargas.freteapp.controller.RDStationController;
 import com.infocargas.freteapp.domain.Authority;
 import com.infocargas.freteapp.domain.User;
 import com.infocargas.freteapp.repository.AuthorityRepository;
 import com.infocargas.freteapp.repository.UserRepository;
+import com.infocargas.freteapp.response.facebook.FacebookSendResponse;
 import com.infocargas.freteapp.security.AuthoritiesConstants;
 import com.infocargas.freteapp.security.SecurityUtils;
 import com.infocargas.freteapp.service.dto.AdminUserDTO;
 import com.infocargas.freteapp.service.dto.UserDTO;
+import com.infocargas.freteapp.service.mapper.UserMapper;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import com.infocargas.freteapp.service.mapper.UserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
@@ -47,13 +49,19 @@ public class UserService {
 
     private final PerfilService perfilService;
 
+    private final RDStationController rdStationController;
+
+    private final FacebookController facebookController;
+
     public UserService(
         UserRepository userRepository,
         PasswordEncoder passwordEncoder,
         AuthorityRepository authorityRepository,
         CacheManager cacheManager,
         UserMapper userMapper,
-        PerfilService perfilService
+        PerfilService perfilService,
+        RDStationController rdStationController,
+        FacebookController facebookController
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -61,6 +69,8 @@ public class UserService {
         this.cacheManager = cacheManager;
         this.userMapper = userMapper;
         this.perfilService = perfilService;
+        this.rdStationController = rdStationController;
+        this.facebookController = facebookController;
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -145,6 +155,18 @@ public class UserService {
         log.debug("Created Information for User: {}", newUser);
 
         userDTO.getPerfil().setUser(userMapper.userToUserDTO(newUser));
+
+        //        UUID uuid = this.rdStationController.createContact(userDTO.getPerfil());
+        //
+        //        if (uuid != null) {
+        //            userDTO.getPerfil().setUuidRD(uuid);
+        //        }
+
+        FacebookSendResponse facebookSendResponse = this.facebookController.createRegistrationMessage(userDTO.getPerfil());
+
+        if (facebookSendResponse != null && facebookSendResponse.getError() == null) {
+            userDTO.getPerfil().setWaId(facebookSendResponse.getContacts().get(0).getWaId());
+        }
 
         perfilService.save(userDTO.getPerfil());
 

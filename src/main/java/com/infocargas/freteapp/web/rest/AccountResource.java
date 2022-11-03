@@ -62,7 +62,7 @@ public class AccountResource {
             throw new InvalidPasswordException();
         }
         userService.registerUser(managedUserVM, managedUserVM.getPassword());
-//        mailService.sendActivationEmail(user);
+        //        mailService.sendActivationEmail(user);
     }
 
     /**
@@ -180,7 +180,7 @@ public class AccountResource {
         }
         Optional<User> user = userService.completePasswordReset(keyAndPassword.getNewPassword(), keyAndPassword.getKey());
 
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             throw new AccountResourceException("No user was found for this reset key");
         }
     }

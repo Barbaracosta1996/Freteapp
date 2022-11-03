@@ -26,3 +26,18 @@ MAIN page styles
   background-blend-mode: screen;
   background-size: contain;
 }
+
+@media only screen and (max-width: 545px) {
+  .logo-gif-panel {
+    height: 72px;
+    width: 100%;
+  }
+
+  .bg-btn-menu {
+    padding: 10px;
+  }
+
+  .h-7rem {
+    height: 100% !important;
+  }
+}

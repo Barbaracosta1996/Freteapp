@@ -157,3 +157,8 @@ Desktop.ini
 ######################
 /coverage/
 /.nyc_output/
+/src/main/webapp/content/images/home/Motorista_img.svg
+/src/main/webapp/content/images/home/Motorista.png
+/src/main/webapp/content/images/home/Embarcador_img.svg
+/src/main/webapp/content/images/home/Embarcador.png
+/src/main/webapp/content/images/home/Transportadora.png

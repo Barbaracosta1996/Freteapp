@@ -156,11 +156,11 @@ public class UserService {
 
         userDTO.getPerfil().setUser(userMapper.userToUserDTO(newUser));
 
-        //        UUID uuid = this.rdStationController.createContact(userDTO.getPerfil());
-        //
-        //        if (uuid != null) {
-        //            userDTO.getPerfil().setUuidRD(uuid);
-        //        }
+        UUID uuid = this.rdStationController.createContact(userDTO.getPerfil());
+
+        if (uuid != null) {
+            userDTO.getPerfil().setUuidRD(uuid);
+        }
 
         FacebookSendResponse facebookSendResponse = this.facebookController.createRegistrationMessage(userDTO.getPerfil());
 

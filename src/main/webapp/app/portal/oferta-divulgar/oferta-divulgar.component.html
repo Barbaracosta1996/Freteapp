@@ -53,13 +53,13 @@
             </div>
           </div>
 
-          <!--   Tipo Transporte       -->
           <div class="mb-3">
             <label class="form-label text-600" for="field_tipoTransporte">Tipo Transporte</label>
             <div class="p-inputgroup">
               <p-dropdown
                 styleClass="w-full"
                 class="p-inputtext-lg"
+                panelStyleClass="w-full"
                 [options]="tiposTransportes"
                 formControlName="tipoTransporte"
                 placeholder="Selecione"
@@ -70,6 +70,32 @@
                 [showClear]="true"
               ></p-dropdown>
               <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
+            </div>
+          </div>
+
+          <!--  QUANTIDADE     -->
+          <div class="mb-3">
+            <label class="form-label text-600" for="field_quantidade">Quantidade</label>
+            <div class="p-inputgroup">
+              <p-inputNumber
+                class="p-inputtext-lg w-10rem"
+                [showButtons]="true"
+                inputId="stacked"
+                name="quantidade"
+                id="field_quantidade"
+                formControlName="quantidade"
+              >
+              </p-inputNumber>
+            </div>
+
+            <div *ngIf="editForm.get('quantidade')!.invalid && (editForm.get('quantidade')!.dirty || editForm.get('quantidade')!.touched)">
+              <small class="form-text text-danger" *ngIf="editForm.get('quantidade')?.errors?.required"> O campo é obrigatório. </small>
+              <small class="form-text text-danger" *ngIf="editForm.get('quantidade')?.errors?.min">
+                Este campo deve ser maior que 1.
+              </small>
+              <small class="form-text text-danger" [hidden]="!editForm.get('quantidade')?.errors?.number">
+                Este campo é do tipo numérico.
+              </small>
             </div>
           </div>
 

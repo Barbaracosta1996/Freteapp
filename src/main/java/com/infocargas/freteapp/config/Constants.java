@@ -15,7 +15,7 @@ public final class Constants {
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
 
     public static final String FACEBOOK_TOKEN =
-        "Bearer EAASALwxx258BAAuXls5qWMY1j0guVIwVF5u0D0ZCnZCFjRjXJ0fRznr6yvznBUK3Etp3NADScVZAho8T8B0yrrjsbAUdWaTsLyFwZCO1LX3Ef4HfVXg7prKVKxPgop3wo23RRZAQ6jj99qsfhHG0d16JKG2oQOQZAJDTlL50blPTqivKPwphjGY9zZBxy5Hggn6zZBm75lPgmLSE8BV2ZAZBLm";
+        "Bearer EAASALwxx258BABTnt0HLnqJdmjXoZBuFXb3TlaDP90nAHZBv6OLG25Sbibv2oMVfH2DlCwYEQ3ZCYnHyB7ecBZA8ZBE1Rw7bSu1qDXOlKNFOYqhZBZBbnqLOsAnW1VbkegacZA33N1hqgG24qj8kPZAgpZCMzbfkYQ0pSLvQehKxV33WZCwz8wShcGC";
 
     private Constants() {}
 }

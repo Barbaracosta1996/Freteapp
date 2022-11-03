@@ -1,37 +1,40 @@
-import {Component, OnInit} from '@angular/core';
-import {IOfertas} from "../../entities/ofertas/ofertas.model";
-import {IPerfil} from "../../entities/perfil/perfil.model";
-import {OfertasFormGroup, OfertasFormService} from "../../entities/ofertas/update/ofertas-form.service";
-import {DataUtils} from "../../core/util/data-util.service";
-import {OfertasService} from "../../entities/ofertas/service/ofertas.service";
-import {PerfilService} from "../../entities/perfil/service/perfil.service";
-import {ActivatedRoute} from "@angular/router";
-import {Observable} from "rxjs";
-import {HttpResponse} from "@angular/common/http";
-import {finalize, map} from "rxjs/operators";
-import {TipoTransporteOferta} from "../../entities/enumerations/tipo-transporte-oferta.model";
-import {TipoCarga} from "../../entities/enumerations/tipo-carga.model";
-import {AppGoogleService} from "../../core/app/app.google.service";
+import { Component, OnInit } from '@angular/core';
+import { IOfertas } from '../../entities/ofertas/ofertas.model';
+import { IPerfil } from '../../entities/perfil/perfil.model';
+import { OfertasFormGroup, OfertasFormService } from '../../entities/ofertas/update/ofertas-form.service';
+import { DataUtils } from '../../core/util/data-util.service';
+import { OfertasService } from '../../entities/ofertas/service/ofertas.service';
+import { PerfilService } from '../../entities/perfil/service/perfil.service';
+import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
+import { HttpResponse } from '@angular/common/http';
+import { finalize, map } from 'rxjs/operators';
+import { TipoTransporteOferta } from '../../entities/enumerations/tipo-transporte-oferta.model';
+import { TipoCarga } from '../../entities/enumerations/tipo-carga.model';
+import { AppGoogleService } from '../../core/app/app.google.service';
 
 @Component({
   selector: 'jhi-oferta-divulgar',
   templateUrl: './oferta-divulgar.component.html',
-  styleUrls: ['./oferta-divulgar.component.scss']
+  styleUrls: ['./oferta-divulgar.component.scss'],
 })
 export class OfertaDivulgarComponent implements OnInit {
   isSaving = false;
   ofertas: IOfertas | null = null;
+
+  activeIndex: number = 0;
+
   minDate = new Date();
   tiposTransportes = [
-    {name: 'Cegonha', value: TipoTransporteOferta.CEGONHA},
-    {name: 'Guincho', value: TipoTransporteOferta.GUINCHO},
-    {name: 'Reboque', value: TipoTransporteOferta.RAMPA},
+    { name: 'Cegonha', value: TipoTransporteOferta.CEGONHA },
+    { name: 'Guincho', value: TipoTransporteOferta.GUINCHO },
+    { name: 'Reboque', value: TipoTransporteOferta.RAMPA },
   ];
 
   tiposCargas = [
-    {name: 'Moto', value: TipoCarga.MOTO},
-    {name: 'Carro', value: TipoCarga.CARRO},
-    {name: 'Caminhão', value: TipoCarga.CAMINHAO},
+    { name: 'Moto', value: TipoCarga.MOTO },
+    { name: 'Carro', value: TipoCarga.CARRO },
+    { name: 'Caminhão', value: TipoCarga.CAMINHAO },
   ];
 
   filteredOrigem: any | null | undefined;
@@ -47,7 +50,7 @@ export class OfertaDivulgarComponent implements OnInit {
     protected ofertasFormService: OfertasFormService,
     protected perfilService: PerfilService,
     protected activatedRoute: ActivatedRoute,
-    protected appGoogleService: AppGoogleService,
+    protected appGoogleService: AppGoogleService
   ) {}
 
   comparePerfil = (o1: IPerfil | null, o2: IPerfil | null): boolean => this.perfilService.comparePerfil(o1, o2);
@@ -81,13 +84,13 @@ export class OfertaDivulgarComponent implements OnInit {
     const selectOrigem = this.editForm.get(['localizacaoOrigem'])?.value;
     console.log(selectOrigem);
 
-    ofertas.origem = `${selectOrigem["structured_formatting"]["main_text"]} - ${selectOrigem["structured_formatting"]["secondary_text"]}`;
+    ofertas.origem = `${selectOrigem['structured_formatting']['main_text']} - ${selectOrigem['structured_formatting']['secondary_text']}`;
     ofertas.localizacaoOrigem = JSON.stringify(selectOrigem);
 
     const selectDestino = this.editForm.get(['localizacaoDestino'])?.value;
     console.log(selectOrigem);
 
-    ofertas.destino = `${selectDestino["structured_formatting"]["main_text"]} - ${selectDestino["structured_formatting"]["secondary_text"]}`;
+    ofertas.destino = `${selectDestino['structured_formatting']['main_text']} - ${selectDestino['structured_formatting']['secondary_text']}`;
     ofertas.localizacaoDestino = JSON.stringify(selectDestino);
 
     if (ofertas.id !== null) {
@@ -134,11 +137,11 @@ export class OfertaDivulgarComponent implements OnInit {
   filtrarOrigem(event: any, ehDestino = false): void {
     let query = event.query;
     this.appGoogleService.autocomplete(query).subscribe(res => {
-      if (ehDestino){
+      if (ehDestino) {
         this.filteredDestino = res.body;
       } else {
         this.filteredOrigem = res.body;
       }
-    })
+    });
   }
 }

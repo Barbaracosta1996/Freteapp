@@ -1,8 +1,86 @@
+@import '~content/scss/colors';
 .grid {
   display: grid;
 }
 
+h1 {
+  font-size: 18pt;
+}
+
+h4 {
+  font-size: 12pt;
+}
+
+.center-page {
+  display: block;
+  margin: 0 auto;
+}
+
 .grid-template {
   grid-template-columns: 1fr 1fr;
-  gap: 35px
+  grid-gap: 10px;
+}
+
+.text-title {
+  color: $blue-color;
+}
+
+.p-button {
+  background-color: $blue-color !important;
+  border-radius: 20px !important;
+}
+
+.p-inputtext-lg .p-inputtext {
+  width: 100% !important;
+}
+.input-size {
+  width: 100% !important;
+}
+
+@media only screen and (max-width: 1100px) {
+  h1 {
+    font-size: 26pt !important;
+  }
+}
+
+#registro-form {
+  max-width: 1100px;
+}
+
+@media only screen and (max-width: 400px) {
+  h1 {
+    font-size: 18pt !important;
+  }
+}
+
+@media only screen and (max-width: 545px) {
+  .card-container {
+    .mb-3 {
+      max-width: 350px;
+    }
+    .w-25rem {
+      max-width: 350px;
+    }
+    .p-inputmask.p-inputmask-clearable .p-inputtext {
+      .p-inputtext {
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 290px) {
+  .card-container {
+    .mb-3 {
+      max-width: 280px;
+    }
+    .w-25rem {
+      max-width: 280px;
+    }
+    .p-inputmask.p-inputmask-clearable .p-inputtext {
+      .p-inputtext {
+        width: 100%;
+      }
+    }
+  }
 }

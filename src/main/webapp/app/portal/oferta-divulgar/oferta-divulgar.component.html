@@ -6,10 +6,8 @@
 </div>
 <div class="d-flex justify-content-center">
   <jhi-alert-error></jhi-alert-error>
-  <div class="col-md-8">
+  <div class="md:col-12" id="registro-form">
     <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
-      <!--      <h2 id="jhi-ofertas-heading" data-cy="OfertasCreateUpdateHeading">Divulgar {{editForm.get('tipoOferta')!.value! === 'VAGAS' ? 'Vaga' : 'Carga'}}</h2>-->
-
       <div class="flex flex-wrap justify-content-center card-container gap-3">
         <div class="row mb-3" [hidden]="true">
           <label class="form-label" for="field_id">ID</label>
@@ -29,267 +27,153 @@
           </div>
         </div>
 
-        <div class="mb-3">
-          <label class="form-label text-600" for="field_dataFechamento">Data da Viagem</label>
-          <div class="p-inputgroup">
-            <p-calendar
-              class="p-inputtext-lg w-15rem"
-              [minDate]="minDate"
-              [dateFormat]="'dd/mm/yy'"
-              [hourFormat]="'24'"
-              [showTime]="true"
-              (onTodayClick)="(true)"
-              inputStyleClass="w-15rem"
-              formControlName="dataFechamento"
-              name="dataFechamento"
-              id="field_dataFechamento"
-              [showButtonBar]="true"
-              inputId="field_dataFechamento"
-            ></p-calendar>
-            <span class="p-inputgroup-addon"><i class="pi pi-calendar"></i></span>
-          </div>
-        </div>
+        <div class="center-page" [ngSwitch]="activeIndex">
+          <!--   Data da Viagem       -->
 
-        <div class="mb-3" *ngIf="editForm.controls.id.value !== null">
-          <label class="form-label text-600" for="field_dataPostagem">Data Postagem</label>
-          <div class="p-inputgroup">
-            <input
-              [readonly]="true"
-              id="field_dataPostagem"
-              data-cy="dataPostagem"
-              class="p-inputtext-lg w-25rem"
-              type="datetime-local"
-              name="dataPostagem"
-              formControlName="dataPostagem"
-              placeholder="YYYY-MM-DD HH:mm"
-            />
-            <span class="p-inputgroup-addon"><i class="pi pi-user-edit"></i></span>
-          </div>
-          <div
-            *ngIf="editForm.get('dataPostagem')!.invalid && (editForm.get('dataPostagem')!.dirty || editForm.get('dataPostagem')!.touched)"
-          >
-            <small class="form-text text-danger" *ngIf="editForm.get('dataPostagem')?.errors?.required"> O campo é obrigatório. </small>
-            <small class="form-text text-danger" [hidden]="!editForm.get('dataPostagem')?.errors?.datetimelocal">
-              Este campo é do tipo data/hora.
-            </small>
-          </div>
-        </div>
+          <h3 class="text-center text-600 mb-3">Preenha todos os dados abaixo</h3>
 
-        <div class="mb-3">
-          <label class="form-label text-600" for="field_tipoTransporte">Tipo Transporte</label>
-          <div class="p-inputgroup">
-            <p-dropdown
-              styleClass="w-15rem"
-              class="p-inputtext-lg w-15rem"
-              panelStyleClass="w-15rem"
-              [options]="tiposTransportes"
-              formControlName="tipoTransporte"
-              placeholder="Selecione"
-              name="tipoTransporte"
-              id="field_tipoTransporte"
-              optionValue="value"
-              optionLabel="name"
-              [showClear]="true"
-            ></p-dropdown>
-            <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
+          <div class="mb-3">
+            <label class="form-label text-600" for="field_dataFechamento">Data da Viagem</label>
+            <div class="p-inputgroup">
+              <p-calendar
+                class="p-inputtext-lg"
+                styleClass="w-full"
+                [minDate]="minDate"
+                [dateFormat]="'dd/mm/yy'"
+                [hourFormat]="'24'"
+                [showTime]="true"
+                inputStyleClass="w-25rem"
+                formControlName="dataFechamento"
+                name="dataFechamento"
+                id="field_dataFechamento"
+                [showButtonBar]="true"
+                inputId="field_dataFechamento"
+              ></p-calendar>
+              <span class="p-inputgroup-addon"><i class="pi pi-calendar"></i></span>
+            </div>
           </div>
-        </div>
 
-        <div class="mb-3">
-          <label class="form-label text-600" for="field_quantidade">Quantidade</label>
-          <div class="p-inputgroup">
-            <p-inputNumber
-              class="p-inputtext-lg w-10rem"
-              [showButtons]="true"
-              inputId="stacked"
-              name="quantidade"
-              id="field_quantidade"
-              formControlName="quantidade"
+          <!--   Tipo Transporte       -->
+          <div class="mb-3">
+            <label class="form-label text-600" for="field_tipoTransporte">Tipo Transporte</label>
+            <div class="p-inputgroup">
+              <p-dropdown
+                styleClass="w-full"
+                class="p-inputtext-lg"
+                [options]="tiposTransportes"
+                formControlName="tipoTransporte"
+                placeholder="Selecione"
+                name="tipoTransporte"
+                id="field_tipoTransporte"
+                optionValue="value"
+                optionLabel="name"
+                [showClear]="true"
+              ></p-dropdown>
+              <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
+            </div>
+          </div>
+
+          <!--   Tipo Carga     -->
+          <div class="mb-3">
+            <label class="form-label text-600" for="field_tipoCarga">Tipo de Carga</label>
+            <div class="p-inputgroup">
+              <p-dropdown
+                styleClass="w-full"
+                class="p-inputtext-lg w-25rem"
+                panelStyleClass="w-25rem"
+                [options]="tiposCargas"
+                formControlName="tipoCarga"
+                placeholder="Selecione"
+                name="tipoCarga"
+                id="field_tipoCarga"
+                optionValue="value"
+                optionLabel="name"
+                [showClear]="true"
+              ></p-dropdown>
+              <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
+            </div>
+            <div *ngIf="editForm.get('tipoCarga')!.invalid && (editForm.get('tipoCarga')!.dirty || editForm.get('tipoCarga')!.touched)">
+              <small class="form-text text-danger" *ngIf="editForm.get('tipoCarga')?.errors?.required"> O campo é obrigatório. </small>
+            </div>
+          </div>
+
+          <!--   Localização Origem     -->
+          <div class="mb-3">
+            <label class="form-label text-600" for="field_localizacaoOrigem">Localizacao Origem</label>
+
+            <div class="p-inputgroup">
+              <p-autoComplete
+                styleClass="w-full"
+                class="p-inputtext-lg w-full"
+                inputStyleClass="w-full"
+                name="localizacaoOrigem"
+                id="field_localizacaoOrigem"
+                formControlName="localizacaoOrigem"
+                [showEmptyMessage]="true"
+                [suggestions]="filteredOrigem"
+                (completeMethod)="filtrarOrigem($event)"
+                field="description"
+                [minLength]="1"
+              >
+              </p-autoComplete>
+              <span class="p-inputgroup-addon"><i class="pi pi-map-marker"></i></span>
+            </div>
+            <div
+              *ngIf="
+                editForm.get('localizacaoOrigem')!.invalid &&
+                (editForm.get('localizacaoOrigem')!.dirty || editForm.get('localizacaoOrigem')!.touched)
+              "
             >
-            </p-inputNumber>
+              <small class="form-text text-danger" *ngIf="editForm.get('localizacaoOrigem')?.errors?.required">
+                O campo é obrigatório.
+              </small>
+            </div>
           </div>
 
-          <div *ngIf="editForm.get('quantidade')!.invalid && (editForm.get('quantidade')!.dirty || editForm.get('quantidade')!.touched)">
-            <small class="form-text text-danger" *ngIf="editForm.get('quantidade')?.errors?.required"> O campo é obrigatório. </small>
-            <small class="form-text text-danger" *ngIf="editForm.get('quantidade')?.errors?.min"> Este campo deve ser maior que 1. </small>
-            <small class="form-text text-danger" [hidden]="!editForm.get('quantidade')?.errors?.number">
-              Este campo é do tipo numérico.
-            </small>
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label text-600" for="field_tipoCarga">Tipo de Carga</label>
-          <div class="p-inputgroup">
-            <p-dropdown
-              styleClass="w-15rem"
-              class="p-inputtext-lg w-15rem"
-              panelStyleClass="w-15rem"
-              [options]="tiposCargas"
-              formControlName="tipoCarga"
-              placeholder="Selecione"
-              name="tipoCarga"
-              id="field_tipoCarga"
-              optionValue="value"
-              optionLabel="name"
-              [showClear]="true"
-            ></p-dropdown>
-            <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
-          </div>
-          <div *ngIf="editForm.get('tipoCarga')!.invalid && (editForm.get('tipoCarga')!.dirty || editForm.get('tipoCarga')!.touched)">
-            <small class="form-text text-danger" *ngIf="editForm.get('tipoCarga')?.errors?.required"> O campo é obrigatório. </small>
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label text-600" for="field_localizacaoOrigem">Localizacao Origem</label>
-
-          <div class="p-inputgroup">
-            <p-autoComplete
-              styleClass="w-25rem"
-              class="p-inputtext-lg w-25rem"
-              inputStyleClass="w-25rem"
-              name="localizacaoOrigem"
-              id="field_localizacaoOrigem"
-              formControlName="localizacaoOrigem"
-              [showEmptyMessage]="true"
-              [suggestions]="filteredOrigem"
-              (completeMethod)="filtrarOrigem($event)"
-              field="description"
-              [minLength]="1"
+          <!--   Localização Destino     -->
+          <div class="mb-3">
+            <label class="form-label text-600" for="field_localizacaoDestino">Localizacao Destino</label>
+            <div class="p-inputgroup">
+              <p-autoComplete
+                styleClass="w-full"
+                class="p-inputtext-lg w-full"
+                inputStyleClass="w-full"
+                name="localizacaoDestino"
+                id="field_localizacaoDestino"
+                formControlName="localizacaoDestino"
+                [showEmptyMessage]="true"
+                [suggestions]="filteredDestino"
+                (completeMethod)="filtrarOrigem($event, true)"
+                field="description"
+                [minLength]="1"
+              >
+              </p-autoComplete>
+              <span class="p-inputgroup-addon"><i class="pi pi-map-marker"></i></span>
+            </div>
+            <div
+              *ngIf="
+                editForm.get('localizacaoDestino')!.invalid &&
+                (editForm.get('localizacaoDestino')!.dirty || editForm.get('localizacaoDestino')!.touched)
+              "
             >
-            </p-autoComplete>
-            <span class="p-inputgroup-addon"><i class="pi pi-map-marker"></i></span>
+              <small class="form-text text-danger" *ngIf="editForm.get('localizacaoDestino')?.errors?.required">
+                O campo é obrigatório.
+              </small>
+            </div>
           </div>
-          <div
-            *ngIf="
-              editForm.get('localizacaoOrigem')!.invalid &&
-              (editForm.get('localizacaoOrigem')!.dirty || editForm.get('localizacaoOrigem')!.touched)
-            "
-          >
-            <small class="form-text text-danger" *ngIf="editForm.get('localizacaoOrigem')?.errors?.required">
-              O campo é obrigatório.
-            </small>
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label text-600" for="field_localizacaoDestino">Localizacao Destino</label>
-          <div class="p-inputgroup">
-            <p-autoComplete
-              styleClass="w-25rem"
-              class="p-inputtext-lg w-25rem"
-              inputStyleClass="w-25rem"
-              name="localizacaoDestino"
-              id="field_localizacaoDestino"
-              formControlName="localizacaoDestino"
-              [showEmptyMessage]="true"
-              [suggestions]="filteredDestino"
-              (completeMethod)="filtrarOrigem($event, true)"
-              field="description"
-              [minLength]="1"
-            >
-            </p-autoComplete>
-            <span class="p-inputgroup-addon"><i class="pi pi-map-marker"></i></span>
-          </div>
-          <div
-            *ngIf="
-              editForm.get('localizacaoDestino')!.invalid &&
-              (editForm.get('localizacaoDestino')!.dirty || editForm.get('localizacaoDestino')!.touched)
-            "
-          >
-            <small class="form-text text-danger" *ngIf="editForm.get('localizacaoDestino')?.errors?.required">
-              O campo é obrigatório.
-            </small>
-          </div>
-        </div>
-
-        <!--        <div class="mb-3">-->
-        <!--          <label class="form-label" for="field_dataColeta">Data Coleta</label>-->
-        <!--          <div class="input-group">-->
-        <!--            <input-->
-        <!--              id="field_dataColeta"-->
-        <!--              data-cy="dataColeta"-->
-        <!--              type="text"-->
-        <!--              class="form-control"-->
-        <!--              name="dataColeta"-->
-        <!--              ngbDatepicker-->
-        <!--              #dataColetaDp="ngbDatepicker"-->
-        <!--              formControlName="dataColeta"-->
-        <!--            />-->
-        <!--            <button type="button" class="btn btn-secondary" (click)="dataColetaDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>-->
-        <!--          </div>-->
-        <!--        </div>-->
-
-        <!--        <div class="mb-3">-->
-        <!--          <label class="form-label" for="field_dataEntrega">Data Entrega</label>-->
-        <!--          <div class="d-flex">-->
-        <!--            <input-->
-        <!--              id="field_dataEntrega"-->
-        <!--              data-cy="dataEntrega"-->
-        <!--              type="datetime-local"-->
-        <!--              class="form-control"-->
-        <!--              name="dataEntrega"-->
-        <!--              formControlName="dataEntrega"-->
-        <!--              placeholder="YYYY-MM-DD HH:mm"-->
-        <!--            />-->
-        <!--          </div>-->
-        <!--        </div>-->
-
-        <div class="mb-3" [hidden]="true">
-          <label class="form-label" for="field_dataModificacao">Data Modificacao</label>
-          <div class="d-flex">
-            <input
-              id="field_dataModificacao"
-              data-cy="dataModificacao"
-              type="datetime-local"
-              class="form-control"
-              name="dataModificacao"
-              formControlName="dataModificacao"
-              placeholder="YYYY-MM-DD HH:mm"
-            />
-          </div>
-        </div>
-
-        <div class="mb-3" [hidden]="true">
-          <label class="form-label" for="field_tipoOferta">Tipo Oferta</label>
-          <select class="form-control" name="tipoOferta" formControlName="tipoOferta" id="field_tipoOferta" data-cy="tipoOferta">
-            <option [ngValue]="null"></option>
-            <option value="CARGA">Carga</option>
-            <option value="VAGAS">Vaga</option>
-          </select>
-          <div *ngIf="editForm.get('tipoOferta')!.invalid && (editForm.get('tipoOferta')!.dirty || editForm.get('tipoOferta')!.touched)">
-            <small class="form-text text-danger" *ngIf="editForm.get('tipoOferta')?.errors?.required"> O campo é obrigatório. </small>
-          </div>
-        </div>
-
-        <div class="mb-3" [hidden]="true">
-          <label class="form-label" for="field_perfil">Perfil</label>
-          <select
-            class="form-control"
-            id="field_perfil"
-            data-cy="perfil"
-            name="perfil"
-            formControlName="perfil"
-            [compareWith]="comparePerfil"
-          >
-            <option *ngIf="!editForm.get('perfil')!.value" [ngValue]="null" selected></option>
-            <option [ngValue]="perfilOption" *ngFor="let perfilOption of perfilsSharedCollection">{{ perfilOption.id }}</option>
-          </select>
-        </div>
-        <div *ngIf="editForm.get(['perfil'])!.invalid && (editForm.get(['perfil'])!.dirty || editForm.get(['perfil'])!.touched)">
-          <small class="form-text text-danger" *ngIf="editForm.get(['perfil'])?.errors?.required"> O campo é obrigatório. </small>
         </div>
       </div>
 
-      <div class="text-center m-4">
+      <jhi-alert-error></jhi-alert-error>
+
+      <div class="text-center m-4 gap-3">
         <button
           pButton
           pRipple
           type="button"
           label="Cancelar"
           (click)="previousState()"
-          class="p-button-raised p-button-danger w-15rem"
+          class="p-button-raised p-button-danger w-15rem mb-3"
           data-cy="submit"
         ></button>
 
@@ -298,9 +182,9 @@
           pRipple
           id="save-entity"
           type="submit"
-          label="Cancelar"
+          label="Enviar"
           [disabled]="editForm.invalid || isSaving"
-          class="p-button-raised p-button-info w-15rem"
+          class="p-button-raised p-button-info w-15rem mb-3"
           data-cy="entityCreateSaveButton"
         ></button>
       </div>

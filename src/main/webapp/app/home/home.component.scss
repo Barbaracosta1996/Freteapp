@@ -160,28 +160,28 @@ HOME page styles
       height: 200px;
     }
 
-    .driver-img {
+    .motorista-img {
       width: 100%;
       height: 200px;
       background-size: contain;
-      background-image: url('../../content/images/home/driver_img.svg');
+      background-image: url('../../content/images/home/motorista.png');
     }
 
-    .shipper-img {
+    .transportadora-img {
       width: 100%;
       height: 200px;
       background-size: contain;
-      background-image: url('../../content/images/home/shipping_img.svg');
+      background-image: url('../../content/images/home/transportador.png');
     }
 
     background-repeat: no-repeat;
     background-position: center;
 
-    .carrier-img {
+    .embarcador-img {
       width: 100%;
       height: 200px;
       background-size: contain;
-      background-image: url('../../content/images/home/carrier_img.svg');
+      background-image: url('../../content/images/home/embarcador.png');
     }
   }
 }

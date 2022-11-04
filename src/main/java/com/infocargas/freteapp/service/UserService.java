@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -53,6 +54,8 @@ public class UserService {
 
     private final FacebookController facebookController;
 
+    private final Environment environment;
+
     public UserService(
         UserRepository userRepository,
         PasswordEncoder passwordEncoder,
@@ -61,7 +64,8 @@ public class UserService {
         UserMapper userMapper,
         PerfilService perfilService,
         RDStationController rdStationController,
-        FacebookController facebookController
+        FacebookController facebookController,
+        Environment environment
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -71,6 +75,7 @@ public class UserService {
         this.perfilService = perfilService;
         this.rdStationController = rdStationController;
         this.facebookController = facebookController;
+        this.environment = environment;
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -156,10 +161,12 @@ public class UserService {
 
         userDTO.getPerfil().setUser(userMapper.userToUserDTO(newUser));
 
-        UUID uuid = this.rdStationController.createContact(userDTO.getPerfil());
+        if (Arrays.stream(environment.getActiveProfiles()).anyMatch(env -> env.equalsIgnoreCase("prod"))) {
+            UUID uuid = this.rdStationController.createContact(userDTO.getPerfil());
 
-        if (uuid != null) {
-            userDTO.getPerfil().setUuidRD(uuid);
+            if (uuid != null) {
+                userDTO.getPerfil().setUuidRD(uuid);
+            }
         }
 
         FacebookSendResponse facebookSendResponse = this.facebookController.createRegistrationMessage(userDTO.getPerfil());

@@ -28,14 +28,15 @@
       "Frota",
       "RotasOfertas",
       "WhatsMessageBatch",
-      "SettingsCargaApp"
+      "SettingsCargaApp",
+      "SettingsContracts"
     ],
     "entitySuffix": "",
     "jhiPrefix": "jhi",
     "jhipsterVersion": "7.9.2",
     "jwtSecretKey": "OWVhYjg5MWJmNjUyMjBkOTNhZTZiZTczODQ4MzhhMWM2YjMxNmE5M2NmODFjOTg0YTUwOWViYjA3MDgxYTgyMWIwNmJhYTkwZGNhMGUyMzc2YzNmN2NjOGJjOWU1YzdmOTlmMzIxNjM4ZWY3NmE4OTc3OWNjYTc5NzBjYTAxYjc=",
     "languages": ["en", "fr"],
-    "lastLiquibaseTimestamp": 1667492250000,
+    "lastLiquibaseTimestamp": 1667573751000,
     "messageBroker": false,
     "microfrontend": false,
     "microfrontends": [],

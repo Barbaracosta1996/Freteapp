@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ElementRef, ViewChild, OnInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
@@ -9,7 +9,9 @@ import { LoginService } from '../../login/login.service';
 import { Login } from '../../login/login.model';
 
 import { TipoConta } from '../../entities/enumerations/tipo-conta.model';
-import { PerfilService } from '../../entities/perfil/service/perfil.service';
+import { SettingsContractsService } from '../../entities/settings-contracts/service/settings-contracts.service';
+import { ISettingsContracts } from '../../entities/settings-contracts/settings-contracts.model';
+import { DataUtils } from '../../core/util/data-util.service';
 
 @Component({
   selector: 'jhi-register',
@@ -24,7 +26,7 @@ export class RegisterComponent implements AfterViewInit, OnInit {
   errorEmailExists = false;
   errorUserExists = false;
   success = false;
-  acceptedTerms = false;
+  contractTerms: ISettingsContracts | null | undefined;
 
   registerForm = new FormGroup({
     login: new FormControl(''),
@@ -70,12 +72,20 @@ export class RegisterComponent implements AfterViewInit, OnInit {
     public router: Router,
     private loginService: LoginService,
     protected activatedRoute: ActivatedRoute,
-    private perfilService: PerfilService
+    private settingsContractsService: SettingsContractsService,
+    protected dataUtils: DataUtils
   ) {}
 
   ngAfterViewInit(): void {}
 
   ngOnInit() {
+    this.settingsContractsService.getContract().subscribe(contract => {
+      console.log(contract);
+      if (contract.status === 200 && contract.body) {
+        this.contractTerms = contract.body;
+      }
+    });
+
     this.activatedRoute.data.subscribe(({ tipo }) => {
       this.tipoConta = tipo;
     });
@@ -135,5 +145,11 @@ export class RegisterComponent implements AfterViewInit, OnInit {
         }
       },
     });
+  }
+
+  openFile(base64String?: string, contentType?: string | null | undefined): void {
+    if (base64String && contentType) {
+      return this.dataUtils.openFile(base64String, contentType);
+    }
   }
 }

@@ -1,0 +1,27 @@
+{
+  "changelogDate": "20221104145551",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "terms",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "any"
+    },
+    {
+      "fieldName": "contractDefault",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "any"
+    },
+    {
+      "fieldName": "privacy",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "any"
+    }
+  ],
+  "jpaMetamodelFiltering": false,
+  "name": "SettingsContracts",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [],
+  "service": "serviceClass"
+}

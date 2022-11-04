@@ -44,6 +44,16 @@ import { RouterModule } from '@angular/router';
         data: { pageTitle: 'WhatsMessageBatches' },
         loadChildren: () => import('./whats-message-batch/whats-message-batch.module').then(m => m.WhatsMessageBatchModule),
       },
+      {
+        path: 'settings-contracts',
+        data: { pageTitle: 'SettingsContracts' },
+        loadChildren: () => import('./settings-contracts/settings-contracts.module').then(m => m.SettingsContractsModule),
+      },
+      {
+        path: 'settings-carga-app',
+        data: { pageTitle: 'SettingsCargaApps' },
+        loadChildren: () => import('./settings-carga-app/settings-carga-app.module').then(m => m.SettingsCargaAppModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

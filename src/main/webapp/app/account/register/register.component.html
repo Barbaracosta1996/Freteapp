@@ -438,7 +438,14 @@
           <div class="field-checkbox mt-4 ml-4 text-600 justify-content-center">
             <p-checkbox formControlName="acceptedTerm" [binary]="true" id="acceptedTerm" name="acceptedTerm"> </p-checkbox>
             <label class="w-35rem" for="acceptedTerm">
-              Eu autorizo o uso dos meus dados de acordo com a <a>Declaração de Privacidade</a> e aceito os <a>Termos e condições</a>.
+              Eu autorizo o uso dos meus dados de acordo com a
+              <a (click)="openFile(contractTerms?.terms!, contractTerms?.termsContentType!)" style="text-decoration: solid blink"
+                >Declaração de Privacidade</a
+              >
+              e aceito os
+              <a (click)="openFile(contractTerms?.terms!, contractTerms?.termsContentType!)" style="text-decoration: solid blink"
+                >Termos e condições</a
+              >.
             </label>
           </div>
 

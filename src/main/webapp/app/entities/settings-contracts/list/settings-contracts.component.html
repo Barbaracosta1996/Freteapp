@@ -1,0 +1,101 @@
+<div>
+  <h2 id="page-heading" data-cy="SettingsContractsHeading">
+    <span>Settings Contracts</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Atualizar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-settings-contracts"
+        [routerLink]="['/settings-contracts/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Criar novo Settings Contracts </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="settingsContracts?.length === 0">
+    <span>Nenhum Settings Contracts encontrado</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="settingsContracts && settingsContracts.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id"><span>Código</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="terms"><span>Terms</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="contractDefault"><span>Contract Default</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="privacy"><span>Privacy</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let settingsContracts of settingsContracts; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/settings-contracts', settingsContracts.id, 'view']">{{ settingsContracts.id }}</a>
+          </td>
+          <td>
+            <a *ngIf="settingsContracts.terms" (click)="openFile(settingsContracts.terms, settingsContracts.termsContentType)">Abrir</a>
+            <span *ngIf="settingsContracts.terms">{{ settingsContracts.termsContentType }}, {{ byteSize(settingsContracts.terms) }}</span>
+          </td>
+          <td>
+            <a
+              *ngIf="settingsContracts.contractDefault"
+              (click)="openFile(settingsContracts.contractDefault, settingsContracts.contractDefaultContentType)"
+              >Abrir</a
+            >
+            <span *ngIf="settingsContracts.contractDefault"
+              >{{ settingsContracts.contractDefaultContentType }}, {{ byteSize(settingsContracts.contractDefault) }}</span
+            >
+          </td>
+          <td>
+            <a *ngIf="settingsContracts.privacy" (click)="openFile(settingsContracts.privacy, settingsContracts.privacyContentType)"
+              >Abrir</a
+            >
+            <span *ngIf="settingsContracts.privacy"
+              >{{ settingsContracts.privacyContentType }}, {{ byteSize(settingsContracts.privacy) }}</span
+            >
+          </td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/settings-contracts', settingsContracts.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">Visualizar</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/settings-contracts', settingsContracts.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Editar</span>
+              </button>
+
+              <button type="submit" (click)="delete(settingsContracts)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Excluir</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

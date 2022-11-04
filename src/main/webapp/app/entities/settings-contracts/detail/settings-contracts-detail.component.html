@@ -1,0 +1,49 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="settingsContracts">
+      <h2 data-cy="settingsContractsDetailsHeading"><span>Settings Contracts</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>Código</span></dt>
+        <dd>
+          <span>{{ settingsContracts.id }}</span>
+        </dd>
+        <dt><span>Terms</span></dt>
+        <dd>
+          <div *ngIf="settingsContracts.terms">
+            <a (click)="openFile(settingsContracts.terms, settingsContracts.termsContentType)">Abrir</a>
+            {{ settingsContracts.termsContentType }}, {{ byteSize(settingsContracts.terms) }}
+          </div>
+        </dd>
+        <dt><span>Contract Default</span></dt>
+        <dd>
+          <div *ngIf="settingsContracts.contractDefault">
+            <a (click)="openFile(settingsContracts.contractDefault, settingsContracts.contractDefaultContentType)">Abrir</a>
+            {{ settingsContracts.contractDefaultContentType }}, {{ byteSize(settingsContracts.contractDefault) }}
+          </div>
+        </dd>
+        <dt><span>Privacy</span></dt>
+        <dd>
+          <div *ngIf="settingsContracts.privacy">
+            <a (click)="openFile(settingsContracts.privacy, settingsContracts.privacyContentType)">Abrir</a>
+            {{ settingsContracts.privacyContentType }}, {{ byteSize(settingsContracts.privacy) }}
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Voltar</span>
+      </button>
+
+      <button type="button" [routerLink]="['/settings-contracts', settingsContracts.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Editar</span>
+      </button>
+    </div>
+  </div>
+</div>

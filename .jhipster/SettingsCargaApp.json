@@ -9,6 +9,11 @@
     {
       "fieldName": "waToken",
       "fieldType": "String"
+    },
+    {
+      "fieldName": "termsPdf",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "any"
     }
   ],
   "jpaMetamodelFiltering": false,

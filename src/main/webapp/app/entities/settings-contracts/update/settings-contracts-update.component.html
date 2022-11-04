@@ -1,0 +1,132 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-settings-contracts-heading" data-cy="SettingsContractsCreateUpdateHeading">Criar ou editar Settings Contracts</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_terms">Terms</label>
+          <div>
+            <div *ngIf="editForm.get('terms')!.value" class="form-text text-danger clearfix">
+              <a class="pull-start" (click)="openFile(editForm.get('terms')!.value!, editForm.get('termsContentType')!.value!)">Abrir</a
+              ><br />
+              <span class="pull-start">{{ editForm.get('termsContentType')!.value }}, {{ byteSize(editForm.get('terms')!.value!) }}</span>
+              <button
+                type="button"
+                (click)="editForm.patchValue({ terms: undefined, termsContentType: undefined })"
+                class="btn btn-secondary btn-xs pull-end"
+              >
+                <fa-icon icon="times"></fa-icon>
+              </button>
+            </div>
+            <input type="file" id="file_terms" data-cy="terms" (change)="setFileData($event, 'terms', false)" />
+          </div>
+          <input type="hidden" class="form-control" name="terms" id="field_terms" data-cy="terms" formControlName="terms" />
+          <input
+            type="hidden"
+            class="form-control"
+            name="termsContentType"
+            id="field_termsContentType"
+            formControlName="termsContentType"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_contractDefault">Contract Default</label>
+          <div>
+            <div *ngIf="editForm.get('contractDefault')!.value" class="form-text text-danger clearfix">
+              <a
+                class="pull-start"
+                (click)="openFile(editForm.get('contractDefault')!.value!, editForm.get('contractDefaultContentType')!.value!)"
+                >Abrir</a
+              ><br />
+              <span class="pull-start"
+                >{{ editForm.get('contractDefaultContentType')!.value }}, {{ byteSize(editForm.get('contractDefault')!.value!) }}</span
+              >
+              <button
+                type="button"
+                (click)="editForm.patchValue({ contractDefault: undefined, contractDefaultContentType: undefined })"
+                class="btn btn-secondary btn-xs pull-end"
+              >
+                <fa-icon icon="times"></fa-icon>
+              </button>
+            </div>
+            <input
+              type="file"
+              id="file_contractDefault"
+              data-cy="contractDefault"
+              (change)="setFileData($event, 'contractDefault', false)"
+            />
+          </div>
+          <input
+            type="hidden"
+            class="form-control"
+            name="contractDefault"
+            id="field_contractDefault"
+            data-cy="contractDefault"
+            formControlName="contractDefault"
+          />
+          <input
+            type="hidden"
+            class="form-control"
+            name="contractDefaultContentType"
+            id="field_contractDefaultContentType"
+            formControlName="contractDefaultContentType"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_privacy">Privacy</label>
+          <div>
+            <div *ngIf="editForm.get('privacy')!.value" class="form-text text-danger clearfix">
+              <a class="pull-start" (click)="openFile(editForm.get('privacy')!.value!, editForm.get('privacyContentType')!.value!)">Abrir</a
+              ><br />
+              <span class="pull-start"
+                >{{ editForm.get('privacyContentType')!.value }}, {{ byteSize(editForm.get('privacy')!.value!) }}</span
+              >
+              <button
+                type="button"
+                (click)="editForm.patchValue({ privacy: undefined, privacyContentType: undefined })"
+                class="btn btn-secondary btn-xs pull-end"
+              >
+                <fa-icon icon="times"></fa-icon>
+              </button>
+            </div>
+            <input type="file" id="file_privacy" data-cy="privacy" (change)="setFileData($event, 'privacy', false)" />
+          </div>
+          <input type="hidden" class="form-control" name="privacy" id="field_privacy" data-cy="privacy" formControlName="privacy" />
+          <input
+            type="hidden"
+            class="form-control"
+            name="privacyContentType"
+            id="field_privacyContentType"
+            formControlName="privacyContentType"
+          />
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Salvar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

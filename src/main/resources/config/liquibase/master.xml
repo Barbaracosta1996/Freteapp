@@ -20,6 +20,7 @@
     <include file="config/liquibase/changelog/20220925224104_added_entity_RotasOfertas.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20221103011613_added_entity_WhatsMessageBatch.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20221103161730_added_entity_SettingsCargaApp.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20221104145551_added_entity_SettingsContracts.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20220829043426_added_entity_constraints_PerfilAnexos.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20220829182941_added_entity_constraints_Ofertas.xml" relativeToChangelogFile="false"/>

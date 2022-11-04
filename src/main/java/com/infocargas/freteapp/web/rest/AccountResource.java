@@ -1,5 +1,6 @@
 package com.infocargas.freteapp.web.rest;
 
+import com.infocargas.freteapp.controller.FacebookController;
 import com.infocargas.freteapp.domain.User;
 import com.infocargas.freteapp.repository.UserRepository;
 import com.infocargas.freteapp.security.SecurityUtils;
@@ -41,10 +42,18 @@ public class AccountResource {
 
     private final MailService mailService;
 
-    public AccountResource(UserRepository userRepository, UserService userService, MailService mailService) {
+    private final FacebookController facebookController;
+
+    public AccountResource(
+        UserRepository userRepository,
+        UserService userService,
+        MailService mailService,
+        FacebookController facebookController
+    ) {
         this.userRepository = userRepository;
         this.userService = userService;
         this.mailService = mailService;
+        this.facebookController = facebookController;
     }
 
     /**
@@ -150,7 +159,7 @@ public class AccountResource {
     }
 
     /**
-     * {@code POST   /account/reset-password/init} : Send an email to reset the password of the user.
+     * {@code POST   /account/reset-password/init} : Email reset the password of the user.
      *
      * @param mail the mail of the user.
      */
@@ -158,6 +167,7 @@ public class AccountResource {
     public void requestPasswordReset(@RequestBody String mail) {
         Optional<User> user = userService.requestPasswordReset(mail);
         if (user.isPresent()) {
+            this.facebookController.resetPassword(user.get());
             mailService.sendPasswordResetMail(user.get());
         } else {
             // Pretend the request has been successful to prevent checking which emails really exist

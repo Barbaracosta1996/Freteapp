@@ -28,6 +28,8 @@ import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { PanelMenuComponent } from './layouts/main/panel-menu/panel-menu.component';
 import { SidebarModule } from 'primeng/sidebar';
+import { MenubarModule } from 'primeng/menubar';
+import { SplitButtonModule } from 'primeng/splitbutton';
 
 @NgModule({
   imports: [
@@ -43,6 +45,8 @@ import { SidebarModule } from 'primeng/sidebar';
     ButtonModule,
     RippleModule,
     SidebarModule,
+    MenubarModule,
+    SplitButtonModule,
   ],
   providers: [
     Title,

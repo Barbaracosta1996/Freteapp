@@ -19,6 +19,13 @@ MAIN page styles
   padding: 2rem;
 }
 
+.bg-btn-menu-right {
+  position: absolute;
+  float: right;
+  right: 0;
+  padding: 2rem;
+}
+
 .logo-gif-panel {
   height: 100%;
   width: 100%;
@@ -35,6 +42,10 @@ MAIN page styles
 
   .bg-btn-menu {
     padding: 10px;
+  }
+
+  .bg-btn-menu-right {
+    display: none;
   }
 
   .h-7rem {

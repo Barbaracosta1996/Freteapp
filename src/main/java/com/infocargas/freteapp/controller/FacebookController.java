@@ -1,6 +1,7 @@
 package com.infocargas.freteapp.controller;
 
 import com.infocargas.freteapp.config.Constants;
+import com.infocargas.freteapp.domain.User;
 import com.infocargas.freteapp.domain.enumeration.TipoOferta;
 import com.infocargas.freteapp.proxy.FacebookApiProxy;
 import com.infocargas.freteapp.response.facebook.FacebookSendResponse;
@@ -74,6 +75,56 @@ public class FacebookController {
         message.getTemplate().setComponents(componets);
 
         return sendNotification(message);
+    }
+
+    /**
+     * send link with token to reset password.
+     */
+    public void resetPassword(User user) {
+        FacebookMessageVM message = new FacebookMessageVM();
+        message.setMessagingProduct("whatsapp");
+        message.setRecipientType("individual");
+        message.setPhoneWhatsApp("55" + user.getTelephoneNumber());
+        message.setType("template");
+        message.setTemplate(getTemplate("reset_password_user"));
+
+        List<FacebookComponetsVM> componets = new ArrayList<>();
+
+        /*
+           ---------------- Header ----------
+        */
+        FacebookComponetsVM header = new FacebookComponetsVM();
+        header.setType("header");
+        List<FacebookParameterVM> headerParameters = new ArrayList<>();
+        FacebookParameterVM headerParam = new FacebookParameterVM();
+        headerParam.setText(user.getFirstName());
+        headerParam.setType("text");
+        headerParameters.add(headerParam);
+
+        header.setParameters(headerParameters);
+
+        /*
+           ---------------- Body ----------
+        */
+
+        FacebookComponetsVM buttons = new FacebookComponetsVM();
+        buttons.setType("button");
+        buttons.setSubType("url");
+        buttons.setIndex(0);
+        List<FacebookParameterVM> parameter = new ArrayList<>();
+        FacebookParameterVM bodyParam = new FacebookParameterVM();
+        bodyParam.setText(user.getResetKey());
+        bodyParam.setType("text");
+        parameter.add(bodyParam);
+
+        buttons.setParameters(parameter);
+
+        componets.add(header);
+        componets.add(buttons);
+
+        message.getTemplate().setComponents(componets);
+
+        sendNotification(message);
     }
 
     public void createRegistrationOffer(OfertasDTO ofertasDTO) {

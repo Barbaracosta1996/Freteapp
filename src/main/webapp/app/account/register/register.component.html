@@ -454,6 +454,18 @@
           </div>
         </div>
 
+        <div>
+          <div class="alert alert-danger" *ngIf="error">
+            <strong>Erro ao realizar o cadastro!</strong> Favor tentar novamente mais tarde.
+          </div>
+
+          <div class="alert alert-danger" *ngIf="errorUserExists"><strong>Usuário já registrado!</strong> Favor escolher outro.</div>
+
+          <div class="alert alert-danger" *ngIf="errorEmailExists"><strong>E-mail já está em uso!</strong> Por favor informe outro.</div>
+
+          <div class="alert alert-danger" *ngIf="doNotMatch">A senha e sua confirmação devem ser iguais!</div>
+        </div>
+
         <div class="text-center mt-5 mb-8">
           <button
             pButton

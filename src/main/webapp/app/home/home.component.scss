@@ -69,29 +69,31 @@ HOME page styles
     margin-bottom: 1.4rem;
   }
 
-  .driver-img {
-    width: 329.62px;
-    height: 392.23px;
+  .motorista-img {
+    width: 100%;
+    height: 280px;
     background-size: contain;
-    background: url('../../content/images/home/driver_img.svg') no-repeat center;
-    padding: 2.4rem;
+    background-image: url('../../content/images/home/motorista_img.svg');
+    background-repeat: no-repeat;
+    background-position: center;
   }
 
-  .shipper-img {
-    align-content: center;
-    width: 336.83px;
-    height: 285.71px;
+  .transportadora-img {
+    width: 100%;
+    height: 280px;
     background-size: contain;
-    background: url('../../content/images/home/shipping_img.svg') no-repeat center;
-    padding: 2.4rem;
+    background-image: url('../../content/images/home/transportadora-img2.svg');
+    background-repeat: no-repeat;
+    background-position: center;
   }
 
-  .carrier-img {
-    width: 389.5px;
-    height: 244.04px;
+  .embarcador-img {
+    width: 100%;
+    height: 280px;
     background-size: contain;
-    background: url('../../content/images/home/carrier_img.svg') no-repeat center;
-    padding: 2.4rem;
+    background-image: url('../../content/images/home/embarcador_img.svg');
+    background-repeat: no-repeat;
+    background-position: center;
   }
 }
 
@@ -160,29 +162,39 @@ HOME page styles
       height: 200px;
     }
 
+    .text-600 {
+      font-weight: 300;
+    }
+
     .motorista-img {
       width: 100%;
       height: 200px;
       background-size: contain;
-      background-image: url('../../content/images/home/motorista.png');
+      background-image: url('../../content/images/home/motorista_img.svg');
+      background-repeat: no-repeat;
+      background-position: center;
     }
 
     .transportadora-img {
       width: 100%;
       height: 200px;
       background-size: contain;
-      background-image: url('../../content/images/home/transportador.png');
+      background-image: url('../../content/images/home/transportadora-img2.svg');
+      background-repeat: no-repeat;
+      background-position: center;
     }
-
-    background-repeat: no-repeat;
-    background-position: center;
 
     .embarcador-img {
       width: 100%;
       height: 200px;
       background-size: contain;
-      background-image: url('../../content/images/home/embarcador.png');
+      background-image: url('../../content/images/home/embarcador_img.svg');
+      background-repeat: no-repeat;
+      background-position: center;
     }
+
+    background-repeat: no-repeat;
+    background-position: center;
   }
 }
 

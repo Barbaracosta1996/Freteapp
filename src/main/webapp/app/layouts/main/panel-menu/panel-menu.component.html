@@ -11,7 +11,8 @@
     'border-radius': '33px',
     'box-shadow': '0 1px 3px rgb(0 0 0 / 10%)'
   }"
-  [dismissible]="false"
+  [dismissible]="true"
+  (visibleChange)="showMenu()"
   [(visible)]="visible"
 >
   <div class="flex-column justify-content-center" style="text-align: center">

@@ -41,11 +41,11 @@
       <hr />
     </div>
 
-    <div class="flex-column text-menu" *jhiHasAnyAuthority="'ROLE_USER'" (click)="open('conexao')">
-      <i class="pi pi-hashtag"></i>
-      <p>Conexões</p>
-      <hr />
-    </div>
+    <!--    <div class="flex-column text-menu" *jhiHasAnyAuthority="'ROLE_USER'" (click)="open('conexao')">-->
+    <!--      <i class="pi pi-hashtag"></i>-->
+    <!--      <p>Conexões</p>-->
+    <!--      <hr />-->
+    <!--    </div>-->
 
     <div class="flex-column text-menu" *ngIf="account !== null" (click)="logout()">
       <i class="pi pi-power-off"></i>

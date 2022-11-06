@@ -1,103 +1,201 @@
+<div
+  class="flex-grow-1 flex align-items-center justify-content-center font-light p-5 text-white text-4xl px-5 py-3"
+  style="background-color: #312e4e"
+>
+  Informações do Usuário
+</div>
+<p-breadcrumb [model]="items" [home]="home"></p-breadcrumb>
+
 <div>
   <div class="d-flex justify-content-center">
     <div class="col-md-8">
-      <h2 *ngIf="settingsForm.value.login">
-        Configurações para o usuário [<strong>{{ settingsForm.value.login }}</strong
-        >]
-      </h2>
-
       <div class="alert alert-success" *ngIf="success">
         <strong>Configurações salvas com sucesso!</strong>
       </div>
 
       <jhi-alert-error></jhi-alert-error>
 
-      <form name="form" role="form" (ngSubmit)="save()" [formGroup]="settingsForm" *ngIf="settingsForm.value.login" novalidate>
-        <div class="mb-3">
-          <label class="form-label" for="firstName">Nome</label>
-          <input
-            type="text"
-            class="form-control"
-            id="firstName"
-            name="firstName"
-            placeholder="Seu nome"
-            formControlName="firstName"
-            data-cy="firstname"
-          />
+      <div class="d-flex justify-content-center">
+        <div class="md:col-6" id="registro-form">
+          <p-tabMenu class="p-2" [model]="itemsTab" [activeItem]="activeItem"></p-tabMenu>
 
-          <div
-            *ngIf="
-              settingsForm.get('firstName')!.invalid && (settingsForm.get('firstName')!.dirty || settingsForm.get('firstName')!.touched)
-            "
-          >
-            <small class="form-text text-danger" *ngIf="settingsForm.get('firstName')?.errors?.required"> O nome é obrigatório. </small>
+          <form name="form" role="form" (ngSubmit)="save()" [formGroup]="settingsForm" *ngIf="settingsForm.value.login" novalidate>
+            <div class="mb-3">
+              <label class="form-label text-600" for="login">Login</label>
+              <div class="p-inputgroup">
+                <input
+                  pInputText
+                  [readOnly]="true"
+                  [disabled]="true"
+                  type="text"
+                  class="p-inputtext-lg p-disabled w-25rem"
+                  id="login"
+                  name="login"
+                  placeholder="Seu Login"
+                  formControlName="login"
+                  data-cy="login"
+                />
+                <span class="p-inputgroup-addon p-disabled"><i class="pi pi-user-edit"></i></span>
+              </div>
+            </div>
 
-            <small class="form-text text-danger" *ngIf="settingsForm.get('firstName')?.errors?.minlength">
-              O nome deve ter pelo menos 1 caractere
-            </small>
+            <div class="mb-3">
+              <label class="form-label text-600" for="firstName">Nome</label>
+              <div class="p-inputgroup">
+                <input
+                  pInputText
+                  type="text"
+                  class="p-inputtext-lg"
+                  id="firstName"
+                  name="firstName"
+                  placeholder="Seu nome"
+                  formControlName="firstName"
+                  data-cy="firstname"
+                />
+                <span class="p-inputgroup-addon"><i class="pi pi-user-edit"></i></span>
+              </div>
 
-            <small class="form-text text-danger" *ngIf="settingsForm.get('firstName')?.errors?.maxlength">
-              O nome não pode ter mais de 50 caracteres
-            </small>
-          </div>
+              <div
+                *ngIf="
+                  settingsForm.get('firstName')!.invalid && (settingsForm.get('firstName')!.dirty || settingsForm.get('firstName')!.touched)
+                "
+              >
+                <small class="form-text text-danger" *ngIf="settingsForm.get('firstName')?.errors?.required"> O nome é obrigatório. </small>
+
+                <small class="form-text text-danger" *ngIf="settingsForm.get('firstName')?.errors?.minlength">
+                  O nome deve ter pelo menos 1 caractere
+                </small>
+
+                <small class="form-text text-danger" *ngIf="settingsForm.get('firstName')?.errors?.maxlength">
+                  O nome não pode ter mais de 50 caracteres
+                </small>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label text-600" for="lastName">Sobrenome</label>
+              <div class="p-inputgroup">
+                <input
+                  pInputText
+                  type="text"
+                  class="p-inputtext-lg"
+                  id="lastName"
+                  name="lastName"
+                  placeholder="Seu sobrenome"
+                  formControlName="lastName"
+                  data-cy="lastname"
+                />
+                <span class="p-inputgroup-addon"><i class="pi pi-user-edit"></i></span>
+              </div>
+
+              <div
+                *ngIf="
+                  settingsForm.get('lastName')!.invalid && (settingsForm.get('lastName')!.dirty || settingsForm.get('lastName')!.touched)
+                "
+              >
+                <small class="form-text text-danger" *ngIf="settingsForm.get('lastName')?.errors?.required">
+                  O sobrenome é obrigatório.
+                </small>
+
+                <small class="form-text text-danger" *ngIf="settingsForm.get('lastName')?.errors?.minlength">
+                  O sobrenome deve ter pelo menos 1 caractere
+                </small>
+
+                <small class="form-text text-danger" *ngIf="settingsForm.get('lastName')?.errors?.maxlength">
+                  O sobrenome não pode ter mais de 50 caracteres
+                </small>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="email">E-mail</label>
+              <div class="p-inputgroup">
+                <input
+                  pInputText
+                  type="email"
+                  class="p-inputtext-lg w-25rem"
+                  id="email"
+                  name="email"
+                  placeholder="Seu e-mail"
+                  formControlName="email"
+                  data-cy="email"
+                />
+                <span class="p-inputgroup-addon"><i class="pi pi-envelope"></i></span>
+              </div>
+
+              <div *ngIf="settingsForm.get('email')!.invalid && (settingsForm.get('email')!.dirty || settingsForm.get('email')!.touched)">
+                <small class="form-text text-danger" *ngIf="settingsForm.get('email')?.errors?.required"> O e-mail é obrigatório. </small>
+
+                <small class="form-text text-danger" *ngIf="settingsForm.get('email')?.errors?.email"> E-mail inválido. </small>
+
+                <small class="form-text text-danger" *ngIf="settingsForm.get('email')?.errors?.minlength">
+                  O e-mail deve ter pelo menos 5 caracteres
+                </small>
+
+                <small class="form-text text-danger" *ngIf="settingsForm.get('email')?.errors?.maxlength">
+                  O e-mail não pode ter mais de 50 caracteres
+                </small>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label text-600" for="telephoneNumber">Whatsapp</label>
+              <div class="p-inputgroup">
+                <p-inputMask
+                  type="text"
+                  class="p-inputtext-lg w-full"
+                  [maxlength]="11"
+                  [showClear]="true"
+                  [unmask]="true"
+                  id="telephoneNumber"
+                  styleClass="w-full"
+                  name="telephoneNumber"
+                  placeholder="Seu Telefone Celular"
+                  formControlName="telephoneNumber"
+                  mask="(99) 9 9999-9999"
+                  data-cy="telephoneNumber"
+                ></p-inputMask>
+                <span class="p-inputgroup-addon"><i class="pi pi-whatsapp"></i></span>
+              </div>
+
+              <div
+                *ngIf="
+                  settingsForm.get('telephoneNumber')!.invalid &&
+                  (settingsForm.get('telephoneNumber')!.dirty || settingsForm.get('telephoneNumber')!.touched)
+                "
+              >
+                <small class="form-text text-danger" *ngIf="settingsForm.get('telephoneNumber')?.errors?.required">
+                  O Telefone é obrigatório.
+                </small>
+
+                <small class="form-text text-danger" *ngIf="settingsForm.get('telephoneNumber')?.errors?.invalid">
+                  Telefone inválido.
+                </small>
+
+                <small class="form-text text-danger" *ngIf="settingsForm.get('telephoneNumber')?.errors?.minlength">
+                  O telefone deve ter pelo menos 5 caracteres
+                </small>
+
+                <small class="form-text text-danger" *ngIf="settingsForm.get('telephoneNumber')?.errors?.maxlength">
+                  O telefone não pode ter mais de 50 caracteres
+                </small>
+              </div>
+            </div>
+
+            <div class="text-center mt-5 mb-8">
+              <button
+                pButton
+                pRipple
+                type="submit"
+                label="Salvar"
+                [disabled]="settingsForm.invalid"
+                class="p-button-raised p-button-info p-button-text w-15rem text-white"
+                data-cy="submit"
+              ></button>
+            </div>
+          </form>
         </div>
-
-        <div class="mb-3">
-          <label class="form-label" for="lastName">Sobrenome</label>
-          <input
-            type="text"
-            class="form-control"
-            id="lastName"
-            name="lastName"
-            placeholder="Seu sobrenome"
-            formControlName="lastName"
-            data-cy="lastname"
-          />
-
-          <div
-            *ngIf="settingsForm.get('lastName')!.invalid && (settingsForm.get('lastName')!.dirty || settingsForm.get('lastName')!.touched)"
-          >
-            <small class="form-text text-danger" *ngIf="settingsForm.get('lastName')?.errors?.required"> O sobrenome é obrigatório. </small>
-
-            <small class="form-text text-danger" *ngIf="settingsForm.get('lastName')?.errors?.minlength">
-              O sobrenome deve ter pelo menos 1 caractere
-            </small>
-
-            <small class="form-text text-danger" *ngIf="settingsForm.get('lastName')?.errors?.maxlength">
-              O sobrenome não pode ter mais de 50 caracteres
-            </small>
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label" for="email">E-mail</label>
-          <input
-            type="email"
-            class="form-control"
-            id="email"
-            name="email"
-            placeholder="Seu e-mail"
-            formControlName="email"
-            data-cy="email"
-          />
-
-          <div *ngIf="settingsForm.get('email')!.invalid && (settingsForm.get('email')!.dirty || settingsForm.get('email')!.touched)">
-            <small class="form-text text-danger" *ngIf="settingsForm.get('email')?.errors?.required"> O e-mail é obrigatório. </small>
-
-            <small class="form-text text-danger" *ngIf="settingsForm.get('email')?.errors?.email"> E-mail inválido. </small>
-
-            <small class="form-text text-danger" *ngIf="settingsForm.get('email')?.errors?.minlength">
-              O e-mail deve ter pelo menos 5 caracteres
-            </small>
-
-            <small class="form-text text-danger" *ngIf="settingsForm.get('email')?.errors?.maxlength">
-              O e-mail não pode ter mais de 50 caracteres
-            </small>
-          </div>
-        </div>
-
-        <button type="submit" [disabled]="settingsForm.invalid" class="btn btn-primary" data-cy="submit">Salvar</button>
-      </form>
+      </div>
     </div>
   </div>
 </div>

@@ -138,8 +138,8 @@ public class AccountResource {
             userDTO.getFirstName(),
             userDTO.getLastName(),
             userDTO.getEmail(),
-            userDTO.getTelephoneNumber(),
             userDTO.getLangKey(),
+            userDTO.getTelephoneNumber(),
             userDTO.getImageUrl()
         );
     }

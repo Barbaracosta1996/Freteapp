@@ -16,6 +16,8 @@ import { InputMaskModule } from 'primeng/inputmask';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { CheckboxModule } from 'primeng/checkbox';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { TabMenuModule } from 'primeng/tabmenu';
 
 @NgModule({
   imports: [
@@ -26,6 +28,8 @@ import { CheckboxModule } from 'primeng/checkbox';
     ButtonModule,
     RippleModule,
     CheckboxModule,
+    BreadcrumbModule,
+    TabMenuModule,
   ],
   declarations: [
     ActivateComponent,

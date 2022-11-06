@@ -21,6 +21,8 @@ import { ConexaoComponent } from './conexao/conexao.component';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { TabMenuModule } from 'primeng/tabmenu';
 
 @NgModule({
   declarations: [PanelComponent, OfertaDivulgarComponent, GridOfertasComponent, RotasIndicadasComponent, ConexaoComponent],
@@ -41,6 +43,8 @@ import { ToastModule } from 'primeng/toast';
     SidebarModule,
     ConfirmDialogModule,
     ToastModule,
+    BreadcrumbModule,
+    TabMenuModule,
   ],
   providers: [ConfirmationService, MessageService],
 })

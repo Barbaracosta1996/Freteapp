@@ -1,24 +1,24 @@
 {
-  "name": "Freteapp",
-  "short_name": "Freteapp",
+  "name": "Carga Certa",
+  "short_name": "CargaCerta",
   "icons": [
     {
-      "src": "./content/images/jhipster_family_member_1_head-192.png",
+      "src": "./content/images/app/carga_certa_192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "./content/images/jhipster_family_member_1_head-256.png",
+      "src": "./content/images/app/carga_certa_256.png",
       "sizes": "256x256",
       "type": "image/png"
     },
     {
-      "src": "./content/images/jhipster_family_member_1_head-384.png",
+      "src": "./content/images/app/carga_certa_384.png",
       "sizes": "384x384",
       "type": "image/png"
     },
     {
-      "src": "./content/images/jhipster_family_member_1_head-512.png",
+      "src": "./content/images/carga_certa_512.png",
       "sizes": "512x512",
       "type": "image/png"
     }

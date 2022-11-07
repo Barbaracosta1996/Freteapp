@@ -161,13 +161,17 @@ public class UserService {
 
         userDTO.getPerfil().setUser(userMapper.userToUserDTO(newUser));
 
-        if (Arrays.stream(environment.getActiveProfiles()).anyMatch(env -> env.equalsIgnoreCase("prod"))) {
+        //        if (Arrays.stream(environment.getActiveProfiles()).anyMatch(env -> env.equalsIgnoreCase("prod"))) {
+        try {
             UUID uuid = this.rdStationController.createContact(userDTO.getPerfil());
 
             if (uuid != null) {
                 userDTO.getPerfil().setUuidRD(uuid);
             }
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
         }
+        //        }
 
         FacebookSendResponse facebookSendResponse = this.facebookController.createRegistrationMessage(userDTO.getPerfil());
 

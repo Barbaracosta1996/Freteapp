@@ -1,4 +1,11 @@
-<div class="card">
+<div
+  class="flex-grow-1 flex align-items-center justify-content-center font-light p-4 text-white text-4xl px-5 py-3"
+  style="background-color: #312e4e"
+>
+  Conexões/Solicitações
+</div>
+<p-breadcrumb [model]="items" [home]="home"></p-breadcrumb>
+<div class="card" *ngIf="solicitacaos && solicitacaos.length > 0">
   <p-table [value]="solicitacaos!" [loading]="isLoading" responsiveLayout="scroll">
     <ng-template pTemplate="header">
       <tr>
@@ -31,6 +38,8 @@
     </ng-template>
   </p-table>
 </div>
+
+<div class="flex h-30rem text-center m-3">Nenhuma solicitação encontrada</div>
 
 <p-confirmDialog
   [style]="{ width: '50vw' }"

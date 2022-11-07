@@ -5,6 +5,8 @@ import com.infocargas.freteapp.domain.enumeration.WhatsStatus;
 import com.infocargas.freteapp.repository.WhatsMessageBatchRepository;
 import com.infocargas.freteapp.service.dto.WhatsMessageBatchDTO;
 import com.infocargas.freteapp.service.mapper.WhatsMessageBatchMapper;
+import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,6 +110,18 @@ public class WhatsMessageBatchService {
     public Optional<WhatsMessageBatchDTO> findByMessageId(String waIdTo) {
         log.debug("Request to get WhatsMessageBatch : {}", waIdTo);
         return whatsMessageBatchRepository.findByWaidToAndStatus(waIdTo, WhatsStatus.OPEN).map(whatsMessageBatchMapper::toDto);
+    }
+
+    @Transactional(readOnly = true)
+    public List<WhatsMessageBatchDTO> findByNearRouteStatus(Integer perfilId, WhatsStatus status) {
+        var lista = whatsMessageBatchRepository.findByPerfilIDAndStatus(perfilId, status);
+        return whatsMessageBatchMapper.toDto(lista);
+    }
+
+    @Transactional(readOnly = true)
+    public List<WhatsMessageBatchDTO> findByRouteStatus(WhatsStatus status) {
+        var lista = whatsMessageBatchRepository.findWith30Minutes(status.name(), 31);
+        return whatsMessageBatchMapper.toDto(lista);
     }
 
     /**

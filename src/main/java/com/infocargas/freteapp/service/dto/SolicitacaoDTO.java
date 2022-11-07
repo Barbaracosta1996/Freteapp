@@ -32,6 +32,10 @@ public class SolicitacaoDTO implements Serializable {
 
     private PerfilDTO perfil;
 
+    private OfertasDTO minhaOferta;
+
+    private PerfilDTO requestedPerfil;
+
     public Long getId() {
         return id;
     }
@@ -104,6 +108,22 @@ public class SolicitacaoDTO implements Serializable {
         this.perfil = perfil;
     }
 
+    public OfertasDTO getMinhaOferta() {
+        return minhaOferta;
+    }
+
+    public void setMinhaOferta(OfertasDTO minhaOferta) {
+        this.minhaOferta = minhaOferta;
+    }
+
+    public PerfilDTO getRequestedPerfil() {
+        return requestedPerfil;
+    }
+
+    public void setRequestedPerfil(PerfilDTO requestedPerfil) {
+        this.requestedPerfil = requestedPerfil;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -138,6 +158,8 @@ public class SolicitacaoDTO implements Serializable {
             ", valorFrete=" + getValorFrete() +
             ", ofertas=" + getOfertas() +
             ", perfil=" + getPerfil() +
+            ", minhaOferta=" + getMinhaOferta() +
+            ", requestedPerfil=" + getRequestedPerfil() +
             "}";
     }
 }

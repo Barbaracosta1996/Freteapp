@@ -57,10 +57,12 @@ describe('Solicitacao Management Update Component', () => {
       const solicitacao: ISolicitacao = { id: 456 };
       const ofertas: IOfertas = { id: 19486 };
       solicitacao.ofertas = ofertas;
+      const minhaOferta: IOfertas = { id: 20761 };
+      solicitacao.minhaOferta = minhaOferta;
 
-      const ofertasCollection: IOfertas[] = [{ id: 20761 }];
+      const ofertasCollection: IOfertas[] = [{ id: 27000 }];
       jest.spyOn(ofertasService, 'query').mockReturnValue(of(new HttpResponse({ body: ofertasCollection })));
-      const additionalOfertas = [ofertas];
+      const additionalOfertas = [ofertas, minhaOferta];
       const expectedCollection: IOfertas[] = [...additionalOfertas, ...ofertasCollection];
       jest.spyOn(ofertasService, 'addOfertasToCollectionIfMissing').mockReturnValue(expectedCollection);
 
@@ -79,10 +81,12 @@ describe('Solicitacao Management Update Component', () => {
       const solicitacao: ISolicitacao = { id: 456 };
       const perfil: IPerfil = { id: 7098 };
       solicitacao.perfil = perfil;
+      const requestedPerfil: IPerfil = { id: 7915 };
+      solicitacao.requestedPerfil = requestedPerfil;
 
-      const perfilCollection: IPerfil[] = [{ id: 7915 }];
+      const perfilCollection: IPerfil[] = [{ id: 46542 }];
       jest.spyOn(perfilService, 'query').mockReturnValue(of(new HttpResponse({ body: perfilCollection })));
-      const additionalPerfils = [perfil];
+      const additionalPerfils = [perfil, requestedPerfil];
       const expectedCollection: IPerfil[] = [...additionalPerfils, ...perfilCollection];
       jest.spyOn(perfilService, 'addPerfilToCollectionIfMissing').mockReturnValue(expectedCollection);
 
@@ -99,16 +103,22 @@ describe('Solicitacao Management Update Component', () => {
 
     it('Should update editForm', () => {
       const solicitacao: ISolicitacao = { id: 456 };
-      const ofertas: IOfertas = { id: 27000 };
+      const ofertas: IOfertas = { id: 41121 };
       solicitacao.ofertas = ofertas;
-      const perfil: IPerfil = { id: 46542 };
+      const minhaOferta: IOfertas = { id: 59215 };
+      solicitacao.minhaOferta = minhaOferta;
+      const perfil: IPerfil = { id: 49105 };
       solicitacao.perfil = perfil;
+      const requestedPerfil: IPerfil = { id: 94184 };
+      solicitacao.requestedPerfil = requestedPerfil;
 
       activatedRoute.data = of({ solicitacao });
       comp.ngOnInit();
 
       expect(comp.ofertasSharedCollection).toContain(ofertas);
+      expect(comp.ofertasSharedCollection).toContain(minhaOferta);
       expect(comp.perfilsSharedCollection).toContain(perfil);
+      expect(comp.perfilsSharedCollection).toContain(requestedPerfil);
       expect(comp.solicitacao).toEqual(solicitacao);
     });
   });

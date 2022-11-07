@@ -4,6 +4,7 @@ import com.infocargas.freteapp.domain.enumeration.TipoOferta;
 import com.infocargas.freteapp.domain.enumeration.WhatsAppType;
 import com.infocargas.freteapp.domain.enumeration.WhatsStatus;
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
@@ -49,6 +50,12 @@ public class WhatsMessageBatch implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_oferta")
     private TipoOferta tipoOferta;
+
+    @Column(name = "notification_date")
+    private ZonedDateTime notificationDate;
+
+    @Column(name = "created_date")
+    private ZonedDateTime createdDate;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -143,6 +150,32 @@ public class WhatsMessageBatch implements Serializable {
         this.tipoOferta = tipoOferta;
     }
 
+    public ZonedDateTime getNotificationDate() {
+        return this.notificationDate;
+    }
+
+    public WhatsMessageBatch notificationDate(ZonedDateTime notificationDate) {
+        this.setNotificationDate(notificationDate);
+        return this;
+    }
+
+    public void setNotificationDate(ZonedDateTime notificationDate) {
+        this.notificationDate = notificationDate;
+    }
+
+    public ZonedDateTime getCreatedDate() {
+        return this.createdDate;
+    }
+
+    public WhatsMessageBatch createdDate(ZonedDateTime createdDate) {
+        this.setCreatedDate(createdDate);
+        return this;
+    }
+
+    public void setCreatedDate(ZonedDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -173,6 +206,13 @@ public class WhatsMessageBatch implements Serializable {
             ", status='" + getStatus() + "'" +
             ", ofertaId=" + getOfertaId() +
             ", tipoOferta='" + getTipoOferta() + "'" +
+            ", notificationDate='" + getNotificationDate() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
             "}";
+    }
+
+    @PrePersist
+    public void updateCreateDate() {
+        this.createdDate = ZonedDateTime.now();
     }
 }

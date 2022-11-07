@@ -4,10 +4,12 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { IWhatsMessageBatch } from '../whats-message-batch.model';
 import { sampleWithRequiredData, sampleWithNewData, sampleWithPartialData, sampleWithFullData } from '../whats-message-batch.test-samples';
 
-import { WhatsMessageBatchService } from './whats-message-batch.service';
+import { WhatsMessageBatchService, RestWhatsMessageBatch } from './whats-message-batch.service';
 
-const requireRestSample: IWhatsMessageBatch = {
+const requireRestSample: RestWhatsMessageBatch = {
   ...sampleWithRequiredData,
+  notificationDate: sampleWithRequiredData.notificationDate?.toJSON(),
+  createdDate: sampleWithRequiredData.createdDate?.toJSON(),
 };
 
 describe('WhatsMessageBatch Service', () => {

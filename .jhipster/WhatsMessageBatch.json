@@ -32,6 +32,14 @@
       "fieldName": "tipoOferta",
       "fieldType": "TipoOferta",
       "fieldValues": "CARGA,VAGAS"
+    },
+    {
+      "fieldName": "notificationDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "ZonedDateTime"
     }
   ],
   "jpaMetamodelFiltering": true,

@@ -1,5 +1,6 @@
 package com.infocargas.freteapp.web.rest;
 
+import static com.infocargas.freteapp.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -14,6 +15,10 @@ import com.infocargas.freteapp.repository.WhatsMessageBatchRepository;
 import com.infocargas.freteapp.service.criteria.WhatsMessageBatchCriteria;
 import com.infocargas.freteapp.service.dto.WhatsMessageBatchDTO;
 import com.infocargas.freteapp.service.mapper.WhatsMessageBatchMapper;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -55,6 +60,14 @@ class WhatsMessageBatchResourceIT {
     private static final TipoOferta DEFAULT_TIPO_OFERTA = TipoOferta.CARGA;
     private static final TipoOferta UPDATED_TIPO_OFERTA = TipoOferta.VAGAS;
 
+    private static final ZonedDateTime DEFAULT_NOTIFICATION_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_NOTIFICATION_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+    private static final ZonedDateTime SMALLER_NOTIFICATION_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(-1L), ZoneOffset.UTC);
+
+    private static final ZonedDateTime DEFAULT_CREATED_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_CREATED_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+    private static final ZonedDateTime SMALLER_CREATED_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(-1L), ZoneOffset.UTC);
+
     private static final String ENTITY_API_URL = "/api/whats-message-batches";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -88,7 +101,9 @@ class WhatsMessageBatchResourceIT {
             .perfilID(DEFAULT_PERFIL_ID)
             .status(DEFAULT_STATUS)
             .ofertaId(DEFAULT_OFERTA_ID)
-            .tipoOferta(DEFAULT_TIPO_OFERTA);
+            .tipoOferta(DEFAULT_TIPO_OFERTA)
+            .notificationDate(DEFAULT_NOTIFICATION_DATE)
+            .createdDate(DEFAULT_CREATED_DATE);
         return whatsMessageBatch;
     }
 
@@ -105,7 +120,9 @@ class WhatsMessageBatchResourceIT {
             .perfilID(UPDATED_PERFIL_ID)
             .status(UPDATED_STATUS)
             .ofertaId(UPDATED_OFERTA_ID)
-            .tipoOferta(UPDATED_TIPO_OFERTA);
+            .tipoOferta(UPDATED_TIPO_OFERTA)
+            .notificationDate(UPDATED_NOTIFICATION_DATE)
+            .createdDate(UPDATED_CREATED_DATE);
         return whatsMessageBatch;
     }
 
@@ -138,6 +155,8 @@ class WhatsMessageBatchResourceIT {
         assertThat(testWhatsMessageBatch.getStatus()).isEqualTo(DEFAULT_STATUS);
         assertThat(testWhatsMessageBatch.getOfertaId()).isEqualTo(DEFAULT_OFERTA_ID);
         assertThat(testWhatsMessageBatch.getTipoOferta()).isEqualTo(DEFAULT_TIPO_OFERTA);
+        assertThat(testWhatsMessageBatch.getNotificationDate()).isEqualTo(DEFAULT_NOTIFICATION_DATE);
+        assertThat(testWhatsMessageBatch.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
     }
 
     @Test
@@ -268,7 +287,9 @@ class WhatsMessageBatchResourceIT {
             .andExpect(jsonPath("$.[*].perfilID").value(hasItem(DEFAULT_PERFIL_ID)))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
             .andExpect(jsonPath("$.[*].ofertaId").value(hasItem(DEFAULT_OFERTA_ID.intValue())))
-            .andExpect(jsonPath("$.[*].tipoOferta").value(hasItem(DEFAULT_TIPO_OFERTA.toString())));
+            .andExpect(jsonPath("$.[*].tipoOferta").value(hasItem(DEFAULT_TIPO_OFERTA.toString())))
+            .andExpect(jsonPath("$.[*].notificationDate").value(hasItem(sameInstant(DEFAULT_NOTIFICATION_DATE))))
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))));
     }
 
     @Test
@@ -288,7 +309,9 @@ class WhatsMessageBatchResourceIT {
             .andExpect(jsonPath("$.perfilID").value(DEFAULT_PERFIL_ID))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
             .andExpect(jsonPath("$.ofertaId").value(DEFAULT_OFERTA_ID.intValue()))
-            .andExpect(jsonPath("$.tipoOferta").value(DEFAULT_TIPO_OFERTA.toString()));
+            .andExpect(jsonPath("$.tipoOferta").value(DEFAULT_TIPO_OFERTA.toString()))
+            .andExpect(jsonPath("$.notificationDate").value(sameInstant(DEFAULT_NOTIFICATION_DATE)))
+            .andExpect(jsonPath("$.createdDate").value(sameInstant(DEFAULT_CREATED_DATE)));
     }
 
     @Test
@@ -673,6 +696,188 @@ class WhatsMessageBatchResourceIT {
         defaultWhatsMessageBatchShouldNotBeFound("tipoOferta.specified=false");
     }
 
+    @Test
+    @Transactional
+    void getAllWhatsMessageBatchesByNotificationDateIsEqualToSomething() throws Exception {
+        // Initialize the database
+        whatsMessageBatchRepository.saveAndFlush(whatsMessageBatch);
+
+        // Get all the whatsMessageBatchList where notificationDate equals to DEFAULT_NOTIFICATION_DATE
+        defaultWhatsMessageBatchShouldBeFound("notificationDate.equals=" + DEFAULT_NOTIFICATION_DATE);
+
+        // Get all the whatsMessageBatchList where notificationDate equals to UPDATED_NOTIFICATION_DATE
+        defaultWhatsMessageBatchShouldNotBeFound("notificationDate.equals=" + UPDATED_NOTIFICATION_DATE);
+    }
+
+    @Test
+    @Transactional
+    void getAllWhatsMessageBatchesByNotificationDateIsInShouldWork() throws Exception {
+        // Initialize the database
+        whatsMessageBatchRepository.saveAndFlush(whatsMessageBatch);
+
+        // Get all the whatsMessageBatchList where notificationDate in DEFAULT_NOTIFICATION_DATE or UPDATED_NOTIFICATION_DATE
+        defaultWhatsMessageBatchShouldBeFound("notificationDate.in=" + DEFAULT_NOTIFICATION_DATE + "," + UPDATED_NOTIFICATION_DATE);
+
+        // Get all the whatsMessageBatchList where notificationDate equals to UPDATED_NOTIFICATION_DATE
+        defaultWhatsMessageBatchShouldNotBeFound("notificationDate.in=" + UPDATED_NOTIFICATION_DATE);
+    }
+
+    @Test
+    @Transactional
+    void getAllWhatsMessageBatchesByNotificationDateIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        whatsMessageBatchRepository.saveAndFlush(whatsMessageBatch);
+
+        // Get all the whatsMessageBatchList where notificationDate is not null
+        defaultWhatsMessageBatchShouldBeFound("notificationDate.specified=true");
+
+        // Get all the whatsMessageBatchList where notificationDate is null
+        defaultWhatsMessageBatchShouldNotBeFound("notificationDate.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllWhatsMessageBatchesByNotificationDateIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        whatsMessageBatchRepository.saveAndFlush(whatsMessageBatch);
+
+        // Get all the whatsMessageBatchList where notificationDate is greater than or equal to DEFAULT_NOTIFICATION_DATE
+        defaultWhatsMessageBatchShouldBeFound("notificationDate.greaterThanOrEqual=" + DEFAULT_NOTIFICATION_DATE);
+
+        // Get all the whatsMessageBatchList where notificationDate is greater than or equal to UPDATED_NOTIFICATION_DATE
+        defaultWhatsMessageBatchShouldNotBeFound("notificationDate.greaterThanOrEqual=" + UPDATED_NOTIFICATION_DATE);
+    }
+
+    @Test
+    @Transactional
+    void getAllWhatsMessageBatchesByNotificationDateIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        whatsMessageBatchRepository.saveAndFlush(whatsMessageBatch);
+
+        // Get all the whatsMessageBatchList where notificationDate is less than or equal to DEFAULT_NOTIFICATION_DATE
+        defaultWhatsMessageBatchShouldBeFound("notificationDate.lessThanOrEqual=" + DEFAULT_NOTIFICATION_DATE);
+
+        // Get all the whatsMessageBatchList where notificationDate is less than or equal to SMALLER_NOTIFICATION_DATE
+        defaultWhatsMessageBatchShouldNotBeFound("notificationDate.lessThanOrEqual=" + SMALLER_NOTIFICATION_DATE);
+    }
+
+    @Test
+    @Transactional
+    void getAllWhatsMessageBatchesByNotificationDateIsLessThanSomething() throws Exception {
+        // Initialize the database
+        whatsMessageBatchRepository.saveAndFlush(whatsMessageBatch);
+
+        // Get all the whatsMessageBatchList where notificationDate is less than DEFAULT_NOTIFICATION_DATE
+        defaultWhatsMessageBatchShouldNotBeFound("notificationDate.lessThan=" + DEFAULT_NOTIFICATION_DATE);
+
+        // Get all the whatsMessageBatchList where notificationDate is less than UPDATED_NOTIFICATION_DATE
+        defaultWhatsMessageBatchShouldBeFound("notificationDate.lessThan=" + UPDATED_NOTIFICATION_DATE);
+    }
+
+    @Test
+    @Transactional
+    void getAllWhatsMessageBatchesByNotificationDateIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        whatsMessageBatchRepository.saveAndFlush(whatsMessageBatch);
+
+        // Get all the whatsMessageBatchList where notificationDate is greater than DEFAULT_NOTIFICATION_DATE
+        defaultWhatsMessageBatchShouldNotBeFound("notificationDate.greaterThan=" + DEFAULT_NOTIFICATION_DATE);
+
+        // Get all the whatsMessageBatchList where notificationDate is greater than SMALLER_NOTIFICATION_DATE
+        defaultWhatsMessageBatchShouldBeFound("notificationDate.greaterThan=" + SMALLER_NOTIFICATION_DATE);
+    }
+
+    @Test
+    @Transactional
+    void getAllWhatsMessageBatchesByCreatedDateIsEqualToSomething() throws Exception {
+        // Initialize the database
+        whatsMessageBatchRepository.saveAndFlush(whatsMessageBatch);
+
+        // Get all the whatsMessageBatchList where createdDate equals to DEFAULT_CREATED_DATE
+        defaultWhatsMessageBatchShouldBeFound("createdDate.equals=" + DEFAULT_CREATED_DATE);
+
+        // Get all the whatsMessageBatchList where createdDate equals to UPDATED_CREATED_DATE
+        defaultWhatsMessageBatchShouldNotBeFound("createdDate.equals=" + UPDATED_CREATED_DATE);
+    }
+
+    @Test
+    @Transactional
+    void getAllWhatsMessageBatchesByCreatedDateIsInShouldWork() throws Exception {
+        // Initialize the database
+        whatsMessageBatchRepository.saveAndFlush(whatsMessageBatch);
+
+        // Get all the whatsMessageBatchList where createdDate in DEFAULT_CREATED_DATE or UPDATED_CREATED_DATE
+        defaultWhatsMessageBatchShouldBeFound("createdDate.in=" + DEFAULT_CREATED_DATE + "," + UPDATED_CREATED_DATE);
+
+        // Get all the whatsMessageBatchList where createdDate equals to UPDATED_CREATED_DATE
+        defaultWhatsMessageBatchShouldNotBeFound("createdDate.in=" + UPDATED_CREATED_DATE);
+    }
+
+    @Test
+    @Transactional
+    void getAllWhatsMessageBatchesByCreatedDateIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        whatsMessageBatchRepository.saveAndFlush(whatsMessageBatch);
+
+        // Get all the whatsMessageBatchList where createdDate is not null
+        defaultWhatsMessageBatchShouldBeFound("createdDate.specified=true");
+
+        // Get all the whatsMessageBatchList where createdDate is null
+        defaultWhatsMessageBatchShouldNotBeFound("createdDate.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllWhatsMessageBatchesByCreatedDateIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        whatsMessageBatchRepository.saveAndFlush(whatsMessageBatch);
+
+        // Get all the whatsMessageBatchList where createdDate is greater than or equal to DEFAULT_CREATED_DATE
+        defaultWhatsMessageBatchShouldBeFound("createdDate.greaterThanOrEqual=" + DEFAULT_CREATED_DATE);
+
+        // Get all the whatsMessageBatchList where createdDate is greater than or equal to UPDATED_CREATED_DATE
+        defaultWhatsMessageBatchShouldNotBeFound("createdDate.greaterThanOrEqual=" + UPDATED_CREATED_DATE);
+    }
+
+    @Test
+    @Transactional
+    void getAllWhatsMessageBatchesByCreatedDateIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        whatsMessageBatchRepository.saveAndFlush(whatsMessageBatch);
+
+        // Get all the whatsMessageBatchList where createdDate is less than or equal to DEFAULT_CREATED_DATE
+        defaultWhatsMessageBatchShouldBeFound("createdDate.lessThanOrEqual=" + DEFAULT_CREATED_DATE);
+
+        // Get all the whatsMessageBatchList where createdDate is less than or equal to SMALLER_CREATED_DATE
+        defaultWhatsMessageBatchShouldNotBeFound("createdDate.lessThanOrEqual=" + SMALLER_CREATED_DATE);
+    }
+
+    @Test
+    @Transactional
+    void getAllWhatsMessageBatchesByCreatedDateIsLessThanSomething() throws Exception {
+        // Initialize the database
+        whatsMessageBatchRepository.saveAndFlush(whatsMessageBatch);
+
+        // Get all the whatsMessageBatchList where createdDate is less than DEFAULT_CREATED_DATE
+        defaultWhatsMessageBatchShouldNotBeFound("createdDate.lessThan=" + DEFAULT_CREATED_DATE);
+
+        // Get all the whatsMessageBatchList where createdDate is less than UPDATED_CREATED_DATE
+        defaultWhatsMessageBatchShouldBeFound("createdDate.lessThan=" + UPDATED_CREATED_DATE);
+    }
+
+    @Test
+    @Transactional
+    void getAllWhatsMessageBatchesByCreatedDateIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        whatsMessageBatchRepository.saveAndFlush(whatsMessageBatch);
+
+        // Get all the whatsMessageBatchList where createdDate is greater than DEFAULT_CREATED_DATE
+        defaultWhatsMessageBatchShouldNotBeFound("createdDate.greaterThan=" + DEFAULT_CREATED_DATE);
+
+        // Get all the whatsMessageBatchList where createdDate is greater than SMALLER_CREATED_DATE
+        defaultWhatsMessageBatchShouldBeFound("createdDate.greaterThan=" + SMALLER_CREATED_DATE);
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned.
      */
@@ -687,7 +892,9 @@ class WhatsMessageBatchResourceIT {
             .andExpect(jsonPath("$.[*].perfilID").value(hasItem(DEFAULT_PERFIL_ID)))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
             .andExpect(jsonPath("$.[*].ofertaId").value(hasItem(DEFAULT_OFERTA_ID.intValue())))
-            .andExpect(jsonPath("$.[*].tipoOferta").value(hasItem(DEFAULT_TIPO_OFERTA.toString())));
+            .andExpect(jsonPath("$.[*].tipoOferta").value(hasItem(DEFAULT_TIPO_OFERTA.toString())))
+            .andExpect(jsonPath("$.[*].notificationDate").value(hasItem(sameInstant(DEFAULT_NOTIFICATION_DATE))))
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))));
 
         // Check, that the count call also returns 1
         restWhatsMessageBatchMockMvc
@@ -741,7 +948,9 @@ class WhatsMessageBatchResourceIT {
             .perfilID(UPDATED_PERFIL_ID)
             .status(UPDATED_STATUS)
             .ofertaId(UPDATED_OFERTA_ID)
-            .tipoOferta(UPDATED_TIPO_OFERTA);
+            .tipoOferta(UPDATED_TIPO_OFERTA)
+            .notificationDate(UPDATED_NOTIFICATION_DATE)
+            .createdDate(UPDATED_CREATED_DATE);
         WhatsMessageBatchDTO whatsMessageBatchDTO = whatsMessageBatchMapper.toDto(updatedWhatsMessageBatch);
 
         restWhatsMessageBatchMockMvc
@@ -762,6 +971,8 @@ class WhatsMessageBatchResourceIT {
         assertThat(testWhatsMessageBatch.getStatus()).isEqualTo(UPDATED_STATUS);
         assertThat(testWhatsMessageBatch.getOfertaId()).isEqualTo(UPDATED_OFERTA_ID);
         assertThat(testWhatsMessageBatch.getTipoOferta()).isEqualTo(UPDATED_TIPO_OFERTA);
+        assertThat(testWhatsMessageBatch.getNotificationDate()).isEqualTo(UPDATED_NOTIFICATION_DATE);
+        assertThat(testWhatsMessageBatch.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
     }
 
     @Test
@@ -843,7 +1054,7 @@ class WhatsMessageBatchResourceIT {
         WhatsMessageBatch partialUpdatedWhatsMessageBatch = new WhatsMessageBatch();
         partialUpdatedWhatsMessageBatch.setId(whatsMessageBatch.getId());
 
-        partialUpdatedWhatsMessageBatch.tipo(UPDATED_TIPO).waidTo(UPDATED_WAID_TO).status(UPDATED_STATUS);
+        partialUpdatedWhatsMessageBatch.tipo(UPDATED_TIPO).waidTo(UPDATED_WAID_TO).status(UPDATED_STATUS).createdDate(UPDATED_CREATED_DATE);
 
         restWhatsMessageBatchMockMvc
             .perform(
@@ -863,6 +1074,8 @@ class WhatsMessageBatchResourceIT {
         assertThat(testWhatsMessageBatch.getStatus()).isEqualTo(UPDATED_STATUS);
         assertThat(testWhatsMessageBatch.getOfertaId()).isEqualTo(DEFAULT_OFERTA_ID);
         assertThat(testWhatsMessageBatch.getTipoOferta()).isEqualTo(DEFAULT_TIPO_OFERTA);
+        assertThat(testWhatsMessageBatch.getNotificationDate()).isEqualTo(DEFAULT_NOTIFICATION_DATE);
+        assertThat(testWhatsMessageBatch.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
     }
 
     @Test
@@ -883,7 +1096,9 @@ class WhatsMessageBatchResourceIT {
             .perfilID(UPDATED_PERFIL_ID)
             .status(UPDATED_STATUS)
             .ofertaId(UPDATED_OFERTA_ID)
-            .tipoOferta(UPDATED_TIPO_OFERTA);
+            .tipoOferta(UPDATED_TIPO_OFERTA)
+            .notificationDate(UPDATED_NOTIFICATION_DATE)
+            .createdDate(UPDATED_CREATED_DATE);
 
         restWhatsMessageBatchMockMvc
             .perform(
@@ -903,6 +1118,8 @@ class WhatsMessageBatchResourceIT {
         assertThat(testWhatsMessageBatch.getStatus()).isEqualTo(UPDATED_STATUS);
         assertThat(testWhatsMessageBatch.getOfertaId()).isEqualTo(UPDATED_OFERTA_ID);
         assertThat(testWhatsMessageBatch.getTipoOferta()).isEqualTo(UPDATED_TIPO_OFERTA);
+        assertThat(testWhatsMessageBatch.getNotificationDate()).isEqualTo(UPDATED_NOTIFICATION_DATE);
+        assertThat(testWhatsMessageBatch.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
     }
 
     @Test

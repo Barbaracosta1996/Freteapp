@@ -38,6 +38,12 @@
             <column name="perfil_id" type="bigint">
                 <constraints nullable="false" />
             </column>
+            <column name="minha_oferta_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="requested_perfil_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
         <dropDefaultValue tableName="solicitacao" columnName="data_proposta" columnDataType="${datetimeType}"/>
@@ -69,6 +75,8 @@
             <column name="valor_frete" type="numeric"/>
             <column name="ofertas_id" type="numeric"/>
             <column name="perfil_id" type="numeric"/>
+            <column name="minha_oferta_id" type="numeric"/>
+            <column name="requested_perfil_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

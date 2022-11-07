@@ -51,6 +51,20 @@
       "relationshipName": "perfil",
       "relationshipType": "many-to-one",
       "relationshipValidateRules": ["required"]
+    },
+    {
+      "otherEntityField": "id",
+      "otherEntityName": "ofertas",
+      "relationshipName": "minhaOferta",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": ["required"]
+    },
+    {
+      "otherEntityField": "id",
+      "otherEntityName": "perfil",
+      "relationshipName": "requestedPerfil",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": ["required"]
     }
   ],
   "service": "serviceClass"

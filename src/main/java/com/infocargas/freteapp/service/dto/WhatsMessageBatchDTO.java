@@ -4,6 +4,7 @@ import com.infocargas.freteapp.domain.enumeration.TipoOferta;
 import com.infocargas.freteapp.domain.enumeration.WhatsAppType;
 import com.infocargas.freteapp.domain.enumeration.WhatsStatus;
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 import javax.validation.constraints.*;
 
@@ -29,6 +30,10 @@ public class WhatsMessageBatchDTO implements Serializable {
     private Long ofertaId;
 
     private TipoOferta tipoOferta;
+
+    private ZonedDateTime notificationDate;
+
+    private ZonedDateTime createdDate;
 
     public Long getId() {
         return id;
@@ -86,6 +91,22 @@ public class WhatsMessageBatchDTO implements Serializable {
         this.tipoOferta = tipoOferta;
     }
 
+    public ZonedDateTime getNotificationDate() {
+        return notificationDate;
+    }
+
+    public void setNotificationDate(ZonedDateTime notificationDate) {
+        this.notificationDate = notificationDate;
+    }
+
+    public ZonedDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(ZonedDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -118,6 +139,8 @@ public class WhatsMessageBatchDTO implements Serializable {
             ", status='" + getStatus() + "'" +
             ", ofertaId=" + getOfertaId() +
             ", tipoOferta='" + getTipoOferta() + "'" +
+            ", notificationDate='" + getNotificationDate() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
             "}";
     }
 }

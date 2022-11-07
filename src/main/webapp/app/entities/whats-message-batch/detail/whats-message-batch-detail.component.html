@@ -38,6 +38,14 @@
         <dd>
           <span>{{ whatsMessageBatch.tipoOferta }}</span>
         </dd>
+        <dt><span>Notification Date</span></dt>
+        <dd>
+          <span>{{ whatsMessageBatch.notificationDate | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span>Created Date</span></dt>
+        <dd>
+          <span>{{ whatsMessageBatch.createdDate | formatMediumDatetime }}</span>
+        </dd>
       </dl>
 
       <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

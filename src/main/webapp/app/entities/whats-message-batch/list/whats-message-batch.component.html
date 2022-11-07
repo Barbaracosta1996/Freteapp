@@ -41,6 +41,8 @@
           <th scope="col" jhiSortBy="status"><span>Status</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col" jhiSortBy="ofertaId"><span>Oferta Id</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col" jhiSortBy="tipoOferta"><span>Tipo Oferta</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="notificationDate"><span>Notification Date</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="createdDate"><span>Created Date</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -55,6 +57,8 @@
           <td>{{ whatsMessageBatch.status }}</td>
           <td>{{ whatsMessageBatch.ofertaId }}</td>
           <td>{{ whatsMessageBatch.tipoOferta }}</td>
+          <td>{{ whatsMessageBatch.notificationDate | formatMediumDatetime }}</td>
+          <td>{{ whatsMessageBatch.createdDate | formatMediumDatetime }}</td>
           <td class="text-end">
             <div class="btn-group">
               <button

@@ -91,11 +91,13 @@ export class SolicitacaoUpdateComponent implements OnInit {
 
     this.ofertasSharedCollection = this.ofertasService.addOfertasToCollectionIfMissing<IOfertas>(
       this.ofertasSharedCollection,
-      solicitacao.ofertas
+      solicitacao.ofertas,
+      solicitacao.minhaOferta
     );
     this.perfilsSharedCollection = this.perfilService.addPerfilToCollectionIfMissing<IPerfil>(
       this.perfilsSharedCollection,
-      solicitacao.perfil
+      solicitacao.perfil,
+      solicitacao.requestedPerfil
     );
   }
 
@@ -103,13 +105,21 @@ export class SolicitacaoUpdateComponent implements OnInit {
     this.ofertasService
       .query()
       .pipe(map((res: HttpResponse<IOfertas[]>) => res.body ?? []))
-      .pipe(map((ofertas: IOfertas[]) => this.ofertasService.addOfertasToCollectionIfMissing<IOfertas>(ofertas, this.solicitacao?.ofertas)))
+      .pipe(
+        map((ofertas: IOfertas[]) =>
+          this.ofertasService.addOfertasToCollectionIfMissing<IOfertas>(ofertas, this.solicitacao?.ofertas, this.solicitacao?.minhaOferta)
+        )
+      )
       .subscribe((ofertas: IOfertas[]) => (this.ofertasSharedCollection = ofertas));
 
     this.perfilService
       .query()
       .pipe(map((res: HttpResponse<IPerfil[]>) => res.body ?? []))
-      .pipe(map((perfils: IPerfil[]) => this.perfilService.addPerfilToCollectionIfMissing<IPerfil>(perfils, this.solicitacao?.perfil)))
+      .pipe(
+        map((perfils: IPerfil[]) =>
+          this.perfilService.addPerfilToCollectionIfMissing<IPerfil>(perfils, this.solicitacao?.perfil, this.solicitacao?.requestedPerfil)
+        )
+      )
       .subscribe((perfils: IPerfil[]) => (this.perfilsSharedCollection = perfils));
   }
 }

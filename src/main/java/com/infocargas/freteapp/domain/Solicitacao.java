@@ -58,6 +58,16 @@ public class Solicitacao implements Serializable {
     @JsonIgnoreProperties(value = { "user" }, allowSetters = true)
     private Perfil perfil;
 
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = { "perfil" }, allowSetters = true)
+    private Ofertas minhaOferta;
+
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = { "user" }, allowSetters = true)
+    private Perfil requestedPerfil;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {
@@ -174,6 +184,32 @@ public class Solicitacao implements Serializable {
 
     public Solicitacao perfil(Perfil perfil) {
         this.setPerfil(perfil);
+        return this;
+    }
+
+    public Ofertas getMinhaOferta() {
+        return this.minhaOferta;
+    }
+
+    public void setMinhaOferta(Ofertas ofertas) {
+        this.minhaOferta = ofertas;
+    }
+
+    public Solicitacao minhaOferta(Ofertas ofertas) {
+        this.setMinhaOferta(ofertas);
+        return this;
+    }
+
+    public Perfil getRequestedPerfil() {
+        return this.requestedPerfil;
+    }
+
+    public void setRequestedPerfil(Perfil perfil) {
+        this.requestedPerfil = perfil;
+    }
+
+    public Solicitacao requestedPerfil(Perfil perfil) {
+        this.setRequestedPerfil(perfil);
         return this;
     }
 

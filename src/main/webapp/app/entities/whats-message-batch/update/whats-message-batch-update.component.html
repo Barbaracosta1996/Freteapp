@@ -64,6 +64,36 @@
             <option *ngFor="let tipoOferta of tipoOfertaValues" [value]="tipoOferta">tipoOferta</option>
           </select>
         </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_notificationDate">Notification Date</label>
+          <div class="d-flex">
+            <input
+              id="field_notificationDate"
+              data-cy="notificationDate"
+              type="datetime-local"
+              class="form-control"
+              name="notificationDate"
+              formControlName="notificationDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_createdDate">Created Date</label>
+          <div class="d-flex">
+            <input
+              id="field_createdDate"
+              data-cy="createdDate"
+              type="datetime-local"
+              class="form-control"
+              name="createdDate"
+              formControlName="createdDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
       </div>
 
       <div>

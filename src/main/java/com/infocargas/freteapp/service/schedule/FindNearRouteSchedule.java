@@ -4,13 +4,18 @@ import com.google.gson.Gson;
 import com.infocargas.freteapp.controller.FacebookController;
 import com.infocargas.freteapp.domain.enumeration.StatusOferta;
 import com.infocargas.freteapp.domain.enumeration.TipoOferta;
+import com.infocargas.freteapp.domain.enumeration.WhatsAppType;
+import com.infocargas.freteapp.domain.enumeration.WhatsStatus;
 import com.infocargas.freteapp.service.PerfilService;
 import com.infocargas.freteapp.service.RotasOfertasService;
+import com.infocargas.freteapp.service.WhatsMessageBatchService;
 import com.infocargas.freteapp.service.dto.OfertasDTO;
 import com.infocargas.freteapp.service.dto.RotasOfertasDTO;
+import com.infocargas.freteapp.service.dto.WhatsMessageBatchDTO;
 import com.infocargas.freteapp.service.dto.routes.GoogleLegs;
 import com.infocargas.freteapp.service.dto.routes.GoogleRoutes;
 import com.infocargas.freteapp.utils.GeoUtils;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -29,13 +34,30 @@ public class FindNearRouteSchedule {
 
     private final PerfilService perfilService;
 
-    public FindNearRouteSchedule(RotasOfertasService ofertasService, FacebookController facebookController, PerfilService perfilService) {
+    private final WhatsMessageBatchService whatsMessageBatchService;
+
+    public FindNearRouteSchedule(
+        RotasOfertasService ofertasService,
+        FacebookController facebookController,
+        PerfilService perfilService,
+        WhatsMessageBatchService whatsMessageBatchService
+    ) {
         this.ofertasService = ofertasService;
         this.facebookController = facebookController;
         this.perfilService = perfilService;
+        this.whatsMessageBatchService = whatsMessageBatchService;
     }
 
-    @Scheduled(fixedDelayString = "PT015M")
+    @Scheduled(fixedDelayString = "PT35M")
+    public void updateWhatsStatus() {
+        var whatsStatus = this.whatsMessageBatchService.findByRouteStatus(WhatsStatus.OPEN);
+        whatsStatus.forEach(whats -> {
+            whats.setStatus(WhatsStatus.CLOSED);
+            whatsMessageBatchService.save(whats);
+        });
+    }
+
+    @Scheduled(fixedDelayString = "PT02M")
     public void getNearRoute() {
         log.info("Start scanning nears route to users.....");
 
@@ -48,6 +70,15 @@ public class FindNearRouteSchedule {
             GoogleRoutes[] gRoutesArr = g.fromJson(dto.getRotas(), GoogleRoutes[].class);
 
             GoogleRoutes gRoutes = gRoutesArr[0];
+
+            var whatsService = whatsMessageBatchService.findByNearRouteStatus(
+                dto.getOfertas().getPerfil().getId().intValue(),
+                WhatsStatus.OPEN
+            );
+
+            if (whatsService.size() > 0) {
+                continue;
+            }
 
             List<RotasOfertasDTO> allRoutes = ofertasService.findAllNotPerfilId(
                 dto.getOfertas().getPerfil().getId(),
@@ -113,7 +144,24 @@ public class FindNearRouteSchedule {
 
             if (selected.size() > 0) {
                 dto.getOfertas().setPerfil(perfilService.findOne(dto.getOfertas().getPerfil().getId()).get());
-                facebookController.sendNearsRouteNotifcation(selected, dto);
+
+                var response = facebookController.sendNearsRouteNotifcation(selected, dto);
+
+                if (response.getError() == null) {
+                    WhatsMessageBatchDTO whatsMessageBatch = new WhatsMessageBatchDTO();
+                    whatsMessageBatch.setTipo(WhatsAppType.LIST_ALERT);
+                    whatsMessageBatch.setPerfilID(dto.getOfertas().getPerfil().getId().intValue());
+                    whatsMessageBatch.setOfertaId(dto.getOfertas().getId());
+                    whatsMessageBatch.setStatus(WhatsStatus.OPEN);
+                    whatsMessageBatch.setTipoOferta(dto.getOfertas().getTipoOferta());
+                    whatsMessageBatch.setWaidTo(response.getMessages().get(0).getId());
+                    whatsMessageBatch.setNotificationDate(ZonedDateTime.now());
+                    this.whatsMessageBatchService.save(whatsMessageBatch);
+                } else {
+                    log.error(response.getError().getCode());
+                    log.error(response.getError().getType());
+                    log.error(response.getError().getMessage());
+                }
             }
         }
 

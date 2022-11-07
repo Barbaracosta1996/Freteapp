@@ -120,6 +120,49 @@
         <div *ngIf="editForm.get(['perfil'])!.invalid && (editForm.get(['perfil'])!.dirty || editForm.get(['perfil'])!.touched)">
           <small class="form-text text-danger" *ngIf="editForm.get(['perfil'])?.errors?.required"> O campo é obrigatório. </small>
         </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_minhaOferta">Minha Oferta</label>
+          <select
+            class="form-control"
+            id="field_minhaOferta"
+            data-cy="minhaOferta"
+            name="minhaOferta"
+            formControlName="minhaOferta"
+            [compareWith]="compareOfertas"
+          >
+            <option *ngIf="!editForm.get('minhaOferta')!.value" [ngValue]="null" selected></option>
+            <option [ngValue]="ofertasOption" *ngFor="let ofertasOption of ofertasSharedCollection">{{ ofertasOption.id }}</option>
+          </select>
+        </div>
+        <div
+          *ngIf="editForm.get(['minhaOferta'])!.invalid && (editForm.get(['minhaOferta'])!.dirty || editForm.get(['minhaOferta'])!.touched)"
+        >
+          <small class="form-text text-danger" *ngIf="editForm.get(['minhaOferta'])?.errors?.required"> O campo é obrigatório. </small>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_requestedPerfil">Requested Perfil</label>
+          <select
+            class="form-control"
+            id="field_requestedPerfil"
+            data-cy="requestedPerfil"
+            name="requestedPerfil"
+            formControlName="requestedPerfil"
+            [compareWith]="comparePerfil"
+          >
+            <option *ngIf="!editForm.get('requestedPerfil')!.value" [ngValue]="null" selected></option>
+            <option [ngValue]="perfilOption" *ngFor="let perfilOption of perfilsSharedCollection">{{ perfilOption.id }}</option>
+          </select>
+        </div>
+        <div
+          *ngIf="
+            editForm.get(['requestedPerfil'])!.invalid &&
+            (editForm.get(['requestedPerfil'])!.dirty || editForm.get(['requestedPerfil'])!.touched)
+          "
+        >
+          <small class="form-text text-danger" *ngIf="editForm.get(['requestedPerfil'])?.errors?.required"> O campo é obrigatório. </small>
+        </div>
       </div>
 
       <div>

@@ -28,6 +28,8 @@ describe('Solicitacao Form Service', () => {
             valorFrete: expect.any(Object),
             ofertas: expect.any(Object),
             perfil: expect.any(Object),
+            minhaOferta: expect.any(Object),
+            requestedPerfil: expect.any(Object),
           })
         );
       });
@@ -46,6 +48,8 @@ describe('Solicitacao Form Service', () => {
             valorFrete: expect.any(Object),
             ofertas: expect.any(Object),
             perfil: expect.any(Object),
+            minhaOferta: expect.any(Object),
+            requestedPerfil: expect.any(Object),
           })
         );
       });

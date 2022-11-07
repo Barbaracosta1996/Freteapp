@@ -14,6 +14,7 @@ import tech.jhipster.service.filter.FloatFilter;
 import tech.jhipster.service.filter.IntegerFilter;
 import tech.jhipster.service.filter.LongFilter;
 import tech.jhipster.service.filter.StringFilter;
+import tech.jhipster.service.filter.ZonedDateTimeFilter;
 
 /**
  * Criteria class for the {@link com.infocargas.freteapp.domain.WhatsMessageBatch} entity. This class is used
@@ -94,6 +95,10 @@ public class WhatsMessageBatchCriteria implements Serializable, Criteria {
 
     private TipoOfertaFilter tipoOferta;
 
+    private ZonedDateTimeFilter notificationDate;
+
+    private ZonedDateTimeFilter createdDate;
+
     private Boolean distinct;
 
     public WhatsMessageBatchCriteria() {}
@@ -106,6 +111,8 @@ public class WhatsMessageBatchCriteria implements Serializable, Criteria {
         this.status = other.status == null ? null : other.status.copy();
         this.ofertaId = other.ofertaId == null ? null : other.ofertaId.copy();
         this.tipoOferta = other.tipoOferta == null ? null : other.tipoOferta.copy();
+        this.notificationDate = other.notificationDate == null ? null : other.notificationDate.copy();
+        this.createdDate = other.createdDate == null ? null : other.createdDate.copy();
         this.distinct = other.distinct;
     }
 
@@ -219,6 +226,36 @@ public class WhatsMessageBatchCriteria implements Serializable, Criteria {
         this.tipoOferta = tipoOferta;
     }
 
+    public ZonedDateTimeFilter getNotificationDate() {
+        return notificationDate;
+    }
+
+    public ZonedDateTimeFilter notificationDate() {
+        if (notificationDate == null) {
+            notificationDate = new ZonedDateTimeFilter();
+        }
+        return notificationDate;
+    }
+
+    public void setNotificationDate(ZonedDateTimeFilter notificationDate) {
+        this.notificationDate = notificationDate;
+    }
+
+    public ZonedDateTimeFilter getCreatedDate() {
+        return createdDate;
+    }
+
+    public ZonedDateTimeFilter createdDate() {
+        if (createdDate == null) {
+            createdDate = new ZonedDateTimeFilter();
+        }
+        return createdDate;
+    }
+
+    public void setCreatedDate(ZonedDateTimeFilter createdDate) {
+        this.createdDate = createdDate;
+    }
+
     public Boolean getDistinct() {
         return distinct;
     }
@@ -244,13 +281,15 @@ public class WhatsMessageBatchCriteria implements Serializable, Criteria {
             Objects.equals(status, that.status) &&
             Objects.equals(ofertaId, that.ofertaId) &&
             Objects.equals(tipoOferta, that.tipoOferta) &&
+            Objects.equals(notificationDate, that.notificationDate) &&
+            Objects.equals(createdDate, that.createdDate) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tipo, waidTo, perfilID, status, ofertaId, tipoOferta, distinct);
+        return Objects.hash(id, tipo, waidTo, perfilID, status, ofertaId, tipoOferta, notificationDate, createdDate, distinct);
     }
 
     // prettier-ignore
@@ -264,6 +303,8 @@ public class WhatsMessageBatchCriteria implements Serializable, Criteria {
             (status != null ? "status=" + status + ", " : "") +
             (ofertaId != null ? "ofertaId=" + ofertaId + ", " : "") +
             (tipoOferta != null ? "tipoOferta=" + tipoOferta + ", " : "") +
+            (notificationDate != null ? "notificationDate=" + notificationDate + ", " : "") +
+            (createdDate != null ? "createdDate=" + createdDate + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }

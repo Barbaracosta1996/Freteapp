@@ -14,6 +14,8 @@ export interface ISolicitacao {
   valorFrete?: number | null;
   ofertas?: Pick<IOfertas, 'id'> | null;
   perfil?: Pick<IPerfil, 'id'> | null;
+  minhaOferta?: Pick<IOfertas, 'id'> | null;
+  requestedPerfil?: Pick<IPerfil, 'id'> | null;
 }
 
 export type NewSolicitacao = Omit<ISolicitacao, 'id'> & { id: null };

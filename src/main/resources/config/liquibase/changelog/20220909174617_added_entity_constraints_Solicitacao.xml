@@ -19,5 +19,17 @@
                                  constraintName="fk_solicitacao__perfil_id"
                                  referencedColumnNames="id"
                                  referencedTableName="perfil"/>
+
+        <addForeignKeyConstraint baseColumnNames="minha_oferta_id"
+                                 baseTableName="solicitacao"
+                                 constraintName="fk_solicitacao__minha_oferta_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="ofertas"/>
+
+        <addForeignKeyConstraint baseColumnNames="requested_perfil_id"
+                                 baseTableName="solicitacao"
+                                 constraintName="fk_solicitacao__requested_perfil_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="perfil"/>
     </changeSet>
 </databaseChangeLog>

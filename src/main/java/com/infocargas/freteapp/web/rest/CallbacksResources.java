@@ -3,6 +3,7 @@ package com.infocargas.freteapp.web.rest;
 import static com.infocargas.freteapp.config.Constants.TOKEN_CALLBACK;
 
 import com.infocargas.freteapp.controller.FacebookController;
+import com.infocargas.freteapp.domain.Ofertas;
 import com.infocargas.freteapp.domain.SettingsCargaApp;
 import com.infocargas.freteapp.domain.enumeration.*;
 import com.infocargas.freteapp.response.facebook.FacebookResponse;
@@ -74,13 +75,22 @@ public class CallbacksResources {
             ) {
                 if (
                     facebookResponse.getEntry().get(0).getChanges().get(0).getValue().getContacts() != null &&
-                    facebookResponse.getEntry().get(0).getChanges().get(0).getValue().getContacts().size() > 1
+                    facebookResponse.getEntry().get(0).getChanges().get(0).getValue().getContacts().size() > 0
                 ) {
                     String waid = facebookResponse.getEntry().get(0).getChanges().get(0).getValue().getContacts().get(0).getWaId();
                     Optional<PerfilDTO> perfilDTO = this.perfilService.findByWaId(waid);
 
                     if (perfilDTO.isPresent()) {
-                        String messageId = facebookResponse.getEntry().get(0).getChanges().get(0).getValue().getMessages().get(0).getId();
+                        String messageId = facebookResponse
+                            .getEntry()
+                            .get(0)
+                            .getChanges()
+                            .get(0)
+                            .getValue()
+                            .getMessages()
+                            .get(0)
+                            .getContext()
+                            .get("id");
                         Optional<WhatsMessageBatchDTO> message = whatsMessageBatchService.findByMessageId(messageId);
 
                         if (message.isPresent()) {
@@ -105,18 +115,36 @@ public class CallbacksResources {
                                             FacebookSendResponse response;
 
                                             SolicitacaoDTO solicitacaoDTO = new SolicitacaoDTO();
+                                            solicitacaoDTO.setRequestedPerfil(ofertaPerfil.get().getOfertas().getPerfil());
                                             solicitacaoDTO.setPerfil(requestedOferta.get().getOfertas().getPerfil());
                                             solicitacaoDTO.setOfertas(ofertaPerfil.get().getOfertas());
+                                            solicitacaoDTO.setMinhaOferta(requestedOferta.get().getOfertas());
                                             solicitacaoDTO.setDataProposta(ZonedDateTime.now());
                                             solicitacaoDTO.setStatus(StatusSolicitacao.AGUARDANDORESPOSTA);
 
                                             if (ofertaPerfil.get().getOfertas().getTipoOferta() == TipoOferta.CARGA) {
                                                 solicitacaoDTO = solicitacaoService.save(solicitacaoDTO);
-
+                                                solicitacaoDTO.setPerfil(
+                                                    perfilService.findOne(requestedOferta.get().getOfertas().getPerfil().getId()).get()
+                                                );
+                                                solicitacaoDTO
+                                                    .getOfertas()
+                                                    .setPerfil(
+                                                        perfilService.findOne(ofertaPerfil.get().getOfertas().getPerfil().getId()).get()
+                                                    );
                                                 response = facebookController.sendRequestCargo(solicitacaoDTO);
                                             } else {
                                                 response = facebookController.sendRequestVacancies(solicitacaoDTO);
                                             }
+
+                                            facebookController.sendOneMessage(
+                                                solicitacaoDTO.getRequestedPerfil().getUser().getPhone(),
+                                                String.format(
+                                                    "Enviamos sua solicitação para o(a) *%s* e será necessário a aprovação do mesmo(a) para dar sequência no processo. " +
+                                                    "Assim que houver quaisquer atualização entraremos em contato.",
+                                                    solicitacaoDTO.getPerfil().getTipoConta().name().toLowerCase()
+                                                )
+                                            );
 
                                             if (response.getError() == null) {
                                                 message.get().setStatus(WhatsStatus.CLOSED);
@@ -124,6 +152,7 @@ public class CallbacksResources {
 
                                                 var newMessageBatch = new WhatsMessageBatchDTO();
                                                 newMessageBatch.setStatus(WhatsStatus.OPEN);
+                                                newMessageBatch.setWaidTo(response.getMessages().get(0).getId());
                                                 newMessageBatch.setTipoOferta(solicitacaoDTO.getOfertas().getTipoOferta());
                                                 newMessageBatch.setOfertaId(solicitacaoDTO.getId());
                                                 newMessageBatch.setPerfilID(solicitacaoDTO.getPerfil().getId().intValue());
@@ -156,6 +185,7 @@ public class CallbacksResources {
 
                                                 var newMessageBatch = new WhatsMessageBatchDTO();
                                                 newMessageBatch.setStatus(WhatsStatus.OPEN);
+                                                newMessageBatch.setWaidTo(response.getMessages().get(0).getId());
                                                 newMessageBatch.setTipoOferta(rotasOfertasDTO.getOfertas().getTipoOferta());
                                                 newMessageBatch.setOfertaId(rotasOfertasDTO.getId());
                                                 newMessageBatch.setPerfilID(perfilDTO.get().getId().intValue());
@@ -189,7 +219,13 @@ public class CallbacksResources {
 
                                             solicitacao = solicitacaoService.save(solicitacao);
 
+                                            solicitacao.setPerfil(perfilService.findOne(solicitacao.getPerfil().getId()).get());
+                                            solicitacao.setRequestedPerfil(
+                                                perfilService.findOne(solicitacao.getRequestedPerfil().getId()).get()
+                                            );
+
                                             OfertasDTO ofertas = solicitacao.getOfertas();
+                                            OfertasDTO ofertasRequested = solicitacao.getMinhaOferta();
 
                                             FacebookSendResponse response;
 
@@ -197,12 +233,42 @@ public class CallbacksResources {
                                                 ofertas.setStatus(StatusOferta.ATENDIDA);
                                                 ofertasService.save(ofertas);
 
+                                                ofertasRequested.setStatus(StatusOferta.ATENDIDA);
+                                                ofertasService.save(ofertasRequested);
+
+                                                facebookController.sendOneMessage(
+                                                    solicitacao.getRequestedPerfil().getUser().getPhone(),
+                                                    String.format(
+                                                        "O(A) %s %s aceitou seu pedido e estamos lhe enviando o contato " +
+                                                        "do mesmo para que você possa combinar os detalhes da viagem.",
+                                                        perfilDTO.get().getTipoConta().name(),
+                                                        perfilDTO.get().getNome()
+                                                    )
+                                                );
+
                                                 response = facebookController.sendContact(solicitacao);
                                             } else {
                                                 response = facebookController.sendNegativeMessage(solicitacao);
                                             }
 
                                             if (response.getError() == null) {
+                                                if (solicitacao.getAceitar() == AnwserStatus.SIM) {
+                                                    facebookController.sendOneMessage(
+                                                        solicitacao.getPerfil().getUser().getPhone(),
+                                                        String.format(
+                                                            "Enviamos sua resposta para o(a) %s %s e em breve o mesmo " +
+                                                            "deve entrar em contato para combinar a viagem. " +
+                                                            "Abaixo segue o contato do responsável.",
+                                                            solicitacao.getOfertas().getPerfil().getTipoConta().name(),
+                                                            solicitacao.getOfertas().getPerfil().getNome()
+                                                        )
+                                                    );
+                                                }
+                                                facebookController.sendContactPerfil(
+                                                    solicitacao.getRequestedPerfil(),
+                                                    solicitacao.getPerfil().getUser().getPhone()
+                                                );
+
                                                 message.get().setStatus(WhatsStatus.CLOSED);
                                                 whatsMessageBatchService.save(message.get());
                                             }

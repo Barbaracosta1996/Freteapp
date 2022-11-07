@@ -26,6 +26,8 @@ describe('WhatsMessageBatch Form Service', () => {
             status: expect.any(Object),
             ofertaId: expect.any(Object),
             tipoOferta: expect.any(Object),
+            notificationDate: expect.any(Object),
+            createdDate: expect.any(Object),
           })
         );
       });
@@ -42,6 +44,8 @@ describe('WhatsMessageBatch Form Service', () => {
             status: expect.any(Object),
             ofertaId: expect.any(Object),
             tipoOferta: expect.any(Object),
+            notificationDate: expect.any(Object),
+            createdDate: expect.any(Object),
           })
         );
       });

@@ -338,6 +338,29 @@ public class FacebookController {
         return sendNotification(message);
     }
 
+    /**
+     * Envia uma mensagem única para clietne
+     * @param phone número do telefone
+     * @param body corpo da mensagem.
+     * @return
+     */
+    public FacebookSendResponse sendOneMessage(String phone, String body) {
+        FacebookMessageVM message = new FacebookMessageVM();
+        message.setMessagingProduct("whatsapp");
+        message.setRecipientType("individual");
+        message.setPhoneWhatsApp("55" + phone);
+        message.setType("text");
+
+        Map<String, Object> messageBody = new HashMap<>();
+
+        messageBody.put("preview_url", false);
+        messageBody.put("body", body);
+
+        message.setMessageBody(messageBody);
+
+        return sendNotification(message);
+    }
+
     public FacebookSendResponse sendNegativeMessage(SolicitacaoDTO solicitacao) {
         FacebookMessageVM message = new FacebookMessageVM();
         message.setMessagingProduct("whatsapp");
@@ -436,9 +459,16 @@ public class FacebookController {
         ofertas.forEach(ofertasDTO -> {
             FacebookRowsVM row = new FacebookRowsVM();
             row.setId(ofertasDTO.getId().toString());
-            row.setTitle(ofertasDTO.getDataFechamento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-            String text = "de: " + ofertasDTO.getOrigem() + " para: " + ofertasDTO.getDestino() + " | vagas: " + ofertasDTO.getQuantidade();
-            row.setDescription(text.substring(0, 70));
+            row.setTitle(
+                ofertasDTO.getDataFechamento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + " | vagas: " + ofertasDTO.getQuantidade()
+            );
+            String text = "de: " + ofertasDTO.getOrigem() + " para: " + ofertasDTO.getDestino();
+            if (text.length() > 70) {
+                row.setDescription(text.substring(0, 70));
+            } else {
+                row.setDescription(text);
+            }
+
             rows.add(row);
         });
 
@@ -459,17 +489,18 @@ public class FacebookController {
         FacebookMessageVM message = new FacebookMessageVM();
         message.setMessagingProduct("whatsapp");
         message.setType("contacts");
-        message.setPhoneWhatsApp("55" + solicitacao.getOfertas().getPerfil().getUser().getPhone());
+        message.setPhoneWhatsApp("55" + solicitacao.getRequestedPerfil().getUser().getPhone());
 
         List<FacebookContactVM> facebookContactVMS = new ArrayList<>();
 
         FacebookContactVM contactVM = new FacebookContactVM();
 
-        Map<String, String> address = new HashMap<>();
-        address.put("city", solicitacao.getPerfil().getCidade());
-        address.put("state", solicitacao.getPerfil().getEstado());
-
-        contactVM.setAddresses(address);
+        if (solicitacao.getPerfil().getCidade() != null && solicitacao.getPerfil().getEstado() != null) {
+            Map<String, String> address = new HashMap<>();
+            address.put("city", solicitacao.getPerfil().getCidade());
+            address.put("state", solicitacao.getPerfil().getEstado());
+            contactVM.setAddresses(address);
+        }
 
         List<Map<String, String>> emails = new ArrayList<>();
 
@@ -483,7 +514,7 @@ public class FacebookController {
 
         Map<String, String> name = new HashMap<>();
         name.put("formatted_name", solicitacao.getPerfil().getNome());
-        List<String> nameSplit = List.of(solicitacao.getPerfil().getUser().getName().split(""));
+        List<String> nameSplit = List.of(solicitacao.getPerfil().getNome().split(" "));
         name.put("first_name", nameSplit.get(0));
         if (nameSplit.size() > 1) {
             name.put("last_name", nameSplit.get(nameSplit.size() - 1));
@@ -495,7 +526,7 @@ public class FacebookController {
         org.put("company", solicitacao.getPerfil().getTipoConta().name().toLowerCase());
         org.put("department", solicitacao.getOfertas().getTipoTransporte().name().toLowerCase());
 
-        contactVM.setName(org);
+        contactVM.setOrg(org);
 
         List<Map<String, String>> phones = new ArrayList<>();
 
@@ -503,6 +534,67 @@ public class FacebookController {
         phone.put("phone", solicitacao.getPerfil().getUser().getPhone());
         phone.put("type", "Whatsapp");
         phone.put("wa_id", solicitacao.getPerfil().getWaId());
+
+        phones.add(phone);
+
+        contactVM.setPhones(phones);
+
+        facebookContactVMS.add(contactVM);
+
+        message.setContacts(facebookContactVMS);
+
+        return sendNotification(message);
+    }
+
+    public FacebookSendResponse sendContactPerfil(PerfilDTO perfil, String telefone) {
+        FacebookMessageVM message = new FacebookMessageVM();
+        message.setMessagingProduct("whatsapp");
+        message.setType("contacts");
+        message.setPhoneWhatsApp("55" + telefone);
+
+        List<FacebookContactVM> facebookContactVMS = new ArrayList<>();
+
+        FacebookContactVM contactVM = new FacebookContactVM();
+
+        if (perfil.getCidade() != null && perfil.getEstado() != null) {
+            Map<String, String> address = new HashMap<>();
+            address.put("city", perfil.getCidade());
+            address.put("state", perfil.getEstado());
+
+            contactVM.setAddresses(address);
+        }
+
+        List<Map<String, String>> emails = new ArrayList<>();
+
+        Map<String, String> email = new HashMap<>();
+        email.put("email", perfil.getUser().getEmail());
+        email.put("type", "Infocargas");
+
+        emails.add(email);
+
+        contactVM.setEmails(emails);
+
+        Map<String, String> name = new HashMap<>();
+        name.put("formatted_name", perfil.getNome());
+        List<String> nameSplit = List.of(perfil.getNome().split(""));
+        name.put("first_name", nameSplit.get(0));
+        if (nameSplit.size() > 1) {
+            name.put("last_name", nameSplit.get(nameSplit.size() - 1));
+        }
+
+        contactVM.setName(name);
+
+        Map<String, String> org = new HashMap<>();
+        org.put("company", perfil.getTipoConta().name().toLowerCase());
+
+        contactVM.setOrg(org);
+
+        List<Map<String, String>> phones = new ArrayList<>();
+
+        Map<String, String> phone = new HashMap<>();
+        phone.put("phone", perfil.getUser().getPhone());
+        phone.put("type", "Whatsapp");
+        phone.put("wa_id", perfil.getWaId());
 
         phones.add(phone);
 

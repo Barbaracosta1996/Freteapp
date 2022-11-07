@@ -40,6 +40,8 @@ type SolicitacaoFormGroupContent = {
   valorFrete: FormControl<SolicitacaoFormRawValue['valorFrete']>;
   ofertas: FormControl<SolicitacaoFormRawValue['ofertas']>;
   perfil: FormControl<SolicitacaoFormRawValue['perfil']>;
+  minhaOferta: FormControl<SolicitacaoFormRawValue['minhaOferta']>;
+  requestedPerfil: FormControl<SolicitacaoFormRawValue['requestedPerfil']>;
 };
 
 export type SolicitacaoFormGroup = FormGroup<SolicitacaoFormGroupContent>;
@@ -73,6 +75,12 @@ export class SolicitacaoFormService {
         validators: [Validators.required],
       }),
       perfil: new FormControl(solicitacaoRawValue.perfil, {
+        validators: [Validators.required],
+      }),
+      minhaOferta: new FormControl(solicitacaoRawValue.minhaOferta, {
+        validators: [Validators.required],
+      }),
+      requestedPerfil: new FormControl(solicitacaoRawValue.requestedPerfil, {
         validators: [Validators.required],
       }),
     });

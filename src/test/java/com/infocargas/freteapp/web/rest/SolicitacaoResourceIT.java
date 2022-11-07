@@ -116,6 +116,10 @@ class SolicitacaoResourceIT {
             perfil = TestUtil.findAll(em, Perfil.class).get(0);
         }
         solicitacao.setPerfil(perfil);
+        // Add required entity
+        solicitacao.setMinhaOferta(ofertas);
+        // Add required entity
+        solicitacao.setRequestedPerfil(perfil);
         return solicitacao;
     }
 
@@ -153,6 +157,10 @@ class SolicitacaoResourceIT {
             perfil = TestUtil.findAll(em, Perfil.class).get(0);
         }
         solicitacao.setPerfil(perfil);
+        // Add required entity
+        solicitacao.setMinhaOferta(ofertas);
+        // Add required entity
+        solicitacao.setRequestedPerfil(perfil);
         return solicitacao;
     }
 
@@ -764,6 +772,52 @@ class SolicitacaoResourceIT {
 
         // Get all the solicitacaoList where perfil equals to (perfilId + 1)
         defaultSolicitacaoShouldNotBeFound("perfilId.equals=" + (perfilId + 1));
+    }
+
+    @Test
+    @Transactional
+    void getAllSolicitacaosByMinhaOfertaIsEqualToSomething() throws Exception {
+        Ofertas minhaOferta;
+        if (TestUtil.findAll(em, Ofertas.class).isEmpty()) {
+            solicitacaoRepository.saveAndFlush(solicitacao);
+            minhaOferta = OfertasResourceIT.createEntity(em);
+        } else {
+            minhaOferta = TestUtil.findAll(em, Ofertas.class).get(0);
+        }
+        em.persist(minhaOferta);
+        em.flush();
+        solicitacao.setMinhaOferta(minhaOferta);
+        solicitacaoRepository.saveAndFlush(solicitacao);
+        Long minhaOfertaId = minhaOferta.getId();
+
+        // Get all the solicitacaoList where minhaOferta equals to minhaOfertaId
+        defaultSolicitacaoShouldBeFound("minhaOfertaId.equals=" + minhaOfertaId);
+
+        // Get all the solicitacaoList where minhaOferta equals to (minhaOfertaId + 1)
+        defaultSolicitacaoShouldNotBeFound("minhaOfertaId.equals=" + (minhaOfertaId + 1));
+    }
+
+    @Test
+    @Transactional
+    void getAllSolicitacaosByRequestedPerfilIsEqualToSomething() throws Exception {
+        Perfil requestedPerfil;
+        if (TestUtil.findAll(em, Perfil.class).isEmpty()) {
+            solicitacaoRepository.saveAndFlush(solicitacao);
+            requestedPerfil = PerfilResourceIT.createEntity(em);
+        } else {
+            requestedPerfil = TestUtil.findAll(em, Perfil.class).get(0);
+        }
+        em.persist(requestedPerfil);
+        em.flush();
+        solicitacao.setRequestedPerfil(requestedPerfil);
+        solicitacaoRepository.saveAndFlush(solicitacao);
+        Long requestedPerfilId = requestedPerfil.getId();
+
+        // Get all the solicitacaoList where requestedPerfil equals to requestedPerfilId
+        defaultSolicitacaoShouldBeFound("requestedPerfilId.equals=" + requestedPerfilId);
+
+        // Get all the solicitacaoList where requestedPerfil equals to (requestedPerfilId + 1)
+        defaultSolicitacaoShouldNotBeFound("requestedPerfilId.equals=" + (requestedPerfilId + 1));
     }
 
     /**

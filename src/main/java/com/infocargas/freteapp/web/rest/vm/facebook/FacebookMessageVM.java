@@ -1,9 +1,8 @@
 package com.infocargas.freteapp.web.rest.vm.facebook;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.infocargas.freteapp.response.facebook.FacebookResponseContacts;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * Body to WhatsApp Message.
@@ -53,6 +52,9 @@ public class FacebookMessageVM {
      * Example: [body, buttons, button, image, etc]
      */
     private List<FacebookComponetsVM> componets;
+
+    @JsonProperty("text")
+    private Map<String, Object> messageBody;
 
     private List<FacebookContactVM> contacts;
 
@@ -118,6 +120,14 @@ public class FacebookMessageVM {
 
     public void setContacts(List<FacebookContactVM> contacts) {
         this.contacts = contacts;
+    }
+
+    public Map<String, Object> getMessageBody() {
+        return messageBody;
+    }
+
+    public void setMessageBody(Map<String, Object> messageBody) {
+        this.messageBody = messageBody;
     }
 
     @Override

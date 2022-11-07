@@ -111,6 +111,13 @@ public class WhatsMessageBatchQueryService extends QueryService<WhatsMessageBatc
             if (criteria.getTipoOferta() != null) {
                 specification = specification.and(buildSpecification(criteria.getTipoOferta(), WhatsMessageBatch_.tipoOferta));
             }
+            if (criteria.getNotificationDate() != null) {
+                specification =
+                    specification.and(buildRangeSpecification(criteria.getNotificationDate(), WhatsMessageBatch_.notificationDate));
+            }
+            if (criteria.getCreatedDate() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getCreatedDate(), WhatsMessageBatch_.createdDate));
+            }
         }
         return specification;
     }

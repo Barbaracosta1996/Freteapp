@@ -111,6 +111,23 @@ public class CallbacksResources {
                                         var ofertaId = interactive.getListReply().get("id");
                                         var requestedOferta = rotasOfertasService.findByIdOferta(Long.valueOf(ofertaId));
 
+                                        if (
+                                            (
+                                                requestedOferta.isPresent() &&
+                                                requestedOferta.get().getOfertas().getStatus() == StatusOferta.ATENDIDA
+                                            ) ||
+                                            (
+                                                requestedOferta.isPresent() &&
+                                                requestedOferta.get().getOfertas().getStatus() == StatusOferta.CANELADA
+                                            )
+                                        ) {
+                                            facebookController.sendOneMessage(
+                                                ofertaPerfil.get().getOfertas().getPerfil().getUser().getPhone(),
+                                                "A solicitação foi cancelada porque o transporte já foi encerrado."
+                                            );
+                                            return ResponseEntity.ok().build();
+                                        }
+
                                         requestedOferta.ifPresent(requested -> {
                                             FacebookSendResponse response;
 
@@ -271,6 +288,20 @@ public class CallbacksResources {
 
                                                 message.get().setStatus(WhatsStatus.CLOSED);
                                                 whatsMessageBatchService.save(message.get());
+
+                                                var qte = ofertasRequested.getQuantidade() - ofertas.getQuantidade();
+
+                                                if (qte > 0) {
+                                                    ofertasRequested.setId(null);
+                                                    ofertasRequested.setQuantidade(qte);
+                                                    ofertasService.createPortal(ofertasRequested);
+                                                }
+
+                                                if (qte < 0) {
+                                                    ofertas.setId(null);
+                                                    ofertas.setQuantidade(Math.abs(qte));
+                                                    ofertasService.createPortal(ofertasRequested);
+                                                }
                                             }
                                         });
                                     }

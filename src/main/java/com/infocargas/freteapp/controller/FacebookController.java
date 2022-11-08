@@ -342,7 +342,7 @@ public class FacebookController {
      * Envia uma mensagem única para clietne
      * @param phone número do telefone
      * @param body corpo da mensagem.
-     * @return
+     * @returne
      */
     public FacebookSendResponse sendOneMessage(String phone, String body) {
         FacebookMessageVM message = new FacebookMessageVM();

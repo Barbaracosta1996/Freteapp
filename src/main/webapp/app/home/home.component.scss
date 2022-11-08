@@ -4,7 +4,7 @@ HOME page styles
 @import '../../content/scss/colors';
 
 .body-home {
-  min-width: 300px;
+  min-width: 200px;
   background-color: $orange-color;
 
   .bg-blue-500 {
@@ -12,15 +12,15 @@ HOME page styles
   }
 
   .border-round {
-    border-radius: 20px !important;
+    border-radius: 10px !important;
   }
 
   .text-home {
-    font-weight: 600;
+    font-weight: 700;
 
     font-size: 3rem;
 
-    line-height: 128%;
+    line-height: 158%;
 
     text-align: center;
     letter-spacing: -0.5px;
@@ -51,7 +51,7 @@ HOME page styles
   .text-title {
     font-weight: bolder;
     font-size: 2rem;
-    line-height: 128%;
+    line-height: 178%;
     text-align: center;
     letter-spacing: -0.5px;
 
@@ -60,18 +60,18 @@ HOME page styles
 
   .text-describe {
     font-size: 1.2rem;
-    font-weight: 400;
+    font-weight: 500;
   }
 
   .img {
     width: 100%;
     height: 392px;
-    margin-bottom: 1.4rem;
+    margin-bottom: 0.5rem;
   }
 
   .motorista-img {
     width: 100%;
-    height: 180px;
+    height: 300px;
     background-size: contain;
     background-image: url('../../content/images/home/motorista_img.svg');
     background-repeat: no-repeat;
@@ -80,7 +80,7 @@ HOME page styles
 
   .transportadora-img {
     width: 100%;
-    height: 180px;
+    height: 300px;
     background-size: contain;
     background-image: url('../../content/images/home/transportadora-img2.svg');
     background-repeat: no-repeat;
@@ -89,7 +89,7 @@ HOME page styles
 
   .embarcador-img {
     width: 100%;
-    height: 180px;
+    height: 380px;
     background-size: contain;
     background-image: url('../../content/images/home/embarcador_img.svg');
     background-repeat: no-repeat;
@@ -168,7 +168,7 @@ HOME page styles
 
     .motorista-img {
       width: 100%;
-      height: 180px;
+      height: 200px;
       background-size: contain;
       background-image: url('../../content/images/home/motorista_img.svg');
       background-repeat: no-repeat;
@@ -177,7 +177,7 @@ HOME page styles
 
     .transportadora-img {
       width: 100%;
-      height: 180px;
+      height: 200px;
       background-size: contain;
       background-image: url('../../content/images/home/transportadora-img2.svg');
       background-repeat: no-repeat;
@@ -186,7 +186,7 @@ HOME page styles
 
     .embarcador-img {
       width: 100%;
-      height: 180px;
+      height: 200px;
       background-size: contain;
       background-image: url('../../content/images/home/embarcador_img.svg');
       background-repeat: no-repeat;
@@ -200,7 +200,7 @@ HOME page styles
 
 .banner-login {
   width: 100%;
-  height: 400px;
+  height: 480px;
   background-image: url('../../content/images/login/banner_login.jpg');
   background-position: top;
   background-repeat: no-repeat;

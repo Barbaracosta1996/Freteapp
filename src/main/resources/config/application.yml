@@ -34,8 +34,8 @@ eureka:
     instance-info-replication-interval-seconds: 10
     registry-fetch-interval-seconds: 10
   instance:
-    appname: freteapp
-    instanceId: freteapp:${spring.application.instance-id:${random.value}}
+    appname: carga-certa
+    instanceId: cargacerta:${spring.application.instance-id:${random.value}}
     lease-renewal-interval-in-seconds: 5
     lease-expiration-duration-in-seconds: 10
     status-page-url-path: ${management.endpoints.web.base-path}/info
@@ -116,7 +116,7 @@ management:
 
 spring:
   application:
-    name: freteapp
+    name: carga-certa
   profiles:
     # The commented value for `active` can be replaced with valid Spring profiles to load.
     # Otherwise, it will be filled in by maven when building the JAR file
@@ -200,7 +200,7 @@ info:
 
 jhipster:
   clientApp:
-    name: 'freteappApp'
+    name: 'cargaCerta'
   # By default, CORS is disabled. Uncomment to enable.
   # cors:
   #   allowed-origins: "http://localhost:8100,http://localhost:9000"
@@ -210,12 +210,12 @@ jhipster:
   #   allow-credentials: true
   #   max-age: 1800
   mail:
-    from: freteapp@localhost
+    from: developer@infocargas.log.br
   api-docs:
     default-include-pattern: ${server.servlet.context-path:}/api/**
     management-include-pattern: ${server.servlet.context-path:}/management/**
-    title: Freteapp API
-    description: Freteapp API documentation
+    title: Carga Certa API
+    description: Carga Certa API documentation
     version: 0.0.1
     terms-of-service-url:
     contact-name:

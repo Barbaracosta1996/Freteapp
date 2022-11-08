@@ -92,6 +92,10 @@ public class FindNearRouteSchedule {
                     return;
                 }
 
+                if (!oferta.getOfertas().getStatus().equals(StatusOferta.AGUARDANDO_PROPOSTA)) {
+                    return;
+                }
+
                 GoogleRoutes[] gRoutesOferta = g.fromJson(oferta.getRotas(), GoogleRoutes[].class);
 
                 GoogleLegs googleLegs = gRoutes.getLegs().get(0);

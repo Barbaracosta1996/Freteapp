@@ -114,17 +114,19 @@ public class CallbacksResources {
                                         if (
                                             (
                                                 requestedOferta.isPresent() &&
-                                                requestedOferta.get().getOfertas().getStatus() == StatusOferta.ATENDIDA
+                                                requestedOferta.get().getOfertas().getStatus() != StatusOferta.AGUARDANDO_PROPOSTA
                                             ) ||
                                             (
                                                 requestedOferta.isPresent() &&
-                                                requestedOferta.get().getOfertas().getStatus() == StatusOferta.CANELADA
+                                                requestedOferta.get().getOfertas().getStatus() != StatusOferta.AGUARDANDO_PROPOSTA
                                             )
                                         ) {
                                             facebookController.sendOneMessage(
                                                 ofertaPerfil.get().getOfertas().getPerfil().getUser().getPhone(),
-                                                "A solicitação foi cancelada porque o transporte já foi encerrado."
+                                                "A solicitação foi cancelada porque o transporte já foi encerrado. Assim que surgir novas indicações enviaremos aqui."
                                             );
+                                            message.get().setStatus(WhatsStatus.CLOSED);
+                                            whatsMessageBatchService.save(message.get());
                                             return ResponseEntity.ok().build();
                                         }
 

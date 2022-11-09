@@ -131,6 +131,16 @@ public class RotasOfertasService {
     }
 
     @Transactional(readOnly = true)
+    public List<RotasOfertasDTO> findAllByStatusAndDate(StatusOferta status) {
+        log.debug("Request to get all RotasOfertas");
+        List<RotasOfertas> lista = rotasOfertasRepository.findAllByOfertasStatusAndOfertasDataFechamentoGreaterThanEqual(
+            status,
+            ZonedDateTime.now()
+        );
+        return rotasOfertasMapper.toDto(lista);
+    }
+
+    @Transactional(readOnly = true)
     public List<RotasOfertasDTO> findByExpired(StatusOferta status) {
         log.debug("Request to get all Ofertas");
         return rotasOfertasMapper.toDto(

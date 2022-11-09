@@ -18,7 +18,9 @@ import com.infocargas.freteapp.utils.GeoUtils;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -72,7 +74,7 @@ public class FindNearRouteSchedule {
         log.info("Start scanning nears route to users.....");
 
         Gson g = new Gson();
-        List<RotasOfertasDTO> ofertasList = ofertasService.findAll();
+        List<RotasOfertasDTO> ofertasList = ofertasService.findAllByStatusAndDate(StatusOferta.AGUARDANDO_PROPOSTA);
 
         for (RotasOfertasDTO dto : ofertasList) {
             List<OfertasDTO> selected = new ArrayList<>();
@@ -81,20 +83,18 @@ public class FindNearRouteSchedule {
 
             GoogleRoutes gRoutes = gRoutesArr[0];
 
-            var whatsService = whatsMessageBatchService.findByNearRouteStatus(
-                dto.getOfertas().getPerfil().getId().intValue(),
-                WhatsStatus.OPEN
-            );
+            var perfilId = dto.getOfertas().getPerfil().getId();
+
+            var whatsService = whatsMessageBatchService.findByNearRouteStatus(perfilId.intValue(), WhatsStatus.OPEN);
 
             if (whatsService.size() > 0) {
                 continue;
             }
 
-            List<RotasOfertasDTO> allRoutes = ofertasService.findAllNotPerfilId(
-                dto.getOfertas().getPerfil().getId(),
-                dto.getOfertas().getTipoOferta() == TipoOferta.CARGA ? TipoOferta.VAGAS : TipoOferta.CARGA,
-                StatusOferta.AGUARDANDO_PROPOSTA
-            );
+            List<RotasOfertasDTO> allRoutes = ofertasList
+                .stream()
+                .filter(o -> !Objects.equals(o.getOfertas().getPerfil().getId(), perfilId))
+                .collect(Collectors.toList());
 
             allRoutes.forEach(oferta -> {
                 if (oferta.getId().equals(dto.getId())) {

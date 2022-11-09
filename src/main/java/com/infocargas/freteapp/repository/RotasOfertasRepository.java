@@ -27,5 +27,7 @@ public interface RotasOfertasRepository extends JpaRepository<RotasOfertas, Long
 
     Optional<RotasOfertas> findByOfertasId(Long ofertasId);
 
+    List<RotasOfertas> findAllByOfertasStatusAndOfertasDataFechamentoGreaterThanEqual(StatusOferta statusOferta, ZonedDateTime dateMax);
+
     List<RotasOfertas> findRotasOfertasByOfertasStatusAndOfertasDataFechamentoLessThanEqual(StatusOferta statusOferta, ZonedDateTime date);
 }

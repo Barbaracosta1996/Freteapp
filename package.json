@@ -90,6 +90,7 @@
     "@fortawesome/free-solid-svg-icons": "6.1.2",
     "@ng-bootstrap/ng-bootstrap": "13.0.0",
     "@popperjs/core": "2.11.5",
+    "angular2-text-mask": "^9.0.0",
     "bootstrap": "5.2.0",
     "bootswatch": "5.2.0",
     "dayjs": "1.11.4",

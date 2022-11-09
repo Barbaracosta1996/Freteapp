@@ -296,12 +296,14 @@ public class CallbacksResources {
                                                 if (qte > 0) {
                                                     ofertasRequested.setId(null);
                                                     ofertasRequested.setQuantidade(qte);
+                                                    ofertasRequested.setStatus(StatusOferta.AGUARDANDO_PROPOSTA);
                                                     ofertasService.createPortal(ofertasRequested);
                                                 }
 
                                                 if (qte < 0) {
                                                     ofertas.setId(null);
                                                     ofertas.setQuantidade(Math.abs(qte));
+                                                    ofertasRequested.setStatus(StatusOferta.AGUARDANDO_PROPOSTA);
                                                     ofertasService.createPortal(ofertasRequested);
                                                 }
                                             }

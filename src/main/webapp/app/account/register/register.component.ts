@@ -12,6 +12,7 @@ import { TipoConta } from '../../entities/enumerations/tipo-conta.model';
 import { SettingsContractsService } from '../../entities/settings-contracts/service/settings-contracts.service';
 import { ISettingsContracts } from '../../entities/settings-contracts/settings-contracts.model';
 import { DataUtils } from '../../core/util/data-util.service';
+import { CELLPHONE_MASK, CNPJ_MASK, CPF_MASK, POSTAL_MASK } from '../../shared/input.constants';
 
 @Component({
   selector: 'jhi-register',
@@ -20,6 +21,11 @@ import { DataUtils } from '../../core/util/data-util.service';
 })
 export class RegisterComponent implements AfterViewInit, OnInit {
   tipoConta = TipoConta.MOTORISTA;
+
+  phoneMask = CELLPHONE_MASK;
+  cpfMask = CPF_MASK;
+  cnpjMask = CNPJ_MASK;
+  cepMask = POSTAL_MASK;
 
   doNotMatch = false;
   error = false;
@@ -38,7 +44,7 @@ export class RegisterComponent implements AfterViewInit, OnInit {
     }),
     telephoneNumber: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.minLength(11), Validators.maxLength(15)],
+      validators: [Validators.required, Validators.minLength(14), Validators.maxLength(15)],
     }),
     password: new FormControl('', {
       nonNullable: true,
@@ -60,7 +66,9 @@ export class RegisterComponent implements AfterViewInit, OnInit {
     pais: new FormControl('', {}),
     nome: new FormControl('', {}),
     razaosocial: new FormControl('', {}),
-    telefoneComercial: new FormControl('', {}),
+    telefoneComercial: new FormControl('', {
+      validators: [Validators.minLength(14), Validators.maxLength(15)],
+    }),
     acceptedTerm: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required],
@@ -101,29 +109,38 @@ export class RegisterComponent implements AfterViewInit, OnInit {
     if (password !== confirmPassword) {
       this.doNotMatch = true;
     } else {
-      let { login, email, telephoneNumber, firstName, lastName } = this.registerForm.getRawValue();
-      login = email;
-
-      const dados = this.registerForm.getRawValue();
+      let user = this.registerForm.getRawValue();
+      let login = user.email;
 
       const perfil: any = {};
 
-      perfil.nome = firstName + ' ' + lastName;
-      perfil.cep = dados.cep || null;
-      perfil.razaosocial = dados.razaosocial || dados.nome;
-      perfil.telefoneComercial = dados.telefoneComercial || telephoneNumber;
-      perfil.cnpj = dados.cnpj || null;
-      perfil.cpf = dados.cpf;
-      perfil.cidade = dados.cidade || null;
-      perfil.estado = dados.estado || null;
-      perfil.numero = dados.numero || null;
+      perfil.nome = user.firstName + ' ' + user.lastName;
+      perfil.cep = user.cep || null;
+      perfil.razaosocial = user.razaosocial || user.nome;
+      perfil.telefoneComercial = user.telefoneComercial?.replace(/\D/g, '');
+      perfil.cnpj = user.cnpj || null;
+      perfil.cpf = user.cpf;
+      perfil.cidade = user.cidade || null;
+      perfil.estado = user.estado || null;
+      perfil.numero = user.numero || null;
       perfil.pais = 'br';
       perfil.tipoConta = this.tipoConta;
 
-      this.registerService.save({ login, email, password, telephoneNumber, langKey: 'pt-br', firstName, lastName, perfil }).subscribe({
-        next: () => this.autentication({ username: login!, password: password, rememberMe: true }),
-        error: response => this.processError(response),
-      });
+      this.registerService
+        .save({
+          login: user.email,
+          email: user.email,
+          password,
+          telephoneNumber: user.telephoneNumber.replace(/\D/g, ''),
+          langKey: 'pt-br',
+          firstName: user.firstName,
+          lastName: user.firstName,
+          perfil: perfil,
+        })
+        .subscribe({
+          next: () => this.autentication({ username: login!, password: password, rememberMe: true }),
+          error: response => this.processError(response),
+        });
     }
   }
 

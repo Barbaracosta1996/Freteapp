@@ -54,7 +54,6 @@ public class GeoOfertaResource {
             List<RotasOfertasDTO> allRoutes = ofertasService.findAllNotPerfilId(
                 rotasOfertasDTO.getOfertas().getPerfil().getId(),
                 rotasOfertasDTO.getOfertas().getTipoOferta() == TipoOferta.CARGA ? TipoOferta.VAGAS : TipoOferta.CARGA,
-                rotasOfertasDTO.getOfertas().getDataFechamento(),
                 StatusOferta.AGUARDANDO_PROPOSTA
             );
 

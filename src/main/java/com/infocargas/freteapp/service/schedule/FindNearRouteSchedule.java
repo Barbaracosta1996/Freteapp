@@ -50,6 +50,16 @@ public class FindNearRouteSchedule {
 
     @Scheduled(fixedDelayString = "PT35M")
     public void updateWhatsStatus() {
+        var ofertas = ofertasService.findByExpired(StatusOferta.AGUARDANDO_PROPOSTA);
+
+        ofertas.forEach(data -> {
+            data.getOfertas().setStatus(StatusOferta.CANCELED);
+            ofertasService.save(data);
+        });
+    }
+
+    @Scheduled(fixedDelayString = "PT35M")
+    public void updateStatusOferta() {
         var whatsStatus = this.whatsMessageBatchService.findByRouteStatus(WhatsStatus.OPEN);
         whatsStatus.forEach(whats -> {
             whats.setStatus(WhatsStatus.CLOSED);
@@ -83,7 +93,6 @@ public class FindNearRouteSchedule {
             List<RotasOfertasDTO> allRoutes = ofertasService.findAllNotPerfilId(
                 dto.getOfertas().getPerfil().getId(),
                 dto.getOfertas().getTipoOferta() == TipoOferta.CARGA ? TipoOferta.VAGAS : TipoOferta.CARGA,
-                dto.getOfertas().getDataFechamento(),
                 StatusOferta.AGUARDANDO_PROPOSTA
             );
 

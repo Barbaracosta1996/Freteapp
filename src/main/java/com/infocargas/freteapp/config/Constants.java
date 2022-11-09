@@ -17,5 +17,8 @@ public final class Constants {
     public static final String FACEBOOK_TOKEN =
         "Bearer EAASALwxx258BABTnt0HLnqJdmjXoZBuFXb3TlaDP90nAHZBv6OLG25Sbibv2oMVfH2DlCwYEQ3ZCYnHyB7ecBZA8ZBE1Rw7bSu1qDXOlKNFOYqhZBZBbnqLOsAnW1VbkegacZA33N1hqgG24qj8kPZAgpZCMzbfkYQ0pSLvQehKxV33WZCwz8wShcGC";
 
+    public static final String FACEBOOK_TOKEN_HOM =
+        "Bearer EAAHRaS1xKbkBAO1UxX43R2giGfVxXZCHNZBaMd52V3oOIkSXRvuouO9XGLljB9x8UXlhh1KioFihZAB4c0EPxkVr5It7cSV8ZAykQ0gLF6NAyffzZC3e8Y7gx0Gh6r4ZAr9fBuFib1hUiQPiFkUh5k5xxgSG7QmO5tUEdGb3FpzGTScfhWJHKe";
+
     private Constants() {}
 }

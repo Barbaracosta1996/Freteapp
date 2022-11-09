@@ -7,5 +7,5 @@ public enum StatusOferta {
     AGUARDANDO_PROPOSTA,
     ATENDIDA_INFOCARGAS,
     ATENDIDA,
-    CANELADA,
+    CANCELED,
 }

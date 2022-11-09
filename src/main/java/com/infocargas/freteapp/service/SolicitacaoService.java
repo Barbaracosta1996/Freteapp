@@ -10,7 +10,6 @@ import com.infocargas.freteapp.repository.SolicitacaoRepository;
 import com.infocargas.freteapp.service.dto.OfertasDTO;
 import com.infocargas.freteapp.service.dto.SolicitacaoDTO;
 import com.infocargas.freteapp.service.mapper.SolicitacaoMapper;
-
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +37,12 @@ public class SolicitacaoService {
 
     private final ClickaTellService clickaTellService;
 
-    public SolicitacaoService(SolicitacaoRepository solicitacaoRepository, SolicitacaoMapper solicitacaoMapper, OfertasService ofertasService, ClickaTellService clickaTellService) {
+    public SolicitacaoService(
+        SolicitacaoRepository solicitacaoRepository,
+        SolicitacaoMapper solicitacaoMapper,
+        OfertasService ofertasService,
+        ClickaTellService clickaTellService
+    ) {
         this.solicitacaoRepository = solicitacaoRepository;
         this.solicitacaoMapper = solicitacaoMapper;
         this.ofertasService = ofertasService;
@@ -55,18 +59,6 @@ public class SolicitacaoService {
         log.debug("Request to save Solicitacao : {}", solicitacaoDTO);
         Solicitacao solicitacao = solicitacaoMapper.toEntity(solicitacaoDTO);
         solicitacao = solicitacaoRepository.save(solicitacao);
-
-        if (solicitacao.getOfertas().getPerfil().getTipoConta() == TipoConta.TRANSPORTADORA){
-            clickaTellService.sendSms("A Transportadora " + solicitacao.getPerfil().getNome() + " enviou sua solicitação. Confira acessando o link https://freteapp.sp.skdrive.net/portal/conexao" ,
-                "+55" +solicitacao.getOfertas().getPerfil().getTelefoneComercial());
-        } else if (solicitacao.getOfertas().getPerfil().getTipoConta() == TipoConta.MOTORISTA){
-            clickaTellService.sendSms("O Motorista " + solicitacao.getPerfil().getNome() + " enviou sua solicitação. Confira acessando o link https://freteapp.sp.skdrive.net/portal/conexao",
-                "+55" +solicitacao.getOfertas().getPerfil().getTelefoneComercial());
-        } else {
-            clickaTellService.sendSms("O Embarcador " + solicitacao.getPerfil().getNome() + " enviou sua solicitação. Confira acessando o link https://freteapp.sp.skdrive.net/portal/conexao",
-                "+55" +solicitacao.getOfertas().getPerfil().getTelefoneComercial());
-        }
-
         return solicitacaoMapper.toDto(solicitacao);
     }
 
@@ -79,37 +71,7 @@ public class SolicitacaoService {
     public SolicitacaoDTO update(SolicitacaoDTO solicitacaoDTO) {
         Solicitacao solicitacao = solicitacaoMapper.toEntity(solicitacaoDTO);
         solicitacao = solicitacaoRepository.save(solicitacao);
-
-        if (solicitacao.getAceitar() == AnwserStatus.SIM){
-            if (solicitacao.getOfertas().getPerfil().getTipoConta() == TipoConta.TRANSPORTADORA){
-                clickaTellService.sendSms("A Transportadora " + solicitacao.getOfertas().getPerfil().getNome() + " aceitou sua solicitação. Favor entrar em contato no número: " + solicitacao.getOfertas().getPerfil().getTelefoneComercial(),
-                    "+55" +solicitacao.getPerfil().getTelefoneComercial());
-            } else if (solicitacao.getOfertas().getPerfil().getTipoConta() == TipoConta.MOTORISTA){
-                clickaTellService.sendSms("O Motorista " + solicitacao.getOfertas().getPerfil().getNome() + " aceitou sua solicitação. Favor entrar em contato no número: " + solicitacao.getOfertas().getPerfil().getTelefoneComercial(),
-                    "+55" +solicitacao.getPerfil().getTelefoneComercial());
-            } else {
-                clickaTellService.sendSms("O Embarcador " + solicitacao.getOfertas().getPerfil().getNome() + " aceitou sua solicitação. Favor entrar em contato no número: " + solicitacao.getOfertas().getPerfil().getTelefoneComercial(),
-                    "+55" +solicitacao.getPerfil().getTelefoneComercial());
-            }
-
-            solicitacaoDTO.getOfertas().setStatus(StatusOferta.ATENDIDA);
-        } else {
-            if (solicitacao.getOfertas().getPerfil().getTipoConta() == TipoConta.TRANSPORTADORA){
-                clickaTellService.sendSms("A Transportadora " + solicitacao.getOfertas().getPerfil().getNome() + " recusou sua solicitação. Favor entrar em contato no número: " + solicitacao.getOfertas().getPerfil().getTelefoneComercial(),
-                    "+55" +solicitacao.getPerfil().getTelefoneComercial());
-            } else if (solicitacao.getOfertas().getPerfil().getTipoConta() == TipoConta.MOTORISTA){
-                clickaTellService.sendSms("O Motorista " + solicitacao.getOfertas().getPerfil().getNome() + " recusou sua solicitação. Favor entrar em contato no número: " + solicitacao.getOfertas().getPerfil().getTelefoneComercial(),
-                    "+55" +solicitacao.getPerfil().getTelefoneComercial());
-            } else {
-                clickaTellService.sendSms("O Embarcador " + solicitacao.getOfertas().getPerfil().getNome() + " recusou sua solicitação. Favor entrar em contato no número: " + solicitacao.getOfertas().getPerfil().getTelefoneComercial(),
-                    "+55" + solicitacao.getPerfil().getTelefoneComercial());
-            }
-
-            solicitacaoDTO.getOfertas().setStatus(StatusOferta.AGUARDANDO_PROPOSTA);
-        }
-
         ofertasService.save(solicitacaoDTO.getOfertas());
-
         return solicitacaoMapper.toDto(solicitacao);
     }
 

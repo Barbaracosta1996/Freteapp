@@ -113,16 +113,9 @@ public class RotasOfertasService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public List<RotasOfertasDTO> findAllNotPerfilId(
-        Long perfilId,
-        TipoOferta tipo,
-        ZonedDateTime dataFechamento,
-        StatusOferta statusOferta
-    ) {
+    public List<RotasOfertasDTO> findAllNotPerfilId(Long perfilId, TipoOferta tipo, StatusOferta statusOferta) {
         log.debug("Request to get all RotasOfertas");
-        return rotasOfertasMapper.toDto(
-            rotasOfertasRepository.findByOfertasPerfilIdIsNotAndOfertasTipoOfertaIsAndOfertasStatusIs(perfilId, tipo, statusOferta)
-        );
+        return rotasOfertasMapper.toDto(rotasOfertasRepository.allOfertasAvaiable(perfilId, tipo, statusOferta, ZonedDateTime.now()));
     }
 
     /**
@@ -135,6 +128,14 @@ public class RotasOfertasService {
         log.debug("Request to get all RotasOfertas");
         List<RotasOfertas> lista = rotasOfertasRepository.findAll();
         return rotasOfertasMapper.toDto(lista);
+    }
+
+    @Transactional(readOnly = true)
+    public List<RotasOfertasDTO> findByExpired(StatusOferta status) {
+        log.debug("Request to get all Ofertas");
+        return rotasOfertasMapper.toDto(
+            rotasOfertasRepository.findRotasOfertasByOfertasStatusAndOfertasDataFechamentoLessThanEqual(status, ZonedDateTime.now())
+        );
     }
 
     /**
@@ -197,7 +198,6 @@ public class RotasOfertasService {
             List<RotasOfertasDTO> allRoutes = findAllNotPerfilId(
                 rotasOfertasDTO.getOfertas().getPerfil().getId(),
                 rotasOfertasDTO.getOfertas().getTipoOferta() == TipoOferta.CARGA ? TipoOferta.VAGAS : TipoOferta.CARGA,
-                rotasOfertasDTO.getOfertas().getDataFechamento(),
                 StatusOferta.AGUARDANDO_PROPOSTA
             );
 

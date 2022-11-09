@@ -117,17 +117,18 @@
           <div class="mb-3">
             <label class="form-label form-label text-600" for="field_cpf">CPF</label>
             <div class="p-inputgroup">
-              <p-inputMask
+              <input
+                pInputText
+                [textMask]="{ mask: cpfMask }"
                 type="text"
                 class="p-inputtext-lg w-25rem"
                 id="field_cpf"
-                styleClass="w-full"
                 name="cpf"
+                autocomplete="off"
                 placeholder="Seu CPF"
                 formControlName="cpf"
-                mask="999.999.999-99"
                 data-cy="cpf"
-              ></p-inputMask>
+              />
               <span class="p-inputgroup-addon"><i class="pi pi-id-card"></i></span>
             </div>
 
@@ -141,17 +142,18 @@
           <div class="mb-3">
             <label class="form-label text-600" for="telephoneNumber">Telefone Celular</label>
             <div class="p-inputgroup">
-              <p-inputMask
+              <input
+                pInputText
                 type="text"
                 class="p-inputtext-lg w-25rem"
                 id="telephoneNumber"
-                styleClass="w-full"
+                [textMask]="{ mask: phoneMask }"
+                autocomplete="off"
                 name="telephoneNumber"
                 placeholder="Seu Telefone Celular"
                 formControlName="telephoneNumber"
-                mask="(99) 9 9999-9999"
                 data-cy="telephoneNumber"
-              ></p-inputMask>
+              />
               <span class="p-inputgroup-addon"><i class="pi pi-phone"></i></span>
             </div>
 
@@ -172,7 +174,7 @@
               </small>
 
               <small class="form-text text-danger" *ngIf="registerForm.get('telephoneNumber')?.errors?.maxlength">
-                O telefone não pode ter mais de 50 caracteres
+                O telefone não pode ter mais de 15 caracteres
               </small>
             </div>
           </div>
@@ -180,17 +182,18 @@
           <div class="mb-3">
             <label class="form-label text-600" for="telefoneComercial">Telefone Comercial</label>
             <div class="p-inputgroup">
-              <p-inputMask
+              <input
+                pInputText
                 type="text"
                 class="p-inputtext-lg w-25rem"
                 id="telefoneComercial"
-                styleClass="w-full"
+                [textMask]="{ mask: phoneMask }"
+                autocomplete="off"
                 name="telefoneComercial"
                 placeholder="Seu Telefone Comercial"
                 formControlName="telefoneComercial"
-                mask="(99) 9 9999-9999"
                 data-cy="telefoneComercial"
-              ></p-inputMask>
+              />
               <span class="p-inputgroup-addon"><i class="pi pi-phone"></i></span>
             </div>
           </div>
@@ -233,17 +236,18 @@
           <div class="mb-3" *ngIf="tipoConta !== 'MOTORISTA'">
             <label class="form-label text-600" for="field_cnpj">Cnpj</label>
             <div class="p-inputgroup">
-              <p-inputMask
+              <input
+                pInputText
                 type="text"
                 class="p-inputtext-lg w-25rem"
                 id="field_cnpj"
-                styleClass="w-25rem"
+                [textMask]="{ mask: cnpjMask }"
+                autocomplete="off"
                 name="cnpj"
                 placeholder="CNPJ da Empresa"
                 formControlName="cnpj"
-                mask="99.999.999/9999-99"
                 data-cy="cnpj"
-              ></p-inputMask>
+              />
               <span class="p-inputgroup-addon"><i class="pi pi-id-card"></i></span>
             </div>
             <div *ngIf="registerForm.get('cnpj')!.invalid && (registerForm.get('cnpj')!.dirty || registerForm.get('cnpj')!.touched)">
@@ -256,17 +260,18 @@
           <div class="mb-3" *ngIf="tipoConta !== 'MOTORISTA'">
             <label class="form-label text-600" for="field_cep">Cep</label>
             <div class="p-inputgroup">
-              <p-inputMask
+              <input
+                pInputText
                 type="text"
                 class="p-inputtext-lg w-25rem"
                 id="field_cep"
-                styleClass="w-25rem"
+                [textMask]="{ mask: cepMask }"
+                autocomplete="off"
                 name="cep"
                 placeholder="CEP"
                 formControlName="cep"
-                mask="99999-999"
                 data-cy="cep"
-              ></p-inputMask>
+              />
               <span class="p-inputgroup-addon"><i class="pi pi-code"></i></span>
             </div>
           </div>

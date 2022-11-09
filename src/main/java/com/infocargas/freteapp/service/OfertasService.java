@@ -2,11 +2,14 @@ package com.infocargas.freteapp.service;
 
 import com.infocargas.freteapp.controller.FacebookController;
 import com.infocargas.freteapp.domain.Ofertas;
+import com.infocargas.freteapp.domain.enumeration.StatusOferta;
 import com.infocargas.freteapp.domain.enumeration.TipoOferta;
 import com.infocargas.freteapp.proxy.FacebookApiProxy;
 import com.infocargas.freteapp.repository.OfertasRepository;
 import com.infocargas.freteapp.service.dto.OfertasDTO;
 import com.infocargas.freteapp.service.mapper.OfertasMapper;
+import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,6 +114,12 @@ public class OfertasService {
     public Page<OfertasDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Ofertas");
         return ofertasRepository.findAll(pageable).map(ofertasMapper::toDto);
+    }
+
+    @Transactional(readOnly = true)
+    public List<OfertasDTO> findByExpired(StatusOferta status) {
+        log.debug("Request to get all Ofertas");
+        return ofertasMapper.toDto(ofertasRepository.findAllByStatusAndDataFechamentoLessThanEqual(status, ZonedDateTime.now()));
     }
 
     /**

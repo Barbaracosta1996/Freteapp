@@ -15,16 +15,20 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 
 @Controller
 public class FacebookController {
 
+    private final Environment environment;
+
     private final Logger log = LoggerFactory.getLogger(FindNearRouteSchedule.class);
 
     private final FacebookApiProxy facebookApiProxy;
 
-    public FacebookController(FacebookApiProxy facebookApiProxy) {
+    public FacebookController(Environment environment, FacebookApiProxy facebookApiProxy) {
+        this.environment = environment;
         this.facebookApiProxy = facebookApiProxy;
     }
 
@@ -609,7 +613,13 @@ public class FacebookController {
 
     private FacebookSendResponse sendNotification(FacebookMessageVM message) {
         try {
-            return facebookApiProxy.createMessage("whatsapp", Constants.FACEBOOK_TOKEN, message);
+            if (
+                Arrays.stream(environment.getActiveProfiles()).anyMatch(env -> env.equalsIgnoreCase("hom") || env.equalsIgnoreCase("dev"))
+            ) {
+                return facebookApiProxy.createMessageHom("whatsapp", Constants.FACEBOOK_TOKEN_HOM, message);
+            } else {
+                return facebookApiProxy.createMessage("whatsapp", Constants.FACEBOOK_TOKEN, message);
+            }
         } catch (Exception ex) {
             log.error(ex.getMessage());
         }

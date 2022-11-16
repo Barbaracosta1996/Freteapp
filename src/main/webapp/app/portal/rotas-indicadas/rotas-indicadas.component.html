@@ -1,14 +1,32 @@
-<div class="flex-grow-1 flex align-items-center justify-content-center font-light p-4 text-white text-4xl px-5 py-3" style="background-color: #312E4E">Indicações de Transporte</div>
-<p-table #dt [value]="ofertas" [(selection)]="selectedOfertas" dataKey="id" styleClass="p-datatable-customers" [rowHover]="true"
-         [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [loading]="loading" responsiveLayout="scroll"
-         [paginator]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-         [filterDelay]="0" [globalFilterFields]="['origem','destino','perfil.nome','status']">
+<div
+  class="flex-grow-1 flex align-items-center justify-content-center font-light p-4 text-white text-4xl px-5 py-3"
+  style="background-color: #312e4e"
+>
+  Indicações de Transporte
+</div>
+<p-table
+  #dt
+  [value]="ofertas"
+  [(selection)]="selectedOfertas"
+  dataKey="id"
+  styleClass="p-datatable-customers"
+  [rowHover]="true"
+  [rows]="10"
+  [showCurrentPageReport]="true"
+  [rowsPerPageOptions]="[10, 25, 50]"
+  [loading]="loading"
+  responsiveLayout="scroll"
+  [paginator]="true"
+  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+  [filterDelay]="0"
+  [globalFilterFields]="['origem', 'destino', 'perfil.nome', 'status']"
+>
   <ng-template pTemplate="caption">
     <div class="table-header">
       <span class="p-input-icon-left">
-                <i class="pi pi-search"></i>
-                <input pInputText type="text" (input)="dt.filterGlobal($event.target, 'contains')" placeholder="Pesquisar Vagas" />
-            </span>
+        <i class="pi pi-search"></i>
+        <input pInputText type="text" (input)="dt.filterGlobal($event.target, 'contains')" placeholder="Pesquisar Vagas" />
+      </span>
     </div>
   </ng-template>
   <ng-template pTemplate="header">
@@ -91,45 +109,47 @@
     <tr class="p-selectable-row">
       <td>
         <span class="p-column-title">Origem</span>
-        {{oferta.origem}}
+        {{ oferta.origem }}
       </td>
       <td>
         <span class="p-column-title">Destino</span>
-        {{oferta.destino}}
+        {{ oferta.destino }}
       </td>
       <td>
         <span class="p-column-title">Nome</span>
-        {{oferta.perfil.nome}}
+        {{ oferta.perfil.nome }}
       </td>
       <td>
         <span class="p-column-title">Date da Viagem</span>
-        {{oferta.dataFechamento | date: 'dd/MM/yyyy'}}
+        {{ oferta.dataFechamento | date: 'dd/MM/yyyy' }}
       </td>
       <td>
         <span class="p-column-title">Tipo Oferta</span>
-        {{oferta.tipoOferta}}
+        {{ oferta.tipoOferta }}
       </td>
       <td>
         <span class="p-column-title">Tipo Oferta</span>
-        {{oferta.tipoCarga}}
+        {{ oferta.tipoCarga }}
       </td>
       <td>
         <span class="p-column-title">Tipo Oferta</span>
-        {{oferta.quantidade}}
+        {{ oferta.quantidade }}
       </td>
 
       <td>
         <span class="p-column-title">Tipo Oferta</span>
-        {{oferta.tipoTransporte}}
+        {{ oferta.tipoTransporte }}
       </td>
 
       <td>
         <span class="p-column-title">Status</span>
-        <span [class]="'customer-badge status-' + oferta.status">{{oferta.status}}</span>
+        <span [class]="'customer-badge status-' + oferta.status">{{ oferta.status }}</span>
       </td>
 
       <td style="text-align: center">
-        <button pButton type="button" (click)="confirmaEnvio(oferta)"  label="Solicitar" class="p-button-info" icon="pi pi-send"></button>
+        <button pButton type="button" (click)="confirmaEnvio(oferta)" label="Solicitar" class="p-button-info" icon="pi pi-send"></button>
+        <button pButton type="button" (click)="confirmaEnvio(oferta)" label="Sim" class="p-button-info" icon="pi pi-send"></button>
+        <button pButton type="button" (click)="confirmaEnvio(oferta)" label="Não" class="p-button-info" icon="pi pi-send"></button>
       </td>
     </tr>
   </ng-template>
@@ -140,4 +160,10 @@
   </ng-template>
 </p-table>
 
-<p-confirmDialog [style]="{width: '50vw'}" key="positionDialog" [position]="'bottom'" [baseZIndex]="10000" rejectButtonStyleClass="p-button-outlined"></p-confirmDialog>
+<p-confirmDialog
+  [style]="{ width: '50vw' }"
+  key="positionDialog"
+  [position]="'bottom'"
+  [baseZIndex]="10000"
+  rejectButtonStyleClass="p-button-outlined"
+></p-confirmDialog>

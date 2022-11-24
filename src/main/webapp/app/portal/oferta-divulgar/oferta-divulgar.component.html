@@ -14,26 +14,13 @@
           <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
         </div>
 
-        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
-          <label class="form-label" for="field_status">Status</label>
-          <select class="form-control" name="status" readonly="true" formControlName="status" id="field_status" data-cy="status">
-            <option [ngValue]="null"></option>
-            <option value="AGUARDANDO_PROPOSTA">Aguardando Proposta</option>
-            <option value="ATENDIDA">Atendida</option>
-            <option value="CANCELADA">Cancelada</option>
-          </select>
-          <div *ngIf="editForm.get('status')!.invalid && (editForm.get('status')!.dirty || editForm.get('status')!.touched)">
-            <small class="form-text text-danger" *ngIf="editForm.get('status')?.errors?.required"> O campo é obrigatório. </small>
-          </div>
-        </div>
-
         <div class="center-page" [ngSwitch]="activeIndex">
           <!--   Data da Viagem       -->
 
           <h3 class="text-center text-600 mb-3">Preenha todos os dados abaixo</h3>
 
           <div class="mb-3">
-            <label class="form-label text-600" for="field_dataFechamento">Data de Liberação</label>
+            <label class="form-center text-600" for="field_dataFechamento">Data de Liberação</label>
             <div class="p-inputgroup">
               <p-calendar
                 class="p-inputtext-lg"
@@ -54,7 +41,7 @@
           </div>
 
           <div class="mb-3">
-            <label class="form-label text-600" for="field_tipoTransporte">Tipo Transporte</label>
+            <label class="form-center text-600" for="field_tipoTransporte">Tipo Transporte</label>
             <div class="p-inputgroup">
               <p-dropdown
                 styleClass="w-full"
@@ -75,7 +62,7 @@
 
           <!--  QUANTIDADE     -->
           <div class="mb-3">
-            <label class="form-label text-600" for="field_quantidade">Quantidade</label>
+            <label class="form-center text-600" for="field_quantidade">Quantidade</label>
             <div class="p-inputgroup">
               <p-inputNumber
                 class="p-inputtext-lg w-10rem"
@@ -101,7 +88,7 @@
 
           <!--   Tipo Carga     -->
           <div class="mb-3">
-            <label class="form-label text-600" for="field_tipoCarga">Tipo de Carga</label>
+            <label class="form-center text-600" for="field_tipoCarga">Tipo de Carga</label>
             <div class="p-inputgroup">
               <p-dropdown
                 styleClass="w-full"
@@ -125,23 +112,18 @@
 
           <!--   Localização Origem     -->
           <div class="mb-3">
-            <label class="form-label text-600" for="field_localizacaoOrigem">Localizacao Origem</label>
+            <label class="form-center text-600" for="field_localizacaoOrigem">Localizacao Origem</label>
 
             <div class="p-inputgroup">
-              <p-autoComplete
-                styleClass="w-full"
+              <input
+                pInputText
                 class="p-inputtext-lg w-full"
-                inputStyleClass="w-full"
                 name="localizacaoOrigem"
                 id="field_localizacaoOrigem"
                 formControlName="localizacaoOrigem"
-                [showEmptyMessage]="true"
-                [suggestions]="filteredOrigem"
-                (completeMethod)="filtrarOrigem($event)"
                 field="description"
                 [minLength]="1"
-              >
-              </p-autoComplete>
+              />
               <span class="p-inputgroup-addon"><i class="pi pi-map-marker"></i></span>
             </div>
             <div
@@ -160,20 +142,16 @@
           <div class="mb-3">
             <label class="form-label text-600" for="field_localizacaoDestino">Localizacao Destino</label>
             <div class="p-inputgroup">
-              <p-autoComplete
-                styleClass="w-full"
+              <input
+                pInputText
                 class="p-inputtext-lg w-full"
-                inputStyleClass="w-full"
                 name="localizacaoDestino"
                 id="field_localizacaoDestino"
                 formControlName="localizacaoDestino"
-                [showEmptyMessage]="true"
-                [suggestions]="filteredDestino"
-                (completeMethod)="filtrarOrigem($event, true)"
                 field="description"
                 [minLength]="1"
-              >
-              </p-autoComplete>
+              />
+
               <span class="p-inputgroup-addon"><i class="pi pi-map-marker"></i></span>
             </div>
             <div
@@ -191,6 +169,19 @@
       </div>
 
       <jhi-alert-error></jhi-alert-error>
+
+      <div class="ram mb-3" *ngIf="editForm.controls.id.value !== null">
+        <label class="form-center text-600 mb-3" for="field_status">Status</label>
+        <select class="form-center" name="status" readonly="true" formControlName="status" id="field_status" data-cy="status">
+          <option [ngValue]="null"></option>
+          <option value="AGUARDANDO_PROPOSTA">Aguardando Proposta</option>
+          <option value="ATENDIDA">Atendida</option>
+          <option value="CANCELADA">Cancelada</option>
+        </select>
+        <div *ngIf="editForm.get('status')!.invalid && (editForm.get('status')!.dirty || editForm.get('status')!.touched)">
+          <small class="form-text text-danger" *ngIf="editForm.get('status')?.errors?.required"> O campo é obrigatório. </small>
+        </div>
+      </div>
 
       <div class="text-center m-4 gap-3">
         <button

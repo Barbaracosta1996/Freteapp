@@ -30,6 +30,7 @@
         <td>{{ oferta.origem }}</td>
         <td>{{ oferta.destino }}</td>
         <td>{{ getStatusOferta(oferta.status) }}</td>
+        <td><button [routerLink]="['/portal', 'oferta', 'edit', oferta.id]">Editar</button></td>
         <td><button [routerLink]="['/portal', 'indicacao', oferta.id]">Indicações</button></td>
       </tr>
     </ng-template>

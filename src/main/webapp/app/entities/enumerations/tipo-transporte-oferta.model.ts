@@ -5,3 +5,11 @@ export enum TipoTransporteOferta {
 
   GUINCHO = 'GUINCHO',
 }
+
+export enum Solicitações {
+  Solicitações = 'Aguardando proposta',
+
+  Atendida = 'Atendida',
+
+  Cancelada = 'Cancelada',
+}

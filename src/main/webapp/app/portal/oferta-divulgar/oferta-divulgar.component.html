@@ -15,9 +15,28 @@
         </div>
 
         <div class="center-page" [ngSwitch]="activeIndex">
-          <!--   Data da Viagem       -->
+          <div class="mb-3">
+            <!--   Data da Viagem       -->
 
-          <h3 class="text-center text-600 mb-3">Preenha todos os dados abaixo</h3>
+            <h3 class="text-center text-600 mb-3">Preenha todos os dados abaixo</h3>
+
+            <!--   Status      -->
+            <label class="form-center text-600" for="field_status">Status</label>
+            <div class="p-inputgroup">
+              <p-dropdown
+                styleClass="w-full"
+                class="p-inputtext-lg"
+                panelStyleClass="w-full"
+                formControlName="status"
+                placeholder="Selecione"
+                name="status"
+                optionValue="value"
+                optionLabel="name"
+                [showClear]="true"
+              ></p-dropdown>
+              <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
+            </div>
+          </div>
 
           <div class="mb-3">
             <label class="form-center text-600" for="field_dataFechamento">Data de Liberação</label>
@@ -115,15 +134,20 @@
             <label class="form-center text-600" for="field_localizacaoOrigem">Localizacao Origem</label>
 
             <div class="p-inputgroup">
-              <input
-                pInputText
+              <p-autoComplete
+                styleClass="w-full"
                 class="p-inputtext-lg w-full"
+                inputStyleClass="w-full"
                 name="localizacaoOrigem"
                 id="field_localizacaoOrigem"
                 formControlName="localizacaoOrigem"
+                [showEmptyMessage]="true"
+                [suggestions]="filteredOrigem"
+                (completeMethod)="filtrarOrigem($event)"
                 field="description"
                 [minLength]="1"
-              />
+              >
+              </p-autoComplete>
               <span class="p-inputgroup-addon"><i class="pi pi-map-marker"></i></span>
             </div>
             <div
@@ -142,16 +166,20 @@
           <div class="mb-3">
             <label class="form-label text-600" for="field_localizacaoDestino">Localizacao Destino</label>
             <div class="p-inputgroup">
-              <input
-                pInputText
+              <p-autoComplete
+                styleClass="w-full"
                 class="p-inputtext-lg w-full"
+                inputStyleClass="w-full"
                 name="localizacaoDestino"
                 id="field_localizacaoDestino"
                 formControlName="localizacaoDestino"
+                [showEmptyMessage]="true"
+                [suggestions]="filteredDestino"
+                (completeMethod)="filtrarOrigem($event, true)"
                 field="description"
                 [minLength]="1"
-              />
-
+              >
+              </p-autoComplete>
               <span class="p-inputgroup-addon"><i class="pi pi-map-marker"></i></span>
             </div>
             <div
@@ -169,19 +197,6 @@
       </div>
 
       <jhi-alert-error></jhi-alert-error>
-
-      <div class="ram mb-3" *ngIf="editForm.controls.id.value !== null">
-        <label class="form-center text-600 mb-3" for="field_status">Status</label>
-        <select class="form-center" name="status" readonly="true" formControlName="status" id="field_status" data-cy="status">
-          <option [ngValue]="null"></option>
-          <option value="AGUARDANDO_PROPOSTA">Aguardando Proposta</option>
-          <option value="ATENDIDA">Atendida</option>
-          <option value="CANCELADA">Cancelada</option>
-        </select>
-        <div *ngIf="editForm.get('status')!.invalid && (editForm.get('status')!.dirty || editForm.get('status')!.touched)">
-          <small class="form-text text-danger" *ngIf="editForm.get('status')?.errors?.required"> O campo é obrigatório. </small>
-        </div>
-      </div>
 
       <div class="text-center m-4 gap-3">
         <button

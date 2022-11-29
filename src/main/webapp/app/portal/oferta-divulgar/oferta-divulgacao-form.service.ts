@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import {IOfertas, NewOfertas} from "../../entities/ofertas/ofertas.model";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
-import dayjs from "dayjs/esm";
-import {DATE_TIME_FORMAT} from "../../config/input.constants";
+import { IOfertas, NewOfertas } from '../../entities/ofertas/ofertas.model';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import dayjs from 'dayjs/esm';
+import { DATE_TIME_FORMAT } from '../../config/input.constants';
 
 /**
  * A partial Type with required key is used as form input.
@@ -51,7 +51,7 @@ type DivulgarFormGroupContent = {
 export type DivulgarFormGroup = FormGroup<DivulgarFormGroupContent>;
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class OfertaDivulgacaoFormService {
   createOfertasFormGroup(ofertas: DivulgarFormGroupInput = { id: null }): DivulgarFormGroup {
@@ -67,9 +67,12 @@ export class OfertaDivulgacaoFormService {
           validators: [Validators.required],
         }
       ),
-      dataPostagem: new FormControl({value: ofertasRawValue.dataPostagem, disabled: true}, {
-        validators: [Validators.required],
-      }),
+      dataPostagem: new FormControl(
+        { value: ofertasRawValue.dataPostagem, disabled: true },
+        {
+          validators: [Validators.required],
+        }
+      ),
       quantidade: new FormControl(ofertasRawValue.quantidade, {
         validators: [Validators.required, Validators.min(1)],
       }),

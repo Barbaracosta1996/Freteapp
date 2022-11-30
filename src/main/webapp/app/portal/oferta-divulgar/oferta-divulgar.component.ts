@@ -12,6 +12,7 @@ import { finalize, map } from 'rxjs/operators';
 import { TipoTransporteOferta } from '../../entities/enumerations/tipo-transporte-oferta.model';
 import { TipoCarga } from '../../entities/enumerations/tipo-carga.model';
 import { AppGoogleService } from '../../core/app/app.google.service';
+import { StatusOferta } from '../../entities/enumerations/status-oferta.model';
 
 @Component({
   selector: 'jhi-oferta-divulgar',
@@ -29,6 +30,12 @@ export class OfertaDivulgarComponent implements OnInit {
     { name: 'Cegonha', value: TipoTransporteOferta.CEGONHA },
     { name: 'Guincho', value: TipoTransporteOferta.GUINCHO },
     { name: 'Reboque', value: TipoTransporteOferta.RAMPA },
+  ];
+
+  status = [
+    { name: 'Atendida', value: StatusOferta.ATENDIDA_INFOCARGAS },
+    { name: 'Aguardando Proposta', value: StatusOferta.AGUARDANDO_PROPOSTA },
+    { name: 'Cancelada', value: StatusOferta.CANELADA },
   ];
 
   tiposCargas = [

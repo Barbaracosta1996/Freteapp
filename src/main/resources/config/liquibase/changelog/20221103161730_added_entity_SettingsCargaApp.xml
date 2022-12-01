@@ -23,6 +23,13 @@
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
     </changeSet>
+    <changeSet id="1669928554973-1" author="samuel">
+        <addColumn tableName="settings_carga_app">
+            <column name="rd_app_token" type="CLOB"/>
+            <column name="rd_app_refresh_token" type="CLOB"/>
+        </addColumn>
+    </changeSet>
+
 
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
 

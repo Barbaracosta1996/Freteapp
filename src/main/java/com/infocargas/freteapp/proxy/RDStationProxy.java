@@ -5,6 +5,7 @@ import com.infocargas.freteapp.response.RDContactResponse;
 import com.infocargas.freteapp.response.RDEventsDTO;
 import com.infocargas.freteapp.response.RDToken;
 import com.infocargas.freteapp.web.rest.vm.RDStationAuth;
+import com.infocargas.freteapp.web.rest.vm.RDStationRefresh;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,9 +17,12 @@ public interface RDStationProxy {
     @PostMapping("/auth/token")
     ResponseEntity<RDToken> authRDStation(@RequestBody RDStationAuth rdStationAuth);
 
+    @PostMapping("/auth/token")
+    ResponseEntity<RDToken> refreshRDStation(@RequestBody RDStationRefresh rdStationAuth);
+
     @PostMapping(value = "/platform/events")
     ResponseEntity<RDContactResponse> createContact(
-        @RequestHeader(required = true, value = "Authorization") String details,
+        @RequestHeader(value = "Authorization") String details,
         @RequestBody RDEventsDTO eventsDTO
     );
 }

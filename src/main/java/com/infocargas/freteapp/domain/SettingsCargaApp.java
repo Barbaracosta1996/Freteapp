@@ -24,6 +24,14 @@ public class SettingsCargaApp implements Serializable {
     @Column(name = "rd_code")
     private String rdCode;
 
+    @Lob
+    @Column(name = "rd_app_token")
+    private String rdAppToken;
+
+    @Lob
+    @Column(name = "rd_app_refresh_token")
+    private String rdAppRefreshToken;
+
     @Column(name = "wa_token")
     private String waToken;
 
@@ -55,6 +63,22 @@ public class SettingsCargaApp implements Serializable {
         this.rdCode = rdCode;
     }
 
+    public String getRdAppToken() {
+        return rdAppToken;
+    }
+
+    public void setRdAppToken(String rdAppToken) {
+        this.rdAppToken = rdAppToken;
+    }
+
+    public String getRdAppRefreshToken() {
+        return rdAppRefreshToken;
+    }
+
+    public void setRdAppRefreshToken(String rdAppRefreshToken) {
+        this.rdAppRefreshToken = rdAppRefreshToken;
+    }
+
     public String getWaToken() {
         return this.waToken;
     }
@@ -70,30 +94,44 @@ public class SettingsCargaApp implements Serializable {
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
+    // prettier-ignore
+
+    @Override
+    public String toString() {
+        return "SettingsCargaApp{" +
+            "id=" + id +
+            ", rdCode='" + rdCode + '\'' +
+            ", rdAppToken='" + rdAppToken + '\'' +
+            ", rdAppRefreshToken='" + rdAppRefreshToken + '\'' +
+            ", waToken='" + waToken + '\'' +
+            '}';
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SettingsCargaApp)) {
-            return false;
-        }
-        return id != null && id.equals(((SettingsCargaApp) o).id);
+        if (this == o) return true;
+        if (!(o instanceof SettingsCargaApp)) return false;
+
+        SettingsCargaApp that = (SettingsCargaApp) o;
+
+        if (getId() != null ? !getId().equals(that.getId()) : that.getId() != null) return false;
+        if (getRdCode() != null ? !getRdCode().equals(that.getRdCode()) : that.getRdCode() != null) return false;
+        if (getRdAppToken() != null ? !getRdAppToken().equals(that.getRdAppToken()) : that.getRdAppToken() != null) return false;
+        if (
+            getRdAppRefreshToken() != null
+                ? !getRdAppRefreshToken().equals(that.getRdAppRefreshToken())
+                : that.getRdAppRefreshToken() != null
+        ) return false;
+        return getWaToken() != null ? getWaToken().equals(that.getWaToken()) : that.getWaToken() == null;
     }
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
-        return getClass().hashCode();
-    }
-
-    // prettier-ignore
-    @Override
-    public String toString() {
-        return "SettingsCargaApp{" +
-            "id=" + getId() +
-            ", rdCode='" + getRdCode() + "'" +
-            ", waToken='" + getWaToken() + "'" +
-            "}";
+        int result = getId() != null ? getId().hashCode() : 0;
+        result = 31 * result + (getRdCode() != null ? getRdCode().hashCode() : 0);
+        result = 31 * result + (getRdAppToken() != null ? getRdAppToken().hashCode() : 0);
+        result = 31 * result + (getRdAppRefreshToken() != null ? getRdAppRefreshToken().hashCode() : 0);
+        result = 31 * result + (getWaToken() != null ? getWaToken().hashCode() : 0);
+        return result;
     }
 }

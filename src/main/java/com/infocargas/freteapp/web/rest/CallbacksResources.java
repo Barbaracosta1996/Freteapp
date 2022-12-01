@@ -3,9 +3,11 @@ package com.infocargas.freteapp.web.rest;
 import static com.infocargas.freteapp.config.Constants.TOKEN_CALLBACK;
 
 import com.infocargas.freteapp.controller.FacebookController;
+import com.infocargas.freteapp.controller.RDStationController;
 import com.infocargas.freteapp.domain.Ofertas;
 import com.infocargas.freteapp.domain.SettingsCargaApp;
 import com.infocargas.freteapp.domain.enumeration.*;
+import com.infocargas.freteapp.repository.SettingsCargaAppRepository;
 import com.infocargas.freteapp.response.facebook.FacebookResponse;
 import com.infocargas.freteapp.response.facebook.FacebookSendResponse;
 import com.infocargas.freteapp.service.*;
@@ -14,6 +16,8 @@ import com.infocargas.freteapp.web.rest.errors.BadRequestAlertException;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,10 +26,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class CallbacksResources {
 
+    private final Logger logger = LoggerFactory.getLogger(CallbacksResources.class);
+
     private final PerfilService perfilService;
     private final WhatsMessageBatchService whatsMessageBatchService;
 
     private final FacebookController facebookController;
+
+    private final RDStationController rdStationController;
 
     private final RotasOfertasService rotasOfertasService;
 
@@ -33,7 +41,7 @@ public class CallbacksResources {
 
     private final OfertasService ofertasService;
 
-    private final SettingsCargaAppService settingsCargaAppService;
+    private final SettingsCargaAppRepository settingsCargaAppRepository;
 
     public CallbacksResources(
         PerfilService perfilService,
@@ -42,7 +50,8 @@ public class CallbacksResources {
         RotasOfertasService rotasOfertasService,
         SolicitacaoService solicitacaoService,
         OfertasService ofertasService,
-        SettingsCargaAppService settingsCargaAppService
+        SettingsCargaAppRepository settingsCargaAppRepository,
+        RDStationController rdStationController
     ) {
         this.perfilService = perfilService;
         this.whatsMessageBatchService = whatsMessageBatchService;
@@ -50,16 +59,19 @@ public class CallbacksResources {
         this.rotasOfertasService = rotasOfertasService;
         this.solicitacaoService = solicitacaoService;
         this.ofertasService = ofertasService;
-        this.settingsCargaAppService = settingsCargaAppService;
+        this.settingsCargaAppRepository = settingsCargaAppRepository;
+        this.rdStationController = rdStationController;
     }
 
     @GetMapping("/callbacks/rd/auth")
     @ResponseStatus(HttpStatus.OK)
-    public void registerAccount(@RequestParam(required = false) String code) {
-        var settings = settingsCargaAppService.findOne(1221L);
-        settings.ifPresent(settingsCargaAppDTO -> {
-            settingsCargaAppDTO.setRdCode(code);
-            this.settingsCargaAppService.save(settingsCargaAppDTO);
+    public void rdCallbackReceiver(@RequestParam(required = false, name = "code") String code) {
+        logger.info("Acesso concedido: {}", code);
+        Optional<SettingsCargaApp> settingsApp = settingsCargaAppRepository.findById(1L);
+        settingsApp.ifPresent(app -> {
+            app.setRdCode(code);
+            settingsCargaAppRepository.save(app);
+            rdStationController.authentication(code);
         });
     }
 

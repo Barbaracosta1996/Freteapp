@@ -134,7 +134,7 @@
           <div class="mb-3">
             <label class="form-center text-600" for="field_localizacaoOrigem">Localizacao Origem</label>
 
-            <div class="p-inputgroup">
+            <div class="p-inputgroup" *ngIf="editForm.controls.id.value !== null">
               <p-autoComplete
                 styleClass="w-full"
                 class="p-inputtext-lg w-full"
@@ -166,7 +166,7 @@
           <!--   Localização Destino     -->
           <div class="mb-3">
             <label class="form-label text-600" for="field_localizacaoDestino">Localizacao Destino</label>
-            <div class="p-inputgroup">
+            <div class="p-inputgroup" *ngIf="editForm.controls.id.value !== null">
               <p-autoComplete
                 styleClass="w-full"
                 class="p-inputtext-lg w-full"

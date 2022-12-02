@@ -20,6 +20,7 @@
         <th>Destino</th>
         <th>Status</th>
         <th></th>
+        <th></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-oferta>
@@ -30,8 +31,26 @@
         <td>{{ oferta.origem }}</td>
         <td>{{ oferta.destino }}</td>
         <td>{{ getStatusOferta(oferta.status) }}</td>
-        <td><button [routerLink]="['/portal', 'oferta', 'edit', oferta.id]">Editar</button></td>
-        <td><button [routerLink]="['/portal', 'indicacao', oferta.id]">Indicações</button></td>
+        <td>
+          <button
+            pButton
+            pRipple
+            type="button"
+            [routerLink]="['/portal', 'oferta', 'edit', oferta.id]"
+            icon="pi pi-pencil"
+            class="p-button-rounded p-button-info"
+          ></button>
+        </td>
+        <td>
+          <button
+            pButton
+            pRipple
+            type="button"
+            icon="pi pi-search"
+            [routerLink]="['/portal', 'indicacao', oferta.id]"
+            class="p-button-rounded p-button-success"
+          ></button>
+        </td>
       </tr>
     </ng-template>
   </p-table>

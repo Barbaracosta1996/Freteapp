@@ -67,7 +67,7 @@ public class CallbacksResources {
     @ResponseStatus(HttpStatus.OK)
     public void rdCallbackReceiver(@RequestParam(required = false, name = "code") String code) {
         logger.info("Acesso concedido: {}", code);
-        Optional<SettingsCargaApp> settingsApp = settingsCargaAppRepository.findById(1L);
+        Optional<SettingsCargaApp> settingsApp = settingsCargaAppRepository.findById(1221L);
         settingsApp.ifPresent(app -> {
             app.setRdCode(code);
             settingsCargaAppRepository.save(app);

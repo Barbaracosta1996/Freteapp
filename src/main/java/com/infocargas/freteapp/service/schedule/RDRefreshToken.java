@@ -32,9 +32,14 @@ public class RDRefreshToken {
         logger.info("Updating RDStation TOKEN --- {}", ZonedDateTime.now());
 
         try {
-            var settings = repository.findById(1L);
+            var settings = repository.findById(1221L);
 
             settings.ifPresent(settingsApp -> {
+                if (settingsApp.getRdCode() == null) {
+                    logger.error("RDStation não está conectado. \n {} ", ZonedDateTime.now());
+                    return;
+                }
+
                 RDStationRefresh refresh = new RDStationRefresh();
 
                 if (

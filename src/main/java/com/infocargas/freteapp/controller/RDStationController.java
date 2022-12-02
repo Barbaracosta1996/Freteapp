@@ -38,7 +38,7 @@ public class RDStationController {
     }
 
     public void authentication(String code) {
-        var settings = settingsCargaAppRepository.findById(1L);
+        var settings = settingsCargaAppRepository.findById(1221L);
 
         settings.ifPresent(settingsApp -> {
             RDStationAuth auth = new RDStationAuth();

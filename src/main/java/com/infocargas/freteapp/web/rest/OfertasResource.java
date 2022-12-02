@@ -56,7 +56,13 @@ public class OfertasResource {
 
     private final PerfilService perfilService;
 
-    public OfertasResource(OfertasService ofertasService, OfertasRepository ofertasRepository, OfertasQueryService ofertasQueryService, UserService userService, PerfilService perfilService) {
+    public OfertasResource(
+        OfertasService ofertasService,
+        OfertasRepository ofertasRepository,
+        OfertasQueryService ofertasQueryService,
+        UserService userService,
+        PerfilService perfilService
+    ) {
         this.ofertasService = ofertasService;
         this.ofertasRepository = ofertasRepository;
         this.ofertasQueryService = ofertasQueryService;
@@ -110,6 +116,40 @@ public class OfertasResource {
         return ResponseEntity
             .created(new URI("/api/ofertas/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+            .body(result);
+    }
+
+    /**
+     * {@code PUT  /ofertas/:id} : Updates an existing ofertas.
+     *
+     * @param id the id of the ofertasDTO to save.
+     * @param ofertasDTO the ofertasDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated ofertasDTO,
+     * or with status {@code 400 (Bad Request)} if the ofertasDTO is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the ofertasDTO couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PutMapping("/ofertas/portal/{id}")
+    public ResponseEntity<OfertasDTO> updateOfertasPortal(
+        @PathVariable(value = "id", required = false) final Long id,
+        @Valid @RequestBody OfertasDTO ofertasDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to update Ofertas : {}, {}", id, ofertasDTO);
+        if (ofertasDTO.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, ofertasDTO.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!ofertasRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        OfertasDTO result = ofertasService.updatePortal(ofertasDTO);
+        return ResponseEntity
+            .ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, ofertasDTO.getId().toString()))
             .body(result);
     }
 

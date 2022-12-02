@@ -15,7 +15,7 @@ export interface IOfertas {
   dataColeta?: dayjs.Dayjs | null;
   dataEntrega?: dayjs.Dayjs | null;
   dataModificacao?: dayjs.Dayjs | null;
-  dataFechamento?: dayjs.Dayjs | null;
+  dataFechamento?: any | null;
   status?: StatusOferta | null;
   tipoOferta?: TipoOferta | null;
   tipoTransporte?: TipoTransporteOferta | null;

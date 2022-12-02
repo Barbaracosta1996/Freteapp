@@ -184,6 +184,23 @@ public class RotasOfertasService {
         }
     }
 
+    public void updateRoute(OfertasDTO ofertasDTO) {
+        Optional<RotasOfertasDTO> rotasOfertasDTO = findByIdOferta(ofertasDTO.getId());
+
+        rotasOfertasDTO.ifPresentOrElse(
+            rotaOfertasUpdate -> {
+                try {
+                    String routes = googlePlacesServices.getRouteDirections(ofertasDTO);
+                    rotaOfertasUpdate.setRotas(routes);
+                    save(rotaOfertasUpdate);
+                } catch (UnirestException e) {
+                    throw new RuntimeException(e);
+                }
+            },
+            () -> saveNewRoute(ofertasDTO)
+        );
+    }
+
     /**
      * Delete the rotasOfertas by id.
      *

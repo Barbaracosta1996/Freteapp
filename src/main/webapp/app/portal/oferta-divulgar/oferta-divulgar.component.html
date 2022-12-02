@@ -7,7 +7,7 @@
 <div class="d-flex justify-content-center">
   <jhi-alert-error></jhi-alert-error>
   <div class="md:col-12" id="registro-form">
-    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+    <form name="editForm" (ngSubmit)="save()" [formGroup]="editForm">
       <div class="flex flex-wrap justify-content-center card-container gap-3">
         <div class="row mb-3" [hidden]="true">
           <label class="form-label" for="field_id">ID</label>
@@ -15,11 +15,9 @@
         </div>
 
         <div class="center-page" [ngSwitch]="activeIndex">
-          <div class="mb-3">
-            <!--   Data da Viagem       -->
+          <h3 class="text-center text-600 mb-3">Preenha todos os dados abaixo</h3>
 
-            <h3 class="text-center text-600 mb-3">Preenha todos os dados abaixo</h3>
-
+          <div class="mb-3" *ngIf="editForm.controls.id.value !== null">
             <!--   Status      -->
             <label class="form-center text-600" for="field_status">Status</label>
             <div class="p-inputgroup">
@@ -27,6 +25,7 @@
                 styleClass="w-full"
                 class="p-inputtext-lg"
                 panelStyleClass="w-full"
+                id="field_status"
                 [options]="status"
                 formControlName="status"
                 placeholder="Selecione"
@@ -45,7 +44,6 @@
               <p-calendar
                 class="p-inputtext-lg"
                 styleClass="w-full"
-                [minDate]="minDate"
                 [dateFormat]="'dd/mm/yy'"
                 [hourFormat]="'24'"
                 [showTime]="true"
@@ -54,7 +52,7 @@
                 name="dataFechamento"
                 id="field_dataFechamento"
                 [showButtonBar]="true"
-                inputId="field_dataFechamento"
+                inputId="dataFechamento"
               ></p-calendar>
               <span class="p-inputgroup-addon"><i class="pi pi-calendar"></i></span>
             </div>
@@ -134,8 +132,19 @@
           <div class="mb-3">
             <label class="form-center text-600" for="field_localizacaoOrigem">Localizacao Origem</label>
 
-            <div class="p-inputgroup" *ngIf="editForm.controls.id.value !== null">
+            <div class="p-inputgroup">
+              <input
+                pInputText
+                *ngIf="!editOrigem"
+                class="p-inputtext-lg w-10rem"
+                [readonly]="true"
+                name="origem"
+                id="origem"
+                formControlName="origem"
+              />
+
               <p-autoComplete
+                *ngIf="editOrigem || editForm.controls.id.value === null"
                 styleClass="w-full"
                 class="p-inputtext-lg w-full"
                 inputStyleClass="w-full"
@@ -149,7 +158,10 @@
                 [minLength]="1"
               >
               </p-autoComplete>
-              <span class="p-inputgroup-addon"><i class="pi pi-map-marker"></i></span>
+              <span *ngIf="editOrigem || editForm.controls.id.value === null" class="p-inputgroup-addon"
+                ><i class="pi pi-map-marker"></i
+              ></span>
+              <span *ngIf="!editOrigem" class="p-inputgroup-addon" (click)="setOrigem()"><i class="pi pi-pencil"></i></span>
             </div>
             <div
               *ngIf="
@@ -166,8 +178,19 @@
           <!--   Localização Destino     -->
           <div class="mb-3">
             <label class="form-label text-600" for="field_localizacaoDestino">Localizacao Destino</label>
-            <div class="p-inputgroup" *ngIf="editForm.controls.id.value !== null">
+            <div class="p-inputgroup">
+              <input
+                pInputText
+                *ngIf="!editDestino"
+                class="p-inputtext-lg w-10rem"
+                name="destino"
+                [readonly]="true"
+                id="destino"
+                formControlName="destino"
+              />
+
               <p-autoComplete
+                *ngIf="editDestino || editForm.controls.id.value === null"
                 styleClass="w-full"
                 class="p-inputtext-lg w-full"
                 inputStyleClass="w-full"
@@ -181,7 +204,10 @@
                 [minLength]="1"
               >
               </p-autoComplete>
-              <span class="p-inputgroup-addon"><i class="pi pi-map-marker"></i></span>
+              <span *ngIf="editDestino || editForm.controls.id.value === null" class="p-inputgroup-addon"
+                ><i class="pi pi-map-marker"></i
+              ></span>
+              <span *ngIf="!editDestino" class="p-inputgroup-addon" (click)="setDestino()"><i class="pi pi-pencil"></i></span>
             </div>
             <div
               *ngIf="

@@ -49,12 +49,13 @@ export class OfertasService {
   createOferta(ofertas: NewOfertas): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(ofertas);
     return this.http
-      .post<RestOfertas>( `${this.resourceUrl}/portal`, copy, { observe: 'response' })
+      .post<RestOfertas>(`${this.resourceUrl}/portal`, copy, { observe: 'response' })
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   findNearRoute(id: number): Observable<EntityArrayResponseType> {
-    return this.http.get<RestOfertas[]>( `${this.resourceUrlGeo}/${id}`, { observe: 'response' })
+    return this.http
+      .get<RestOfertas[]>(`${this.resourceUrlGeo}/${id}`, { observe: 'response' })
       .pipe(map(res => this.convertResponseArrayFromServer(res)));
   }
 
@@ -62,6 +63,13 @@ export class OfertasService {
     const copy = this.convertDateFromClient(ofertas);
     return this.http
       .put<RestOfertas>(`${this.resourceUrl}/${this.getOfertasIdentifier(ofertas)}`, copy, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
+  }
+
+  updateOferta(ofertas: IOfertas): Observable<EntityResponseType> {
+    const copy = this.convertDateFromClient(ofertas);
+    return this.http
+      .put<RestOfertas>(`${this.resourceUrl}/portal/${this.getOfertasIdentifier(ofertas)}`, copy, { observe: 'response' })
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
@@ -135,7 +143,7 @@ export class OfertasService {
       dataColeta: restOfertas.dataColeta ? dayjs(restOfertas.dataColeta) : undefined,
       dataEntrega: restOfertas.dataEntrega ? dayjs(restOfertas.dataEntrega) : undefined,
       dataModificacao: restOfertas.dataModificacao ? dayjs(restOfertas.dataModificacao) : undefined,
-      dataFechamento: restOfertas.dataFechamento ? dayjs(restOfertas.dataFechamento) : undefined,
+      dataFechamento: new Date(restOfertas.dataFechamento!),
     };
   }
 

@@ -13,7 +13,6 @@ import { TipoTransporteOferta } from '../../entities/enumerations/tipo-transport
 import { TipoCarga } from '../../entities/enumerations/tipo-carga.model';
 import { AppGoogleService } from '../../core/app/app.google.service';
 import { StatusOferta } from '../../entities/enumerations/status-oferta.model';
-
 @Component({
   selector: 'jhi-oferta-divulgar',
   templateUrl: './oferta-divulgar.component.html',
@@ -22,10 +21,14 @@ import { StatusOferta } from '../../entities/enumerations/status-oferta.model';
 export class OfertaDivulgarComponent implements OnInit {
   isSaving = false;
   ofertas: IOfertas | null = null;
+  editOrigem = false;
+  editDestino = false;
 
   activeIndex: number = 0;
 
-  minDate = new Date();
+  oldOrigem = null;
+  oldDestino = null;
+
   tiposTransportes = [
     { name: 'Cegonha', value: TipoTransporteOferta.CEGONHA },
     { name: 'Guincho', value: TipoTransporteOferta.GUINCHO },
@@ -66,6 +69,13 @@ export class OfertaDivulgarComponent implements OnInit {
     this.activatedRoute.data.subscribe(({ ofertas }) => {
       this.ofertas = ofertas;
       if (ofertas) {
+        if (this.ofertas?.id === null) {
+          this.editDestino = true;
+          this.editOrigem = true;
+        } else {
+          this.oldDestino = ofertas.localizacaoDestino;
+          this.oldOrigem = ofertas.localizacaoOrigem;
+        }
         this.updateForm(ofertas);
       }
       this.loadRelationshipsOptions();
@@ -86,22 +96,39 @@ export class OfertaDivulgarComponent implements OnInit {
 
   save(): void {
     this.isSaving = true;
+
     const ofertas = this.ofertasFormService.getOfertas(this.editForm);
 
-    const selectOrigem = this.editForm.get(['localizacaoOrigem'])?.value;
+    let selectOrigem = this.editForm.get(['localizacaoOrigem'])?.value;
+
     console.log(selectOrigem);
+
+    if (selectOrigem == undefined || null) {
+      selectOrigem = this.oldOrigem;
+    }
+
+    if (ofertas.id !== null && !this.editOrigem) {
+      selectOrigem = JSON.parse(selectOrigem);
+    }
 
     ofertas.origem = `${selectOrigem['structured_formatting']['main_text']} - ${selectOrigem['structured_formatting']['secondary_text']}`;
     ofertas.localizacaoOrigem = JSON.stringify(selectOrigem);
 
-    const selectDestino = this.editForm.get(['localizacaoDestino'])?.value;
-    console.log(selectOrigem);
+    let selectDestino = this.editForm.get(['localizacaoDestino'])?.value;
+
+    if (selectDestino == undefined || null) {
+      selectDestino = this.oldDestino;
+    }
+
+    if (ofertas.id !== null && !this.editDestino) {
+      selectDestino = JSON.parse(selectDestino);
+    }
 
     ofertas.destino = `${selectDestino['structured_formatting']['main_text']} - ${selectDestino['structured_formatting']['secondary_text']}`;
     ofertas.localizacaoDestino = JSON.stringify(selectDestino);
 
     if (ofertas.id !== null) {
-      this.subscribeToSaveResponse(this.ofertasService.update(ofertas));
+      this.subscribeToSaveResponse(this.ofertasService.updateOferta(ofertas));
     } else {
       this.subscribeToSaveResponse(this.ofertasService.createOferta(ofertas));
     }
@@ -129,7 +156,6 @@ export class OfertaDivulgarComponent implements OnInit {
   protected updateForm(ofertas: IOfertas): void {
     this.ofertas = ofertas;
     this.ofertasFormService.resetForm(this.editForm, ofertas);
-
     this.perfilsSharedCollection = this.perfilService.addPerfilToCollectionIfMissing<IPerfil>(this.perfilsSharedCollection, ofertas.perfil);
   }
 
@@ -150,5 +176,13 @@ export class OfertaDivulgarComponent implements OnInit {
         this.filteredOrigem = res.body;
       }
     });
+  }
+
+  setDestino() {
+    this.editDestino = !this.editDestino;
+  }
+
+  setOrigem() {
+    this.editOrigem = !this.editOrigem;
   }
 }

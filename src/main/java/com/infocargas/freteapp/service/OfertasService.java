@@ -9,6 +9,7 @@ import com.infocargas.freteapp.repository.OfertasRepository;
 import com.infocargas.freteapp.service.dto.OfertasDTO;
 import com.infocargas.freteapp.service.mapper.OfertasMapper;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -66,6 +67,25 @@ public class OfertasService {
 
         if (ofertas.getId() != null) {
             rotasOfertasService.saveNewRoute(ofertas);
+        }
+
+        return ofertas;
+    }
+
+    public OfertasDTO updatePortal(OfertasDTO ofertasDTO) {
+        OfertasDTO ofertas = save(ofertasDTO);
+
+        if (ofertas.getStatus() == StatusOferta.AGUARDANDO_PROPOSTA) {
+            rotasOfertasService.updateRoute(ofertas);
+            facebookController.sendOneMessage(
+                ofertas.getPerfil().getUser().getPhone(),
+                String.format(
+                    "Você acaba de atualizar uma oferta de: %s para: %s para o dia: %s. Fique atento às notificações de transporte aqui no Whatsapp.",
+                    ofertas.getOrigem(),
+                    ofertas.getDestino(),
+                    ofertas.getDataFechamento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                )
+            );
         }
 
         return ofertas;

@@ -95,6 +95,9 @@ export class MainComponent implements OnInit {
       this.router.navigate(['/login']).then();
     }
   }
+  previousState(): void {
+    window.history.back();
+  }
 
   logout(): void {
     this.nameUser = 'Login';

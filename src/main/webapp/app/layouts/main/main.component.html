@@ -26,8 +26,14 @@
     </div>
 
     <div class="bg-btn-menu">
-      <p-button type="button" id="cancel-save" data-cy="entityCreateCancelButton" styleClass="p-button-danger" (click)="previousState()">
-        <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Voltar página</span>      </p-button
+      <p-button
+        type="button"
+        id="cancel-save"
+        data-cy="entityCreateCancelButton"
+        styleClass="p-button-rounded p-button-warning mr-2 mb-2"
+        (click)="previousState()"
+      >
+        <span jhiTranslate="entity.action.cancel">Voltar página</span>      </p-button
       >
     </div>
   </div>

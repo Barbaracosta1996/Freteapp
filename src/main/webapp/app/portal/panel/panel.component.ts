@@ -13,7 +13,7 @@ export class PanelComponent implements OnInit {
   account: Account | null | undefined = null;
   visible: boolean = false;
 
-  home = { icon: 'pi pi-home', routerLink: '' };
+  home = { icon: 'pi pi-home', routerLink: '/painel' };
   items = [{ label: 'Divulgar Vagas/Cargas' }];
 
   itemsTab: MenuItem[] = [

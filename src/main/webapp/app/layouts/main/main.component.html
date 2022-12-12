@@ -18,7 +18,7 @@
 
     <div class="bg-btn-menu-right">
       <p-splitButton
-        [label]="nameUser ? nameUser : 'Login'"
+        [label]="nameUser == undefined || nameUser == null ? 'Login' : nameUser"
         (click)="goLogin()"
         [model]="items"
         styleClass="p-button-rounded p-button-warning mr-2 mb-2"

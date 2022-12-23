@@ -13,9 +13,18 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { InputTextModule } from 'primeng/inputtext';
 import { GestaoRoutingModule } from './gestao-routing.module';
+import { GestaoConexaoComponent } from './gestao-conexao/gestao-conexao.component';
+import { GestaoSolicitacaoComponent } from './gestao-solicitacao/gestao-solicitacao.component';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @NgModule({
-  declarations: [GridGestaoOfertasComponent, GestaoMainComponent, GestaoOfertasComponent],
+  declarations: [
+    GridGestaoOfertasComponent,
+    GestaoMainComponent,
+    GestaoOfertasComponent,
+    GestaoConexaoComponent,
+    GestaoSolicitacaoComponent,
+  ],
   imports: [
     SharedModule,
     GestaoRoutingModule,
@@ -28,6 +37,7 @@ import { GestaoRoutingModule } from './gestao-routing.module';
     InputNumberModule,
     AutoCompleteModule,
     InputTextModule,
+    ConfirmDialogModule,
   ],
 })
 export class GestaoPortalModule {}

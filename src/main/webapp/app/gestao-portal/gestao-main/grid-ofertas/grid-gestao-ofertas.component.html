@@ -13,6 +13,7 @@
   >
     <ng-template pTemplate="header">
       <tr>
+        <th>Código Oferta</th>
         <th>Status</th>
         <th>Data Liberação</th>
         <th>Tipo Transporte</th>
@@ -26,6 +27,7 @@
     </ng-template>
     <ng-template pTemplate="body" let-oferta>
       <tr>
+        <td>{{ oferta.id }}</td>
         <td>{{ getStatusOferta(oferta.status) }}</td>
         <td>{{ oferta.dataFechamento | date: 'dd/MM/yyyy HH:mm' }}</td>
         <td>{{ getTipoTransport(oferta.tipoTransporte) }}</td>
@@ -41,16 +43,6 @@
             [routerLink]="['/gestao', 'oferta', 'edit', oferta.id]"
             icon="pi pi-pencil"
             class="p-button-rounded p-button-info"
-          ></button>
-        </td>
-        <td>
-          <button
-            pButton
-            pRipple
-            type="button"
-            icon="pi pi-search"
-            [routerLink]="['/gestao', 'indicacao', oferta.id]"
-            class="p-button-rounded p-button-success"
           ></button>
         </td>
       </tr>

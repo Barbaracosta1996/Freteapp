@@ -26,11 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class GeoOfertaResource {
 
     private final RotasOfertasService ofertasService;
-    private final ClickaTellService clickaTellService;
 
-    public GeoOfertaResource(RotasOfertasService ofertasService, ClickaTellService clickaTellService) {
+    public GeoOfertaResource(RotasOfertasService ofertasService) {
         this.ofertasService = ofertasService;
-        this.clickaTellService = clickaTellService;
     }
 
     /**
@@ -111,10 +109,6 @@ public class GeoOfertaResource {
                     selected.add(oferta.getOfertas());
                 }
             });
-            //            if (selected.size() > 0){
-            //                clickaTellService.sendSms("Encontramos " + selected.size() + " possíveís vagas. Para mais informações acesse: https://freteapp.sp.skdrive.net/portal/indicacao/"+rotasOfertasDTO.getOfertas().getId(), "+55" + rotasOfertasDTO.getOfertas().getPerfil().getTelefoneComercial());
-            //            }
-
         }
 
         return ResponseEntity.ok(selected);
@@ -133,7 +127,6 @@ public class GeoOfertaResource {
         @QueryParam("lngSecond") Double lngSecond
     ) {
         Double distance = GeoUtils.geoDistanceInKm(latFirst, lngFirst, latSecond, lngSecond);
-
         return ResponseEntity.ok(distance);
     }
 }

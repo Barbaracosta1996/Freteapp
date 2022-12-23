@@ -172,7 +172,7 @@
           <label class="form-label" for="field_status">Status</label>
           <select class="form-control" name="status" formControlName="status" id="field_status" data-cy="status">
             <option [ngValue]="null"></option>
-            <option *ngFor="let statusOferta of statusOfertaValues" [value]="statusOferta">statusOferta</option>
+            <option *ngFor="let statusOferta of statusOfertaValues" [value]="statusOferta">{{ statusOferta }}</option>
           </select>
           <div *ngIf="editForm.get('status')!.invalid && (editForm.get('status')!.dirty || editForm.get('status')!.touched)">
             <small class="form-text text-danger" *ngIf="editForm.get('status')?.errors?.required"> O campo é obrigatório. </small>

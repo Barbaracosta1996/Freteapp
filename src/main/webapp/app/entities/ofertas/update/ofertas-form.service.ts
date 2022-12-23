@@ -150,6 +150,51 @@ export class OfertasFormService {
     });
   }
 
+  createOfertasPortalFormGroupOriginal(ofertas: OfertasFormGroupInput = { id: null }): OfertasFormGroup {
+    const ofertasRawValue = this.convertOfertasToOfertasRawValue({
+      ...this.getFormDefaults(),
+      ...ofertas,
+    });
+    return new FormGroup<OfertasFormGroupContent>({
+      id: new FormControl(
+        { value: ofertasRawValue.id, disabled: true },
+        {
+          nonNullable: true,
+          validators: [Validators.required],
+        }
+      ),
+      dataPostagem: new FormControl(ofertasRawValue.dataPostagem),
+      quantidade: new FormControl(ofertasRawValue.quantidade, {
+        validators: [Validators.required, Validators.min(1)],
+      }),
+      tipoCarga: new FormControl(ofertasRawValue.tipoCarga, {
+        validators: [Validators.required],
+      }),
+      localizacaoOrigem: new FormControl(ofertasRawValue.localizacaoOrigem, {
+        validators: [Validators.required],
+      }),
+      localizacaoDestino: new FormControl(ofertasRawValue.localizacaoDestino, {
+        validators: [Validators.required],
+      }),
+      dataColeta: new FormControl(ofertasRawValue.dataColeta),
+      dataEntrega: new FormControl(ofertasRawValue.dataEntrega),
+      dataModificacao: new FormControl(ofertasRawValue.dataModificacao),
+      dataFechamento: new FormControl(ofertasRawValue.dataFechamento, {
+        validators: [Validators.required],
+      }),
+      status: new FormControl(ofertasRawValue.status),
+      tipoOferta: new FormControl(ofertasRawValue.tipoOferta, {
+        validators: [Validators.required],
+      }),
+      tipoTransporte: new FormControl(ofertasRawValue.tipoTransporte),
+      destino: new FormControl(ofertasRawValue.destino),
+      origem: new FormControl(ofertasRawValue.origem),
+      perfil: new FormControl(ofertasRawValue.perfil, {
+        validators: [Validators.required],
+      }),
+    });
+  }
+
   getOfertas(form: OfertasFormGroup): IOfertas | NewOfertas {
     return this.convertOfertasRawValueToOfertas(form.getRawValue() as OfertasFormRawValue | NewOfertasFormRawValue);
   }
@@ -171,7 +216,7 @@ export class OfertasFormService {
       id: null,
       dataPostagem: currentTime,
       dataEntrega: currentTime,
-      dataModificacao: currentTime
+      dataModificacao: currentTime,
     };
   }
 
@@ -180,7 +225,7 @@ export class OfertasFormService {
       ...rawOfertas,
       dataPostagem: dayjs(rawOfertas.dataPostagem, DATE_TIME_FORMAT),
       dataEntrega: dayjs(rawOfertas.dataEntrega, DATE_TIME_FORMAT),
-      dataModificacao: dayjs(rawOfertas.dataModificacao, DATE_TIME_FORMAT)
+      dataModificacao: dayjs(rawOfertas.dataModificacao, DATE_TIME_FORMAT),
     };
   }
 
@@ -191,7 +236,7 @@ export class OfertasFormService {
       ...ofertas,
       dataPostagem: ofertas.dataPostagem ? ofertas.dataPostagem.format(DATE_TIME_FORMAT) : undefined,
       dataEntrega: ofertas.dataEntrega ? ofertas.dataEntrega.format(DATE_TIME_FORMAT) : undefined,
-      dataModificacao: ofertas.dataModificacao ? ofertas.dataModificacao.format(DATE_TIME_FORMAT) : undefined
+      dataModificacao: ofertas.dataModificacao ? ofertas.dataModificacao.format(DATE_TIME_FORMAT) : undefined,
     };
   }
 }

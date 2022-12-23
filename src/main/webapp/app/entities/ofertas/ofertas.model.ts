@@ -22,6 +22,7 @@ export interface IOfertas {
   destino?: string | null;
   origem?: string | null;
   perfil?: Pick<IPerfil, 'id'> | null;
+  perfilCompleto?: IPerfil | null;
 }
 
 export type NewOfertas = Omit<IOfertas, 'id'> & { id: null };

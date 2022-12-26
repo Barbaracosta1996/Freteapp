@@ -33,6 +33,10 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access.service'
           loadChildren: () => import('./portal/portal.module').then(m => m.PortalModule),
         },
         {
+          path: 'gestao',
+          loadChildren: () => import('./gestao-portal/gestao-portal.module').then(m => m.GestaoPortalModule),
+        },
+        {
           path: '',
           loadChildren: () => import(`./entities/entity-routing.module`).then(m => m.EntityRoutingModule),
         },

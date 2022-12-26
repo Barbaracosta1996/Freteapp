@@ -1,0 +1,51 @@
+<div class="card">
+  <p-table
+    [value]="ofertas!"
+    [paginator]="true"
+    [(first)]="page"
+    [loading]="isLoading"
+    [pageLinks]="page + 1"
+    [rows]="10"
+    [showCurrentPageReport]="true"
+    responsiveLayout="scroll"
+    currentPageReportTemplate="Mostrar {{ page + 1 }} - {{ itemsPerPage }} de {{ totalItems }} ofertas"
+    [rowsPerPageOptions]="[10, 25, 50]"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Código Oferta</th>
+        <th>Status</th>
+        <th>Data Liberação</th>
+        <th>Tipo Transporte</th>
+        <th>Quantidade</th>
+        <th>Origem</th>
+        <th>Destino</th>
+        <th>Motorista</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-oferta>
+      <tr>
+        <td>{{ oferta.id }}</td>
+        <td>{{ getStatusOferta(oferta.status) }}</td>
+        <td>{{ oferta.dataFechamento | date: 'dd/MM/yyyy HH:mm' }}</td>
+        <td>{{ getTipoTransport(oferta.tipoTransporte) }}</td>
+        <td>{{ oferta.quantidade }}</td>
+        <td>{{ oferta.origem }}</td>
+        <td>{{ oferta.destino }}</td>
+        <td>{{ oferta.perfilCompleto.nome }}</td>
+        <td>
+          <button
+            pButton
+            pRipple
+            type="button"
+            [routerLink]="['/gestao', 'oferta', 'edit', oferta.id]"
+            icon="pi pi-pencil"
+            class="p-button-rounded p-button-info"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

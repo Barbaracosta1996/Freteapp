@@ -11,6 +11,7 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring", uses = { PerfilMapper.class })
 public interface OfertasMapper extends EntityMapper<OfertasDTO, Ofertas> {
+    @Mapping(target = "perfilCompleto", source = "perfil")
     @Mapping(target = "perfil", source = "perfil")
     OfertasDTO toDto(Ofertas s);
 }

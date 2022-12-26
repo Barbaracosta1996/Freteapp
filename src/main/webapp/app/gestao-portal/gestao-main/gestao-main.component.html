@@ -1,0 +1,55 @@
+<div class="p-grid">
+  <p-breadcrumb [model]="items" [home]="home"></p-breadcrumb>
+
+  <div>
+    <div
+      class="flex-grow-1 flex align-items-center justify-content-center font-light p-4 text-white text-4xl px-5 py-3"
+      style="background-color: #312e4e"
+    >
+      Ofertas de Vagas
+    </div>
+
+    <div class="card">
+      <div class="flex card-container overflow-hidden ml-7 mt-4 mb-4 w-20rem">
+        <button
+          pButton
+          pRipple
+          type="button"
+          icon="pi pi-plus-circle"
+          iconPos="right"
+          label="Novas Vagas"
+          class="p-button-rounded p-button-info"
+          [routerLink]="['/gestao', 'nova-oferta', 'vagas']"
+        ></button>
+      </div>
+    </div>
+
+    <jhi-grid-gestao-ofertas [tipoOferta]="'VAGAS'"></jhi-grid-gestao-ofertas>
+  </div>
+
+  <div>
+    <div
+      class="flex-grow-1 flex align-items-center justify-content-center font-light p-4 text-white text-4xl px-5 py-3"
+      style="background-color: #312e4e"
+    >
+      Ofertas de Cargas
+    </div>
+
+    <div class="card">
+      <div class="flex card-container overflow-hidden ml-7 mt-4 mb-4 w-20rem">
+        <button
+          pButton
+          pRipple
+          type="button"
+          icon="pi pi-plus-circle"
+          iconPos="right"
+          label="Divulgar Cargas"
+          class="p-button-rounded p-button-info"
+          [routerLink]="['/gestao', 'nova-oferta', 'carga']"
+        ></button>
+      </div>
+    </div>
+
+    <jhi-grid-gestao-ofertas [tipoOferta]="'CARGA'"></jhi-grid-gestao-ofertas>
+  </div>
+</div>

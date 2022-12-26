@@ -58,6 +58,8 @@ public class OfertasDTO implements Serializable {
 
     private PerfilDTO perfil;
 
+    private PerfilDTO perfilCompleto;
+
     public Long getId() {
         return id;
     }
@@ -184,6 +186,14 @@ public class OfertasDTO implements Serializable {
 
     public void setPerfil(PerfilDTO perfil) {
         this.perfil = perfil;
+    }
+
+    public PerfilDTO getPerfilCompleto() {
+        return perfilCompleto;
+    }
+
+    public void setPerfilCompleto(PerfilDTO perfilCompleto) {
+        this.perfilCompleto = perfilCompleto;
     }
 
     @Override

@@ -1,0 +1,171 @@
+<div
+  class="flex-grow-1 flex align-items-center justify-content-center font-light p-4 text-white text-4xl px-5 py-3"
+  style="background-color: #312e4e"
+>
+  Fazer Conexão
+</div>
+<p-table
+  #dt
+  [value]="ofertas"
+  [(selection)]="selectedOfertas"
+  dataKey="id"
+  styleClass="p-datatable-customers"
+  [rowHover]="true"
+  [rows]="10"
+  [showCurrentPageReport]="true"
+  [rowsPerPageOptions]="[10, 25, 50]"
+  [loading]="loading"
+  responsiveLayout="scroll"
+  [paginator]="true"
+  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+  [filterDelay]="0"
+  [globalFilterFields]="['origem', 'destino', 'perfil.nome', 'status']"
+>
+  <ng-template pTemplate="caption">
+    <div class="table-header">
+      <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input pInputText type="text" (input)="dt.filterGlobal($event.target, 'contains')" placeholder="Pesquisar Vagas" />
+      </span>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="origem">
+        <div class="flex justify-content-between align-items-center">
+          Origem
+          <p-sortIcon field="origem"></p-sortIcon>
+          <p-columnFilter type="text" field="origem" display="menu" class="ml-auto"></p-columnFilter>
+        </div>
+      </th>
+
+      <th pSortableColumn="destino">
+        <div class="flex justify-content-between align-items-center">
+          Destino
+          <p-sortIcon field="destino"></p-sortIcon>
+          <p-columnFilter type="text" field="destino" display="menu" class="ml-auto"></p-columnFilter>
+        </div>
+      </th>
+
+      <th pSortableColumn="perfil.nome">
+        <div class="flex justify-content-between align-items-center">
+          Nome
+          <p-sortIcon field="perfil.nome"></p-sortIcon>
+          <p-columnFilter type="text" field="perfil.nome" display="menu" class="ml-auto"></p-columnFilter>
+        </div>
+      </th>
+
+      <th pSortableColumn="dataFechamento">
+        <div class="flex justify-content-between align-items-center">
+          Data da Viagem
+          <p-sortIcon field="dataFechamento"></p-sortIcon>
+          <p-columnFilter type="date" field="dataFechamento" display="menu" class="ml-auto"></p-columnFilter>
+        </div>
+      </th>
+
+      <th pSortableColumn="tipoOferta">
+        <div class="flex justify-content-between align-items-center">
+          Tipo Oferta
+          <p-sortIcon field="tipoOferta"></p-sortIcon>
+          <p-columnFilter type="text" field="tipoOferta" display="menu" class="ml-auto"></p-columnFilter>
+        </div>
+      </th>
+
+      <th pSortableColumn="tipoCarga">
+        <div class="flex justify-content-between align-items-center">
+          Tipo Carga
+          <p-sortIcon field="tipoCarga"></p-sortIcon>
+          <p-columnFilter type="text" field="tipoCarga" display="menu" class="ml-auto"></p-columnFilter>
+        </div>
+      </th>
+
+      <th pSortableColumn="quantidade">
+        <div class="flex justify-content-between align-items-center">
+          Quantidade
+          <p-sortIcon field="quantidade"></p-sortIcon>
+          <p-columnFilter type="text" field="quantidade" display="menu" class="ml-auto"></p-columnFilter>
+        </div>
+      </th>
+
+      <th pSortableColumn="tipoTransporte">
+        <div class="flex justify-content-between align-items-center">
+          Tipo Transporte
+          <p-sortIcon field="tipoTransporte"></p-sortIcon>
+          <p-columnFilter type="text" field="tipoTransporte" display="menu" class="ml-auto"></p-columnFilter>
+        </div>
+      </th>
+
+      <th pSortableColumn="status">
+        <div class="flex justify-content-between align-items-center">
+          Status
+          <p-sortIcon field="status"></p-sortIcon>
+          <p-columnFilter type="text" field="status" display="menu" class="ml-auto"></p-columnFilter>
+        </div>
+      </th>
+      <th style="width: 8rem"></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-oferta>
+    <tr class="p-selectable-row">
+      <td>
+        <span class="p-column-title">Origem</span>
+        {{ oferta.origem }}
+      </td>
+      <td>
+        <span class="p-column-title">Destino</span>
+        {{ oferta.destino }}
+      </td>
+      <td>
+        <span class="p-column-title">Nome</span>
+        {{ oferta.perfilCompleto.nome }}
+      </td>
+      <td>
+        <span class="p-column-title">Date da Viagem</span>
+        {{ oferta.dataFechamento | date: 'dd/MM/yyyy' }}
+      </td>
+      <td>
+        <span class="p-column-title">Tipo Oferta</span>
+        {{ oferta.tipoOferta }}
+      </td>
+      <td>
+        <span class="p-column-title">Tipo Carga</span>
+        {{ oferta.tipoCarga }}
+      </td>
+      <td>
+        <span class="p-column-title">Quantidade</span>
+        {{ oferta.quantidade }}
+      </td>
+
+      <td>
+        <span class="p-column-title">Tipo Transporte</span>
+        {{ oferta.tipoTransporte }}
+      </td>
+
+      <td>
+        <span class="p-column-title">Status</span>
+        <span [class]="'customer-badge status-' + oferta.status">{{ oferta.status }}</span>
+      </td>
+
+      <td style="text-align: center">
+        <button pButton type="button" (click)="confirmaEnvio(oferta)" label="Solicitar" class="p-button-info" icon="pi pi-send"></button>
+        <button pButton type="button" (click)="confirmaEnvio(oferta)" label="Sim" class="p-button-info" icon="pi pi-send"></button>
+        <button pButton type="button" (click)="confirmaEnvio(oferta)" label="Não" class="p-button-info" icon="pi pi-send"></button>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="8">Nenhuma Indicação encontrada.</td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-confirmDialog
+  [style]="{ width: '50vw' }"
+  [acceptLabel]="'Sim'"
+  [rejectLabel]="'Não'"
+  key="positionDialog"
+  [position]="'bottom'"
+  [baseZIndex]="10000"
+  rejectButtonStyleClass="p-button-outlined"
+></p-confirmDialog>

@@ -14,6 +14,8 @@ import { OfertasService } from '../entities/ofertas/service/ofertas.service';
 import { EMPTY, Observable, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
+import { ASC, DESC } from '../config/navigation.constants';
+import { GestaoHomeComponent } from './gestao-home/gestao-home.component';
 
 @Injectable({ providedIn: 'root' })
 export class GestaoConexaoRoutingResolveService implements Resolve<IOfertas[]> {
@@ -43,6 +45,26 @@ export class GestaoConexaoRoutingResolveService implements Resolve<IOfertas[]> {
         path: '',
         data: {
           authorities: [Authority.ADMIN],
+        },
+        canActivate: [UserRouteAccessService],
+        component: GestaoHomeComponent,
+      },
+      {
+        path: 'cargas',
+        data: {
+          authorities: [Authority.ADMIN],
+          defaultSort: 'id,' + DESC,
+          type: 'CARGAS',
+        },
+        canActivate: [UserRouteAccessService],
+        component: GestaoMainComponent,
+      },
+      {
+        path: 'vagas',
+        data: {
+          authorities: [Authority.ADMIN],
+          defaultSort: 'id,' + DESC,
+          type: 'VAGAS',
         },
         canActivate: [UserRouteAccessService],
         component: GestaoMainComponent,

@@ -1,51 +1,105 @@
 <div class="card">
-  <p-table
-    [value]="ofertas!"
-    [paginator]="true"
-    [(first)]="page"
-    [loading]="isLoading"
-    [pageLinks]="page + 1"
-    [rows]="10"
-    [showCurrentPageReport]="true"
-    responsiveLayout="scroll"
-    currentPageReportTemplate="Mostrar {{ page + 1 }} - {{ itemsPerPage }} de {{ totalItems }} ofertas"
-    [rowsPerPageOptions]="[10, 25, 50]"
-  >
-    <ng-template pTemplate="header">
-      <tr>
-        <th>Código Oferta</th>
-        <th>Status</th>
-        <th>Data Liberação</th>
-        <th>Tipo Transporte</th>
-        <th>Quantidade</th>
-        <th>Origem</th>
-        <th>Destino</th>
-        <th>Motorista</th>
-        <th></th>
-        <th></th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-oferta>
-      <tr>
-        <td>{{ oferta.id }}</td>
-        <td>{{ getStatusOferta(oferta.status) }}</td>
-        <td>{{ oferta.dataFechamento | date: 'dd/MM/yyyy HH:mm' }}</td>
-        <td>{{ getTipoTransport(oferta.tipoTransporte) }}</td>
-        <td>{{ oferta.quantidade }}</td>
-        <td>{{ oferta.origem }}</td>
-        <td>{{ oferta.destino }}</td>
-        <td>{{ oferta.perfilCompleto.nome }}</td>
-        <td>
-          <button
-            pButton
-            pRipple
-            type="button"
-            [routerLink]="['/gestao', 'oferta', 'edit', oferta.id]"
-            icon="pi pi-pencil"
-            class="p-button-rounded p-button-info"
-          ></button>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+  <div>
+    <h2 id="page-heading" data-cy="OfertasHeading">
+      <span>Ofertas</span>
+
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-info me-2" (click)="loadOfertas()" [disabled]="isLoading">
+          <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+          <span>Atualizar lista</span>
+        </button>
+      </div>
+    </h2>
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <jhi-filter [filters]="filters" (filterChange)="navigateToWithComponentValues()"></jhi-filter>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="ofertas?.length === 0">
+      <span>Nenhuma Ofertas encontrada</span>
+    </div>
+
+    <div class="table-responsive" id="entities" *ngIf="ofertas && ofertas.length > 0">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+            <th scope="col" jhiSortBy="id"><span>Código</span> <fa-icon icon="sort"></fa-icon></th>
+            <th scope="col" jhiSortBy="dataFechamento"><span>Data de Liberação</span> <fa-icon icon="sort"></fa-icon></th>
+            <th scope="col" jhiSortBy="status"><span>Status</span> <fa-icon icon="sort"></fa-icon></th>
+            <th scope="col" jhiSortBy="quantidade"><span>Quantidade</span> <fa-icon icon="sort"></fa-icon></th>
+            <th scope="col" jhiSortBy="tipoCarga"><span>Tipo Carga</span> <fa-icon icon="sort"></fa-icon></th>
+            <th scope="col" jhiSortBy="tipoOferta"><span>Tipo Oferta</span> <fa-icon icon="sort"></fa-icon></th>
+            <th scope="col" jhiSortBy="tipoTransporte"><span>Tipo Transporte</span> <fa-icon icon="sort"></fa-icon></th>
+            <th scope="col" jhiSortBy="destino"><span>Destino</span> <fa-icon icon="sort"></fa-icon></th>
+            <th scope="col" jhiSortBy="origem"><span>Origem</span> <fa-icon icon="sort"></fa-icon></th>
+            <th scope="col" jhiSortBy="perfil.id"><span>Perfil</span> <fa-icon icon="sort"></fa-icon></th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ofertas of ofertas; trackBy: trackId" data-cy="entityTable">
+            <td>
+              <a>{{ ofertas.id }}</a>
+            </td>
+            <td>{{ ofertas.dataFechamento | date: 'dd/mm/yyyy HH:MM' }}</td>
+            <td>{{ ofertas.status }}</td>
+            <td>{{ ofertas.quantidade }}</td>
+            <td>{{ ofertas.tipoCarga }}</td>
+            <td>{{ ofertas.tipoOferta }}</td>
+            <td>{{ ofertas.tipoTransporte }}</td>
+            <td>{{ ofertas.destino }}</td>
+            <td>{{ ofertas.origem }}</td>
+            <td>
+              <div *ngIf="ofertas.perfil">
+                <a [routerLink]="['/perfil', ofertas.perfil.id, 'view']">{{ ofertas.perfil.id }} - {{ ofertas.perfilCompleto?.nome }}</a>
+              </div>
+            </td>
+            <td class="text-end">
+              <div class="btn-group">
+                <button
+                  type="submit"
+                  [routerLink]="['/ofertas', ofertas.id, 'view']"
+                  class="btn btn-info btn-sm"
+                  data-cy="entityDetailsButton"
+                >
+                  <fa-icon icon="eye"></fa-icon>
+                  <span class="d-none d-md-inline">Visualizar</span>
+                </button>
+
+                <button
+                  type="submit"
+                  [routerLink]="['/ofertas', ofertas.id, 'edit']"
+                  class="btn btn-primary btn-sm"
+                  data-cy="entityEditButton"
+                >
+                  <fa-icon icon="pencil-alt"></fa-icon>
+                  <span class="d-none d-md-inline">Editar</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="ofertas && ofertas.length > 0">
+      <div class="d-flex justify-content-center">
+        <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <ngb-pagination
+          [collectionSize]="totalItems"
+          [page]="page"
+          [pageSize]="itemsPerPage"
+          [maxSize]="5"
+          [rotate]="true"
+          [boundaryLinks]="true"
+          (pageChange)="navigateToPage($event)"
+        ></ngb-pagination>
+      </div>
+    </div>
+  </div>
 </div>

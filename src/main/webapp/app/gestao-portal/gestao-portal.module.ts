@@ -16,6 +16,7 @@ import { GestaoRoutingModule } from './gestao-routing.module';
 import { GestaoConexaoComponent } from './gestao-conexao/gestao-conexao.component';
 import { GestaoSolicitacaoComponent } from './gestao-solicitacao/gestao-solicitacao.component';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { GestaoHomeComponent } from './gestao-home/gestao-home.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     GestaoOfertasComponent,
     GestaoConexaoComponent,
     GestaoSolicitacaoComponent,
+    GestaoHomeComponent,
   ],
   imports: [
     SharedModule,

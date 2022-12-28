@@ -4,8 +4,8 @@ import { IOfertas } from '../../../entities/ofertas/ofertas.model';
 import { EntityArrayResponseType, OfertasService } from '../../../entities/ofertas/service/ofertas.service';
 import { combineLatest, Observable, switchMap, tap } from 'rxjs';
 import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
-import { ITEMS_PER_PAGE, TOTAL_COUNT_RESPONSE_HEADER } from '../../../config/pagination.constants';
-import { ASC, DESC } from '../../../config/navigation.constants';
+import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from '../../../config/pagination.constants';
+import { ASC, DEFAULT_SORT_DATA, DESC, SORT } from '../../../config/navigation.constants';
 import { HttpHeaders } from '@angular/common/http';
 import { FilterOptions, IFilterOptions } from '../../../shared/filter/filter.model';
 import { TipoTransporteOferta } from '../../../entities/enumerations/tipo-transporte-oferta.model';
@@ -30,14 +30,9 @@ export class GridGestaoOfertasComponent implements OnInit {
 
   itemsPerPage = ITEMS_PER_PAGE;
   totalItems = 0;
-  page = 0;
+  page = 1;
 
-  constructor(
-    private ofertasService: OfertasService,
-    protected activatedRoute: ActivatedRoute,
-    public router: Router,
-    private appService: AppService
-  ) {}
+  constructor(private ofertasService: OfertasService, protected activatedRoute: ActivatedRoute, public router: Router) {}
 
   ngOnInit(): void {
     this.loadOfertas();
@@ -68,7 +63,14 @@ export class GridGestaoOfertasComponent implements OnInit {
     );
   }
 
-  protected fillComponentAttributeFromRoute(params: ParamMap, data: Data): void {}
+  protected fillComponentAttributeFromRoute(params: ParamMap, data: Data): void {
+    const page = params.get(PAGE_HEADER);
+    this.page = +(page ?? 1);
+    const sort = (params.get(SORT) ?? data[DEFAULT_SORT_DATA]).split(',');
+    this.predicate = sort[0];
+    this.ascending = sort[1] === ASC;
+    this.filters.initializeFromParams(params);
+  }
 
   protected onResponseSuccess(response: EntityArrayResponseType): void {
     this.fillComponentAttributesFromResponseHeader(response.headers);
@@ -103,9 +105,15 @@ export class GridGestaoOfertasComponent implements OnInit {
     }
 
     queryObject['tipoOferta.equals'] = this.tipoOferta === TipoOferta.VAGAS ? 'VAGAS' : 'CARGA';
-    // queryObject["userId.equals"] = this.appService.account?.id.toString();
 
-    return this.ofertasService.query(queryObject).pipe(tap(() => (this.isLoading = false)));
+    return this.ofertasService.query(queryObject).pipe(
+      tap(res => {
+        this.isLoading = false;
+        if (res.body) {
+          this.ofertas = res.body;
+        }
+      })
+    );
   }
 
   protected handleNavigation(page = this.page, predicate?: string, ascending?: boolean, filters?: IFilterOptions): void {

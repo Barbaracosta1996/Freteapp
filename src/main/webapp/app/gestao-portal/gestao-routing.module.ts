@@ -16,6 +16,7 @@ import { mergeMap } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
 import { ASC, DESC } from '../config/navigation.constants';
 import { GestaoHomeComponent } from './gestao-home/gestao-home.component';
+import { GestaoConexaoComponent } from './gestao-conexao/gestao-conexao.component';
 
 @Injectable({ providedIn: 'root' })
 export class GestaoConexaoRoutingResolveService implements Resolve<IOfertas[]> {
@@ -68,6 +69,19 @@ export class GestaoConexaoRoutingResolveService implements Resolve<IOfertas[]> {
         },
         canActivate: [UserRouteAccessService],
         component: GestaoMainComponent,
+      },
+      {
+        path: 'conexao/:id',
+        data: {
+          authorities: [Authority.ADMIN],
+          defaultSort: 'id,' + DESC,
+          type: 'CARGAS',
+        },
+        resolve: {
+          ofertas: OfertasRoutingResolveService,
+        },
+        canActivate: [UserRouteAccessService],
+        component: GestaoConexaoComponent,
       },
       {
         path: 'nova-oferta/:tipo',

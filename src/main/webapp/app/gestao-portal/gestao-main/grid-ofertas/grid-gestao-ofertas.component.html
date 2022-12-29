@@ -77,6 +77,28 @@
                   <fa-icon icon="pencil-alt"></fa-icon>
                   <span class="d-none d-md-inline">Editar</span>
                 </button>
+
+                <button
+                  [hidden]="selectOferta"
+                  type="submit"
+                  [routerLink]="['/gestao', 'conexao', ofertas.id]"
+                  class="btn btn-success btn-sm"
+                  data-cy="entityEditButton"
+                >
+                  <fa-icon icon="search"></fa-icon>
+                  <span class="d-none d-md-inline">Solicitar</span>
+                </button>
+
+                <button
+                  *ngIf="selectOferta"
+                  type="button"
+                  (click)="solicitarTransporte(ofertas)"
+                  class="btn btn-success btn-sm"
+                  data-cy="entityEditButton"
+                >
+                  <fa-icon icon="check"></fa-icon>
+                  <span class="d-none d-md-inline">Selecionar</span>
+                </button>
               </div>
             </td>
           </tr>

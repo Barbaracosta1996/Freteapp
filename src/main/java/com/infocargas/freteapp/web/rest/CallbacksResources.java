@@ -118,23 +118,23 @@ public class CallbacksResources {
                                         .get(0)
                                         .getInteractive();
                                     if (interactive.getListReply() != null) {
-                                        var ofertaPerfil = rotasOfertasService.findByIdOferta(message.get().getOfertaId());
+                                        var minhaOferta = rotasOfertasService.findByIdOferta(message.get().getOfertaId());
 
                                         var ofertaId = interactive.getListReply().get("id");
-                                        var requestedOferta = rotasOfertasService.findByIdOferta(Long.valueOf(ofertaId));
+                                        var ofertaEscolhida = rotasOfertasService.findByIdOferta(Long.valueOf(ofertaId));
 
                                         if (
                                             (
-                                                requestedOferta.isPresent() &&
-                                                requestedOferta.get().getOfertas().getStatus() != StatusOferta.AGUARDANDO_PROPOSTA
+                                                ofertaEscolhida.isPresent() &&
+                                                ofertaEscolhida.get().getOfertas().getStatus() != StatusOferta.AGUARDANDO_PROPOSTA
                                             ) ||
                                             (
-                                                requestedOferta.isPresent() &&
-                                                requestedOferta.get().getOfertas().getStatus() != StatusOferta.AGUARDANDO_PROPOSTA
+                                                ofertaEscolhida.isPresent() &&
+                                                ofertaEscolhida.get().getOfertas().getStatus() != StatusOferta.AGUARDANDO_PROPOSTA
                                             )
                                         ) {
                                             facebookController.sendOneMessage(
-                                                ofertaPerfil.get().getOfertas().getPerfil().getUser().getPhone(),
+                                                minhaOferta.get().getOfertas().getPerfil().getUser().getPhone(),
                                                 "A solicitação foi cancelada porque o transporte já foi encerrado. Assim que surgir novas indicações enviaremos aqui."
                                             );
                                             message.get().setStatus(WhatsStatus.CLOSED);
@@ -142,26 +142,26 @@ public class CallbacksResources {
                                             return ResponseEntity.ok().build();
                                         }
 
-                                        requestedOferta.ifPresent(requested -> {
+                                        ofertaEscolhida.ifPresent(requested -> {
                                             FacebookSendResponse response;
 
                                             SolicitacaoDTO solicitacaoDTO = new SolicitacaoDTO();
-                                            solicitacaoDTO.setRequestedPerfil(ofertaPerfil.get().getOfertas().getPerfil());
-                                            solicitacaoDTO.setPerfil(requestedOferta.get().getOfertas().getPerfil());
-                                            solicitacaoDTO.setOfertas(ofertaPerfil.get().getOfertas());
-                                            solicitacaoDTO.setMinhaOferta(requestedOferta.get().getOfertas());
+                                            solicitacaoDTO.setRequestedPerfil(minhaOferta.get().getOfertas().getPerfil());
+                                            solicitacaoDTO.setPerfil(ofertaEscolhida.get().getOfertas().getPerfil());
+                                            solicitacaoDTO.setOfertas(minhaOferta.get().getOfertas());
+                                            solicitacaoDTO.setMinhaOferta(ofertaEscolhida.get().getOfertas());
                                             solicitacaoDTO.setDataProposta(ZonedDateTime.now());
                                             solicitacaoDTO.setStatus(StatusSolicitacao.AGUARDANDORESPOSTA);
 
-                                            if (ofertaPerfil.get().getOfertas().getTipoOferta() == TipoOferta.CARGA) {
+                                            if (minhaOferta.get().getOfertas().getTipoOferta() == TipoOferta.CARGA) {
                                                 solicitacaoDTO = solicitacaoService.save(solicitacaoDTO);
                                                 solicitacaoDTO.setPerfil(
-                                                    perfilService.findOne(requestedOferta.get().getOfertas().getPerfil().getId()).get()
+                                                    perfilService.findOne(ofertaEscolhida.get().getOfertas().getPerfil().getId()).get()
                                                 );
                                                 solicitacaoDTO
                                                     .getOfertas()
                                                     .setPerfil(
-                                                        perfilService.findOne(ofertaPerfil.get().getOfertas().getPerfil().getId()).get()
+                                                        perfilService.findOne(minhaOferta.get().getOfertas().getPerfil().getId()).get()
                                                     );
                                                 response = facebookController.sendRequestCargo(solicitacaoDTO);
                                             } else {

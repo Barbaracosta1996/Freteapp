@@ -1,11 +1,11 @@
 package com.infocargas.freteapp.web.rest;
 
+import com.infocargas.freteapp.controller.FacebookController;
+import com.infocargas.freteapp.domain.enumeration.StatusOferta;
 import com.infocargas.freteapp.domain.enumeration.StatusSolicitacao;
+import com.infocargas.freteapp.domain.enumeration.TipoOferta;
 import com.infocargas.freteapp.repository.SolicitacaoRepository;
-import com.infocargas.freteapp.service.PerfilService;
-import com.infocargas.freteapp.service.SolicitacaoQueryService;
-import com.infocargas.freteapp.service.SolicitacaoService;
-import com.infocargas.freteapp.service.UserService;
+import com.infocargas.freteapp.service.*;
 import com.infocargas.freteapp.service.criteria.SolicitacaoCriteria;
 import com.infocargas.freteapp.service.dto.PerfilDTO;
 import com.infocargas.freteapp.service.dto.SolicitacaoDTO;
@@ -26,6 +26,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -56,18 +57,26 @@ public class SolicitacaoResource {
 
     private final PerfilService perfilService;
 
+    private final FacebookController facebookController;
+
+    private final OfertasService ofertasService;
+
     public SolicitacaoResource(
         SolicitacaoService solicitacaoService,
         SolicitacaoRepository solicitacaoRepository,
         SolicitacaoQueryService solicitacaoQueryService,
         UserService userService,
-        PerfilService perfilService
+        PerfilService perfilService,
+        FacebookController facebookController,
+        OfertasService ofertasService
     ) {
         this.solicitacaoService = solicitacaoService;
         this.solicitacaoRepository = solicitacaoRepository;
         this.solicitacaoQueryService = solicitacaoQueryService;
         this.userService = userService;
         this.perfilService = perfilService;
+        this.facebookController = facebookController;
+        this.ofertasService = ofertasService;
     }
 
     /**
@@ -110,6 +119,38 @@ public class SolicitacaoResource {
         solicitacaoDTO.setDataProposta(ZonedDateTime.now());
         solicitacaoDTO.setPerfil(perfilDTO);
         SolicitacaoDTO result = solicitacaoService.save(solicitacaoDTO);
+
+        return ResponseEntity
+            .created(new URI("/api/solicitacaos/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+            .body(result);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/solicitacaos/avulso")
+    public ResponseEntity<SolicitacaoDTO> createSolicitacaoOfertaPortal(@RequestBody SolicitacaoDTO solicitacaoDTO)
+        throws URISyntaxException {
+        if (solicitacaoDTO.getId() != null) {
+            throw new BadRequestAlertException("A new solicitacao cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+
+        solicitacaoDTO.setStatus(StatusSolicitacao.ACEITOU);
+        solicitacaoDTO.setDataProposta(ZonedDateTime.now());
+        SolicitacaoDTO result = solicitacaoService.save(solicitacaoDTO);
+
+        result.getOfertas().setStatus(StatusOferta.ATENDIDA_INFOCARGAS);
+        result.getMinhaOferta().setStatus(StatusOferta.ATENDIDA_INFOCARGAS);
+        ofertasService.save(result.getOfertas());
+        ofertasService.save(result.getMinhaOferta());
+
+        if (solicitacaoDTO.getMinhaOferta().getTipoOferta() == TipoOferta.CARGA) {
+            perfilService
+                .findOne(solicitacaoDTO.getOfertas().getPerfil().getId())
+                .ifPresent(perfil -> {
+                    solicitacaoDTO.setPerfil(perfil);
+                    facebookController.sendContact(solicitacaoDTO);
+                });
+        }
 
         return ResponseEntity
             .created(new URI("/api/solicitacaos/" + result.getId()))

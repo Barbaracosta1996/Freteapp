@@ -10,7 +10,9 @@ import { HttpHeaders } from '@angular/common/http';
 import { FilterOptions, IFilterOptions } from '../../../shared/filter/filter.model';
 import { TipoTransporteOferta } from '../../../entities/enumerations/tipo-transporte-oferta.model';
 import { StatusOferta } from '../../../entities/enumerations/status-oferta.model';
-import { AppService } from '../../../core/app/app.service';
+import { SolicitacaoService } from '../../../entities/solicitacao/service/solicitacao.service';
+import { NewSolicitacao } from '../../../entities/solicitacao/solicitacao.model';
+import { StatusSolicitacao } from '../../../entities/enumerations/status-solicitacao.model';
 
 @Component({
   selector: 'jhi-grid-gestao-ofertas',
@@ -20,6 +22,12 @@ import { AppService } from '../../../core/app/app.service';
 export class GridGestaoOfertasComponent implements OnInit {
   @Input()
   tipoOferta = 'VAGAS';
+
+  @Input()
+  selectOferta = false;
+
+  @Input()
+  currentOferta: IOfertas | null = null;
 
   ofertas?: IOfertas[];
   isLoading = false;
@@ -32,7 +40,12 @@ export class GridGestaoOfertasComponent implements OnInit {
   totalItems = 0;
   page = 1;
 
-  constructor(private ofertasService: OfertasService, protected activatedRoute: ActivatedRoute, public router: Router) {}
+  constructor(
+    private ofertasService: OfertasService,
+    protected activatedRoute: ActivatedRoute,
+    public router: Router,
+    protected solicitacaoService: SolicitacaoService
+  ) {}
 
   ngOnInit(): void {
     this.loadOfertas();
@@ -104,7 +117,13 @@ export class GridGestaoOfertasComponent implements OnInit {
       });
     }
 
+    if (this.selectOferta) {
+      queryObject['tipoOferta.equals'] = this.currentOferta?.tipoOferta === TipoOferta.VAGAS ? 'CARGAS' : 'VAGAS';
+      queryObject['perfilId.notEquals'] = this.currentOferta?.perfil?.id;
+    }
+
     queryObject['tipoOferta.equals'] = this.tipoOferta === TipoOferta.VAGAS ? 'VAGAS' : 'CARGA';
+    queryObject['status.equals'] = 'AGUARDANDO_PROPOSTA';
 
     return this.ofertasService.query(queryObject).pipe(
       tap(res => {
@@ -163,6 +182,30 @@ export class GridGestaoOfertasComponent implements OnInit {
       return 'Atendida Via App';
     } else {
       return 'Viagem Cancelada';
+    }
+  }
+
+  solicitarTransporte(requestedOfertas: IOfertas) {
+    if (this.currentOferta) {
+      const oferatData: NewSolicitacao = {
+        id: null,
+        /// Oferta do usuário
+        requestedPerfil: this.currentOferta.perfil,
+        ofertas: this.currentOferta,
+        // Oferta solicitada
+        perfil: requestedOfertas.perfil,
+        minhaOferta: requestedOfertas,
+        status: StatusSolicitacao.ACEITOU,
+      };
+      this.solicitacaoService.createPortal(oferatData).subscribe(res => {
+        if (res.status === 201 || res.status === 200) {
+          window.history.back();
+        } else {
+          alert('Ocorreu um erro nesta solicitação error: ' + res.statusText);
+        }
+      });
+    } else {
+      alert('Oferta corrente não foi selecionada');
     }
   }
 }

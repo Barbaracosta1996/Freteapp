@@ -45,7 +45,12 @@ export class SolicitacaoService {
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-
+  createPortal(solicitacao: NewSolicitacao): Observable<EntityResponseType> {
+    const copy = this.convertDateFromClient(solicitacao);
+    return this.http
+      .post<RestSolicitacao>(`${this.resourceUrl}/avulso`, copy, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
+  }
 
   update(solicitacao: ISolicitacao): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(solicitacao);

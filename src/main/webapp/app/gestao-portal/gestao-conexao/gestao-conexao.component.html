@@ -1,1 +1,18 @@
-<p>gestao-conexao works!</p>
+<div class="p-grid">
+  <p-breadcrumb [model]="items" [home]="home"></p-breadcrumb>
+
+  <div>
+    <div
+      class="flex-grow-1 flex align-items-center justify-content-center font-light p-4 text-white text-4xl px-5 py-3"
+      style="background-color: #312e4e"
+    >
+      Ofertas de Cargas
+    </div>
+
+    <jhi-grid-gestao-ofertas
+      [tipoOferta]="ofertas?.tipoOferta === 'CARGA' ? 'VAGAS' : 'CARGA'"
+      [selectOferta]="true"
+      [currentOferta]="ofertas"
+    ></jhi-grid-gestao-ofertas>
+  </div>
+</div>

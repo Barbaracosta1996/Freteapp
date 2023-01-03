@@ -13,6 +13,7 @@ import { AppGoogleService } from '../../core/app/app.google.service';
 import { Observable } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
 import { finalize, map } from 'rxjs/operators';
+import { TipoOferta } from '../../entities/enumerations/tipo-oferta.model';
 
 @Component({
   selector: 'jhi-gestao-ofertas',
@@ -24,6 +25,8 @@ export class GestaoOfertasComponent implements OnInit {
   ofertas: IOfertas | null = null;
   editOrigem = true;
   editDestino = true;
+
+  tipo: any = null;
 
   perfilsSharedCollection: IPerfil[] = [];
 
@@ -69,6 +72,11 @@ export class GestaoOfertasComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ ofertas }) => {
       this.ofertas = ofertas;
+
+      this.activatedRoute.params.subscribe(data => {
+        this.tipo = data.tipo === 'vagas' ? TipoOferta.VAGAS : TipoOferta.CARGA;
+      });
+
       if (ofertas) {
         if (this.ofertas?.id === null) {
           this.editDestino = true;
@@ -127,13 +135,15 @@ export class GestaoOfertasComponent implements OnInit {
       selectDestino = JSON.parse(selectDestino);
     }
 
+    ofertas.tipoOferta = this.tipo;
+
     ofertas.destino = `${selectDestino['structured_formatting']['main_text']} - ${selectDestino['structured_formatting']['secondary_text']}`;
     ofertas.localizacaoDestino = JSON.stringify(selectDestino);
 
     if (ofertas.id !== null) {
-      this.subscribeToSaveResponse(this.ofertasService.updateOferta(ofertas));
+      this.subscribeToSaveResponse(this.ofertasService.updateAdmin(ofertas));
     } else {
-      this.subscribeToSaveResponse(this.ofertasService.createOferta(ofertas));
+      this.subscribeToSaveResponse(this.ofertasService.createAdmin(ofertas));
     }
   }
 
@@ -191,7 +201,7 @@ export class GestaoOfertasComponent implements OnInit {
 
   filtrarNome($event: any) {
     this.perfilService
-      .query({ 'nome.contains': $event.value })
+      .query({ 'cpf.contains': $event.filter })
       .pipe(map((res: HttpResponse<IPerfil[]>) => res.body ?? []))
       .pipe(map((perfils: IPerfil[]) => this.perfilService.addPerfilToCollectionIfMissing<IPerfil>(perfils, this.ofertas?.perfil)))
       .subscribe((perfils: IPerfil[]) => (this.perfilsSharedCollection = perfils));

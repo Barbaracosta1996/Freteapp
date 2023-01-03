@@ -88,9 +88,6 @@ export class GestaoConexaoRoutingResolveService implements Resolve<IOfertas[]> {
         data: {
           authorities: [Authority.ADMIN],
         },
-        resolve: {
-          ofertas: OfertasRoutingResolveService,
-        },
         canActivate: [UserRouteAccessService],
         component: GestaoOfertasComponent,
       },

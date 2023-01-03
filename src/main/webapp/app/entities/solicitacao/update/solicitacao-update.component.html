@@ -53,7 +53,7 @@
           <label class="form-label" for="field_aceitar">Aceitar</label>
           <select class="form-control" name="aceitar" formControlName="aceitar" id="field_aceitar" data-cy="aceitar">
             <option [ngValue]="null"></option>
-            <option *ngFor="let anwserStatus of anwserStatusValues" [value]="anwserStatus">anwserStatus</option>
+            <option *ngFor="let anwserStatus of anwserStatusValues" [value]="anwserStatus">{{ anwserStatus }}</option>
           </select>
         </div>
 
@@ -61,7 +61,7 @@
           <label class="form-label" for="field_status">Status</label>
           <select class="form-control" name="status" formControlName="status" id="field_status" data-cy="status">
             <option [ngValue]="null"></option>
-            <option *ngFor="let statusSolicitacao of statusSolicitacaoValues" [value]="statusSolicitacao">statusSolicitacao</option>
+            <option *ngFor="let statusSolicitacao of statusSolicitacaoValues" [value]="statusSolicitacao">{{ statusSolicitacao }}</option>
           </select>
           <div *ngIf="editForm.get('status')!.invalid && (editForm.get('status')!.dirty || editForm.get('status')!.touched)">
             <small class="form-text text-danger" *ngIf="editForm.get('status')?.errors?.required"> O campo é obrigatório. </small>
@@ -104,18 +104,35 @@
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" for="field_perfil">Perfil</label>
-          <select
-            class="form-control"
-            id="field_perfil"
-            data-cy="perfil"
-            name="perfil"
-            formControlName="perfil"
-            [compareWith]="comparePerfil"
-          >
-            <option *ngIf="!editForm.get('perfil')!.value" [ngValue]="null" selected></option>
-            <option [ngValue]="perfilOption" *ngFor="let perfilOption of perfilsSharedCollection">{{ perfilOption.id }}</option>
-          </select>
+          <label class="form-label text-600" for="field_requestedPerfil">Perfil</label>
+          <div class="p-inputgroup">
+            <p-dropdown
+              panelStyleClass="w-full"
+              styleClass="w-full"
+              class="p-inputtext-lg w-full"
+              tooltipStyleClass="w-full"
+              [options]="perfilsSharedCollection"
+              optionLabel="nome"
+              [filter]="true"
+              [emptyFilterMessage]="'Nenhum motorista encontrado'"
+              (onFilter)="filtrarNome($event)"
+              filterBy="cpf"
+              filterPlaceholder="Pesquisar CPF"
+              name="perfil"
+              id="field_perfil"
+              formControlName="perfil"
+              [showClear]="true"
+              placeholder="Selecionar Perfil"
+            >
+              <ng-template let-perfil pTemplate="item">
+                <div class="country-item country-item-value">
+                  <div>{{ perfil.id }}</div>
+                  <div>{{ perfil.nome }}</div>
+                  <div>{{ perfil.cpf }}</div>
+                </div>
+              </ng-template>
+            </p-dropdown>
+          </div>
         </div>
         <div *ngIf="editForm.get(['perfil'])!.invalid && (editForm.get(['perfil'])!.dirty || editForm.get(['perfil'])!.touched)">
           <small class="form-text text-danger" *ngIf="editForm.get(['perfil'])?.errors?.required"> O campo é obrigatório. </small>
@@ -142,26 +159,42 @@
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" for="field_requestedPerfil">Requested Perfil</label>
-          <select
-            class="form-control"
-            id="field_requestedPerfil"
-            data-cy="requestedPerfil"
-            name="requestedPerfil"
-            formControlName="requestedPerfil"
-            [compareWith]="comparePerfil"
-          >
-            <option *ngIf="!editForm.get('requestedPerfil')!.value" [ngValue]="null" selected></option>
-            <option [ngValue]="perfilOption" *ngFor="let perfilOption of perfilsSharedCollection">{{ perfilOption.id }}</option>
-          </select>
-        </div>
-        <div
-          *ngIf="
-            editForm.get(['requestedPerfil'])!.invalid &&
-            (editForm.get(['requestedPerfil'])!.dirty || editForm.get(['requestedPerfil'])!.touched)
-          "
-        >
-          <small class="form-text text-danger" *ngIf="editForm.get(['requestedPerfil'])?.errors?.required"> O campo é obrigatório. </small>
+          <label class="form-label text-600" for="field_requestedPerfil">Motorista Solicitado</label>
+          <div class="p-inputgroup">
+            <p-dropdown
+              #template
+              panelStyleClass="w-full"
+              styleClass="w-full"
+              class="p-inputtext-lg w-full"
+              tooltipStyleClass="w-full"
+              [options]="perfilsSharedCollection"
+              optionLabel="nome"
+              [filter]="true"
+              [emptyFilterMessage]="'Nenhum motorista encontrado'"
+              (onFilter)="filtrarRequested($event)"
+              filterBy="cpf"
+              filterPlaceholder="Pesquisar CPF"
+              name="requestedPerfil"
+              id="field_requestedPerfil"
+              formControlName="requestedPerfil"
+              [showClear]="true"
+              placeholder="Selecionar Motorista"
+            >
+              <ng-template pTemplate="selectedItem">
+                <div class="country-item country-item-value" *ngIf="template.selectedOption">
+                  <div>{{ template.selectedOption?.id }} - {{ template.selectedOption?.nome }}</div>
+                </div>
+              </ng-template>
+
+              <ng-template let-perfil pTemplate="item">
+                <div class="country-item country-item-value">
+                  <div>Código: {{ perfil.id }}</div>
+                  <div>Nome: {{ perfil.nome }}</div>
+                  <div>Perfil: {{ perfil.cpf }}</div>
+                </div>
+              </ng-template>
+            </p-dropdown>
+          </div>
         </div>
       </div>
 
@@ -171,6 +204,7 @@
         </button>
 
         <button
+          type="submit"
           type="submit"
           id="save-entity"
           data-cy="entityCreateSaveButton"

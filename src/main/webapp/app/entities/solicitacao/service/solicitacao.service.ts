@@ -18,10 +18,6 @@ type RestOf<T extends ISolicitacao | NewSolicitacao> = Omit<T, 'dataProposta' | 
 
 export type RestSolicitacao = RestOf<ISolicitacao>;
 
-export type NewRestSolicitacao = RestOf<NewSolicitacao>;
-
-export type PartialUpdateRestSolicitacao = RestOf<PartialUpdateSolicitacao>;
-
 export type EntityResponseType = HttpResponse<ISolicitacao>;
 export type EntityArrayResponseType = HttpResponse<ISolicitacao[]>;
 

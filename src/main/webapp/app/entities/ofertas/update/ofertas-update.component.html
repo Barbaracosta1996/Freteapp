@@ -57,7 +57,7 @@
           <label class="form-label" for="field_tipoCarga">Tipo Carga</label>
           <select class="form-control" name="tipoCarga" formControlName="tipoCarga" id="field_tipoCarga" data-cy="tipoCarga">
             <option [ngValue]="null"></option>
-            <option *ngFor="let tipoCarga of tipoCargaValues" [value]="tipoCarga">tipoCarga</option>
+            <option *ngFor="let tipoCarga of tipoCargaValues" [value]="tipoCarga">{{ tipoCarga }}</option>
           </select>
           <div *ngIf="editForm.get('tipoCarga')!.invalid && (editForm.get('tipoCarga')!.dirty || editForm.get('tipoCarga')!.touched)">
             <small class="form-text text-danger" *ngIf="editForm.get('tipoCarga')?.errors?.required"> O campo é obrigatório. </small>
@@ -183,7 +183,7 @@
           <label class="form-label" for="field_tipoOferta">Tipo Oferta</label>
           <select class="form-control" name="tipoOferta" formControlName="tipoOferta" id="field_tipoOferta" data-cy="tipoOferta">
             <option [ngValue]="null"></option>
-            <option *ngFor="let tipoOferta of tipoOfertaValues" [value]="tipoOferta">tipoOferta</option>
+            <option *ngFor="let tipoOferta of tipoOfertaValues" [value]="tipoOferta">{{ tipoOferta }}</option>
           </select>
           <div *ngIf="editForm.get('tipoOferta')!.invalid && (editForm.get('tipoOferta')!.dirty || editForm.get('tipoOferta')!.touched)">
             <small class="form-text text-danger" *ngIf="editForm.get('tipoOferta')?.errors?.required"> O campo é obrigatório. </small>
@@ -201,7 +201,7 @@
           >
             <option [ngValue]="null"></option>
             <option *ngFor="let tipoTransporteOferta of tipoTransporteOfertaValues" [value]="tipoTransporteOferta">
-              tipoTransporteOferta
+              {{ tipoTransporteOferta }}
             </option>
           </select>
         </div>
@@ -223,18 +223,34 @@
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" for="field_perfil">Perfil</label>
-          <select
-            class="form-control"
-            id="field_perfil"
-            data-cy="perfil"
-            name="perfil"
-            formControlName="perfil"
-            [compareWith]="comparePerfil"
-          >
-            <option *ngIf="!editForm.get('perfil')!.value" [ngValue]="null" selected></option>
-            <option [ngValue]="perfilOption" *ngFor="let perfilOption of perfilsSharedCollection">{{ perfilOption.id }}</option>
-          </select>
+          <label class="form-label text-600" for="field_perfil">Motorista</label>
+          <div class="p-inputgroup">
+            <p-dropdown
+              panelStyleClass="w-full"
+              styleClass="w-full"
+              class="p-inputtext-lg w-full"
+              tooltipStyleClass="w-full"
+              [options]="perfilsSharedCollection"
+              optionLabel="nome"
+              [filter]="true"
+              [emptyFilterMessage]="'Nenhum motorista encontrado'"
+              (onFilter)="filtrarNome($event)"
+              filterBy="cpf"
+              filterPlaceholder="Pesquisar CPF"
+              name="perfil"
+              id="field_perfil"
+              formControlName="perfil"
+              [showClear]="true"
+              placeholder="Selecionar Motorista"
+            >
+              <ng-template let-perfil pTemplate="item">
+                <div class="country-item country-item-value">
+                  <div>{{ perfil.id }}</div>
+                  <div>{{ perfil.nome }}</div>
+                </div>
+              </ng-template>
+            </p-dropdown>
+          </div>
         </div>
         <div *ngIf="editForm.get(['perfil'])!.invalid && (editForm.get(['perfil'])!.dirty || editForm.get(['perfil'])!.touched)">
           <small class="form-text text-danger" *ngIf="editForm.get(['perfil'])?.errors?.required"> O campo é obrigatório. </small>

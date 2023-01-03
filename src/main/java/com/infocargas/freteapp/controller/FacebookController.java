@@ -613,18 +613,165 @@ public class FacebookController {
 
     private FacebookSendResponse sendNotification(FacebookMessageVM message) {
         try {
-            if (
-                Arrays.stream(environment.getActiveProfiles()).anyMatch(env -> env.equalsIgnoreCase("hom") || env.equalsIgnoreCase("dev"))
-            ) {
-                return facebookApiProxy.createMessageHom("whatsapp", Constants.FACEBOOK_TOKEN_HOM, message);
-            } else {
-                return facebookApiProxy.createMessage("whatsapp", Constants.FACEBOOK_TOKEN, message);
-            }
+            var body = facebookApiProxy.createMessage("whatsapp", Constants.FACEBOOK_TOKEN, message);
+            return body;
         } catch (Exception ex) {
             log.error(ex.getMessage());
         }
 
         return null;
+    }
+
+    public FacebookSendResponse sendDoneMatch(SolicitacaoDTO solicitacao) {
+        var message = new FacebookMessageVM();
+        message.setMessagingProduct("whatsapp");
+        message.setRecipientType("individual");
+        message.setPhoneWhatsApp("55" + solicitacao.getPerfil().getUser().getPhone());
+        message.setType("template");
+
+        message.setTemplate(getTemplate("match_done_message"));
+
+        List<FacebookComponetsVM> componets = new ArrayList<>();
+
+        /*
+           ---------------- Header ----------
+        */
+        FacebookComponetsVM header = new FacebookComponetsVM();
+        header.setType("header");
+        List<FacebookParameterVM> headerParameters = new ArrayList<>();
+        FacebookParameterVM headerParam = new FacebookParameterVM();
+        headerParam.setText(solicitacao.getPerfil().getNome());
+        headerParam.setType("text");
+        headerParameters.add(headerParam);
+        header.setParameters(headerParameters);
+
+        /*
+           ---------------- Body ----------
+        */
+
+        FacebookComponetsVM body = new FacebookComponetsVM();
+        body.setType("body");
+        List<FacebookParameterVM> bodyParameters = new ArrayList<>();
+
+        FacebookParameterVM bodyParam = new FacebookParameterVM();
+        bodyParam.setText(solicitacao.getOfertas().getOrigem());
+        bodyParam.setType("text");
+        bodyParameters.add(bodyParam);
+
+        bodyParam = new FacebookParameterVM();
+        bodyParam.setText(solicitacao.getOfertas().getDestino());
+        bodyParam.setType("text");
+        bodyParameters.add(bodyParam);
+
+        bodyParam = new FacebookParameterVM();
+        bodyParam.setText(solicitacao.getOfertas().getDataFechamento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        bodyParam.setType("text");
+        bodyParameters.add(bodyParam);
+
+        bodyParam = new FacebookParameterVM();
+        bodyParam.setText(solicitacao.getRequestedPerfil().getNome());
+        bodyParam.setType("text");
+        bodyParameters.add(bodyParam);
+
+        bodyParam = new FacebookParameterVM();
+        bodyParam.setText(solicitacao.getRequestedPerfil().getUser().getPhone());
+        bodyParam.setType("text");
+        bodyParameters.add(bodyParam);
+
+        bodyParam = new FacebookParameterVM();
+        bodyParam.setText(solicitacao.getRequestedPerfil().getUser().getLogin());
+        bodyParam.setType("text");
+        bodyParameters.add(bodyParam);
+
+        bodyParam = new FacebookParameterVM();
+        bodyParam.setText(solicitacao.getOfertas().getQuantidade().toString());
+        bodyParam.setType("text");
+        bodyParameters.add(bodyParam);
+
+        body.setParameters(bodyParameters);
+
+        componets.add(header);
+        componets.add(body);
+
+        message.getTemplate().setComponents(componets);
+
+        return sendNotification(message);
+    }
+
+    public FacebookSendResponse sendDoneRequested(SolicitacaoDTO solicitacao) {
+        var message = new FacebookMessageVM();
+        message.setMessagingProduct("whatsapp");
+        message.setRecipientType("individual");
+        message.setPhoneWhatsApp("55" + solicitacao.getRequestedPerfil().getUser().getPhone());
+        message.setType("template");
+
+        message.setTemplate(getTemplate("match_done_message"));
+
+        List<FacebookComponetsVM> componets = new ArrayList<>();
+
+        /*
+           ---------------- Header ----------
+        */
+        FacebookComponetsVM header = new FacebookComponetsVM();
+        header.setType("header");
+        List<FacebookParameterVM> headerParameters = new ArrayList<>();
+        FacebookParameterVM headerParam = new FacebookParameterVM();
+        headerParam.setText(solicitacao.getRequestedPerfil().getNome());
+        headerParam.setType("text");
+        headerParameters.add(headerParam);
+        header.setParameters(headerParameters);
+
+        /*
+           ---------------- Body ----------
+        */
+
+        FacebookComponetsVM body = new FacebookComponetsVM();
+        body.setType("body");
+        List<FacebookParameterVM> bodyParameters = new ArrayList<>();
+
+        FacebookParameterVM bodyParam = new FacebookParameterVM();
+        bodyParam.setText(solicitacao.getOfertas().getOrigem());
+        bodyParam.setType("text");
+        bodyParameters.add(bodyParam);
+
+        bodyParam = new FacebookParameterVM();
+        bodyParam.setText(solicitacao.getOfertas().getDestino());
+        bodyParam.setType("text");
+        bodyParameters.add(bodyParam);
+
+        bodyParam = new FacebookParameterVM();
+        bodyParam.setText(solicitacao.getOfertas().getDataFechamento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        bodyParam.setType("text");
+        bodyParameters.add(bodyParam);
+
+        bodyParam = new FacebookParameterVM();
+        bodyParam.setText(solicitacao.getPerfil().getNome());
+        bodyParam.setType("text");
+        bodyParameters.add(bodyParam);
+
+        bodyParam = new FacebookParameterVM();
+        bodyParam.setText(solicitacao.getPerfil().getUser().getPhone());
+        bodyParam.setType("text");
+        bodyParameters.add(bodyParam);
+
+        bodyParam = new FacebookParameterVM();
+        bodyParam.setText(solicitacao.getPerfil().getUser().getLogin());
+        bodyParam.setType("text");
+        bodyParameters.add(bodyParam);
+
+        bodyParam = new FacebookParameterVM();
+        bodyParam.setText(solicitacao.getOfertas().getQuantidade().toString());
+        bodyParam.setType("text");
+        bodyParameters.add(bodyParam);
+
+        body.setParameters(bodyParameters);
+
+        componets.add(header);
+        componets.add(body);
+
+        message.getTemplate().setComponents(componets);
+
+        return sendNotification(message);
     }
 
     private FacebookTemplateVM getTemplate(String name) {

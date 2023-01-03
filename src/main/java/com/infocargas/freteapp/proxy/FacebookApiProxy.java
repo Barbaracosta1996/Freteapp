@@ -19,7 +19,7 @@ public interface FacebookApiProxy {
         @RequestBody FacebookMessageVM messageVM
     );
 
-    @PostMapping(value = "/101799009411734/messages")
+    @PostMapping(value = "/100355506229783/messages")
     FacebookSendResponse createMessageHom(
         @RequestHeader(value = "messaging_product") String messagingProduct,
         @RequestHeader(value = "Authorization") String token,

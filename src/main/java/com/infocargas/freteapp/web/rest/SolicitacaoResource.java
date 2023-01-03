@@ -143,14 +143,22 @@ public class SolicitacaoResource {
         ofertasService.save(result.getOfertas());
         ofertasService.save(result.getMinhaOferta());
 
-        if (solicitacaoDTO.getMinhaOferta().getTipoOferta() == TipoOferta.CARGA) {
-            perfilService
-                .findOne(solicitacaoDTO.getOfertas().getPerfil().getId())
-                .ifPresent(perfil -> {
-                    solicitacaoDTO.setPerfil(perfil);
-                    facebookController.sendContact(solicitacaoDTO);
-                });
-        }
+        //        if (solicitacaoDTO.getMinhaOferta().getTipoOferta() == TipoOferta.CARGA) {
+
+        /// Envia para a carga
+        var perfil = perfilService.findOne(solicitacaoDTO.getPerfil().getId());
+
+        perfil.ifPresent(solicitacaoDTO::setPerfil);
+
+        var requestedPerfil = perfilService.findOne(solicitacaoDTO.getRequestedPerfil().getId());
+
+        requestedPerfil.ifPresent(solicitacaoDTO::setRequestedPerfil);
+
+        facebookController.sendDoneMatch(solicitacaoDTO);
+
+        facebookController.sendDoneRequested(solicitacaoDTO);
+
+        //        }
 
         return ResponseEntity
             .created(new URI("/api/solicitacaos/" + result.getId()))

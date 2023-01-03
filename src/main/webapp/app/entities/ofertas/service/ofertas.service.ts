@@ -53,6 +53,13 @@ export class OfertasService {
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
+  createAdmin(ofertas: NewOfertas): Observable<EntityResponseType> {
+    const copy = this.convertDateFromClient(ofertas);
+    return this.http
+      .post<RestOfertas>(`${this.resourceUrl}/portal/admin`, copy, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
+  }
+
   findNearRoute(id: number): Observable<EntityArrayResponseType> {
     return this.http
       .get<RestOfertas[]>(`${this.resourceUrlGeo}/${id}`, { observe: 'response' })
@@ -70,6 +77,13 @@ export class OfertasService {
     const copy = this.convertDateFromClient(ofertas);
     return this.http
       .put<RestOfertas>(`${this.resourceUrl}/portal/${this.getOfertasIdentifier(ofertas)}`, copy, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
+  }
+
+  updateAdmin(ofertas: IOfertas): Observable<EntityResponseType> {
+    const copy = this.convertDateFromClient(ofertas);
+    return this.http
+      .put<RestOfertas>(`${this.resourceUrl}/portal/admin/${this.getOfertasIdentifier(ofertas)}`, copy, { observe: 'response' })
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 

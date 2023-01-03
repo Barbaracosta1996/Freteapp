@@ -5,9 +5,10 @@ import { SolicitacaoDetailComponent } from './detail/solicitacao-detail.componen
 import { SolicitacaoUpdateComponent } from './update/solicitacao-update.component';
 import { SolicitacaoDeleteDialogComponent } from './delete/solicitacao-delete-dialog.component';
 import { SolicitacaoRoutingModule } from './route/solicitacao-routing.module';
+import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
-  imports: [SharedModule, SolicitacaoRoutingModule],
+  imports: [SharedModule, SolicitacaoRoutingModule, DropdownModule],
   declarations: [SolicitacaoComponent, SolicitacaoDetailComponent, SolicitacaoUpdateComponent, SolicitacaoDeleteDialogComponent],
 })
 export class SolicitacaoModule {}

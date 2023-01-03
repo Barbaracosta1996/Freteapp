@@ -117,4 +117,12 @@ export class OfertasUpdateComponent implements OnInit {
       .pipe(map((perfils: IPerfil[]) => this.perfilService.addPerfilToCollectionIfMissing<IPerfil>(perfils, this.ofertas?.perfil)))
       .subscribe((perfils: IPerfil[]) => (this.perfilsSharedCollection = perfils));
   }
+
+  filtrarNome($event: any) {
+    this.perfilService
+      .query({ 'cpf.contains': $event.filter })
+      .pipe(map((res: HttpResponse<IPerfil[]>) => res.body ?? []))
+      .pipe(map((perfils: IPerfil[]) => this.perfilService.addPerfilToCollectionIfMissing<IPerfil>(perfils, this.ofertas?.perfil)))
+      .subscribe((perfils: IPerfil[]) => (this.perfilsSharedCollection = perfils));
+  }
 }

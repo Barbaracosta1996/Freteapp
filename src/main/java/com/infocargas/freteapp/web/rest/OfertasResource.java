@@ -26,6 +26,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -108,6 +109,29 @@ public class OfertasResource {
         PerfilDTO perfilDTO = perfilService.findByUserDTO(userDTO.getLogin());
 
         ofertasDTO.setPerfil(perfilDTO);
+        ofertasDTO.setDataPostagem(ZonedDateTime.now());
+        ofertasDTO.setStatus(StatusOferta.AGUARDANDO_PROPOSTA);
+
+        OfertasDTO result = ofertasService.createPortal(ofertasDTO);
+
+        return ResponseEntity
+            .created(new URI("/api/ofertas/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+            .body(result);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/ofertas/portal/admin")
+    public ResponseEntity<OfertasDTO> createOfertasAdmin(@RequestBody OfertasDTO ofertasDTO) throws URISyntaxException {
+        log.debug("REST request to save Ofertas do Portal : {}", ofertasDTO);
+        if (ofertasDTO.getId() != null) {
+            throw new BadRequestAlertException("A new ofertas cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+
+        //        UserDTO userDTO = userService.getUserWithAuthoritiesByLogin(ofertasDTO.getPerfil().getUser().getLogin());
+        //        PerfilDTO perfilDTO = perfilService.findByUserDTO();
+
+        //        ofertasDTO.setPerfil();
         ofertasDTO.setDataPostagem(ZonedDateTime.now());
         ofertasDTO.setStatus(StatusOferta.AGUARDANDO_PROPOSTA);
 

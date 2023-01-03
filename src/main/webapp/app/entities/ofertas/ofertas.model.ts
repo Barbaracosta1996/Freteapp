@@ -21,7 +21,7 @@ export interface IOfertas {
   tipoTransporte?: TipoTransporteOferta | null;
   destino?: string | null;
   origem?: string | null;
-  perfil?: Pick<IPerfil, 'id'> | null;
+  perfil?: IPerfil | null;
   perfilCompleto?: IPerfil | null;
   ofertaCorrente?: number | null;
 }

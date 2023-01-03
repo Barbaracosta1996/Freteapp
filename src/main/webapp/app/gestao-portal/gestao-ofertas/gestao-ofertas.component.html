@@ -224,20 +224,31 @@
           <div class="row mb-3">
             <label class="form-label text-600" for="field_perfil">Motorista</label>
             <div class="p-inputgroup">
-              <p-autoComplete
+              <p-dropdown
+                panelStyleClass="w-full"
                 styleClass="w-full"
                 class="p-inputtext-lg w-full"
-                inputStyleClass="w-full"
+                tooltipStyleClass="w-full"
+                [options]="perfilsSharedCollection"
+                optionLabel="nome"
+                [filter]="true"
+                [emptyFilterMessage]="'Nenhum motorista encontrado'"
+                (onFilter)="filtrarNome($event)"
+                filterBy="cpf"
+                filterPlaceholder="Pesquisar CPF"
                 name="perfil"
                 id="field_perfil"
                 formControlName="perfil"
-                [showEmptyMessage]="true"
-                [suggestions]="perfilsSharedCollection"
-                (completeMethod)="filtrarNome($event)"
-                field="nome"
-                [minLength]="1"
+                [showClear]="true"
+                placeholder="Selecionar Motorista"
               >
-              </p-autoComplete>
+                <ng-template let-perfil pTemplate="item">
+                  <div class="country-item country-item-value">
+                    <div>{{ perfil.id }}</div>
+                    <div>{{ perfil.nome }}</div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
             </div>
           </div>
           <div *ngIf="editForm.get(['perfil'])!.invalid && (editForm.get(['perfil'])!.dirty || editForm.get(['perfil'])!.touched)">
@@ -265,7 +276,6 @@
           id="save-entity"
           type="submit"
           label="Salvar"
-          [disabled]="editForm.invalid || isSaving"
           class="p-button-raised p-button-info w-15rem mb-3"
           data-cy="entityCreateSaveButton"
         ></button>

@@ -3,14 +3,15 @@ package com.infocargas.freteapp.controller;
 import com.infocargas.freteapp.config.Constants;
 import com.infocargas.freteapp.domain.User;
 import com.infocargas.freteapp.domain.enumeration.TipoOferta;
+import com.infocargas.freteapp.domain.enumeration.WhatsAppType;
+import com.infocargas.freteapp.domain.enumeration.WhatsStatus;
 import com.infocargas.freteapp.proxy.FacebookApiProxy;
+import com.infocargas.freteapp.response.facebook.FacebookResponse;
 import com.infocargas.freteapp.response.facebook.FacebookSendResponse;
-import com.infocargas.freteapp.service.dto.OfertasDTO;
-import com.infocargas.freteapp.service.dto.PerfilDTO;
-import com.infocargas.freteapp.service.dto.RotasOfertasDTO;
-import com.infocargas.freteapp.service.dto.SolicitacaoDTO;
-import com.infocargas.freteapp.service.schedule.FindNearRouteSchedule;
+import com.infocargas.freteapp.service.WhatsMessageBatchService;
+import com.infocargas.freteapp.service.dto.*;
 import com.infocargas.freteapp.web.rest.vm.facebook.*;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import org.slf4j.Logger;
@@ -23,13 +24,20 @@ public class FacebookController {
 
     private final Environment environment;
 
-    private final Logger log = LoggerFactory.getLogger(FindNearRouteSchedule.class);
+    private final Logger log = LoggerFactory.getLogger(FacebookController.class);
 
     private final FacebookApiProxy facebookApiProxy;
 
-    public FacebookController(Environment environment, FacebookApiProxy facebookApiProxy) {
+    private final WhatsMessageBatchService whatsMessageBatchService;
+
+    public FacebookController(
+        Environment environment,
+        FacebookApiProxy facebookApiProxy,
+        WhatsMessageBatchService whatsMessageBatchService
+    ) {
         this.environment = environment;
         this.facebookApiProxy = facebookApiProxy;
+        this.whatsMessageBatchService = whatsMessageBatchService;
     }
 
     /**
@@ -68,6 +76,72 @@ public class FacebookController {
         List<FacebookParameterVM> bodyParameters = new ArrayList<>();
         FacebookParameterVM bodyParam = new FacebookParameterVM();
         bodyParam.setText(perfilDTO.getTipoConta().name().toLowerCase());
+        bodyParam.setType("text");
+        bodyParameters.add(bodyParam);
+
+        body.setParameters(bodyParameters);
+
+        componets.add(header);
+        componets.add(body);
+
+        message.getTemplate().setComponents(componets);
+
+        return sendNotification(message);
+    }
+
+    /**
+     * Create new registration message to register user.
+     * @param ofertas register data.
+     */
+    public FacebookSendResponse createAlertTransportIndication(OfertasDTO ofertas, Integer vagas) {
+        FacebookMessageVM message = new FacebookMessageVM();
+        message.setMessagingProduct("whatsapp");
+        message.setRecipientType("individual");
+        log.info("Telefone enviado " + ofertas.getId());
+        log.info("Telefone: " + ofertas.getPerfil().getUser().getPhone());
+        message.setPhoneWhatsApp("55" + ofertas.getPerfil().getUser().getPhone());
+        message.setType("template");
+        message.setTemplate(getTemplate("alert_indications_transport"));
+
+        List<FacebookComponetsVM> componets = new ArrayList<>();
+
+        /*
+           ---------------- Header ----------
+        */
+        FacebookComponetsVM header = new FacebookComponetsVM();
+        header.setType("header");
+
+        log.info("Nome enviado " + ofertas.getId());
+        log.info("Nome: " + ofertas.getPerfil().getUser().getName());
+
+        List<FacebookParameterVM> headerParameters = new ArrayList<>();
+        FacebookParameterVM headerParam = new FacebookParameterVM();
+        headerParam.setText(ofertas.getPerfil().getNome());
+        headerParam.setType("text");
+        headerParameters.add(headerParam);
+
+        header.setParameters(headerParameters);
+
+        /*
+           ---------------- Body ----------
+        */
+
+        FacebookComponetsVM body = new FacebookComponetsVM();
+        body.setType("body");
+        List<FacebookParameterVM> bodyParameters = new ArrayList<>();
+
+        FacebookParameterVM bodyParam = new FacebookParameterVM();
+        bodyParam.setText(vagas.toString());
+        bodyParam.setType("text");
+        bodyParameters.add(bodyParam);
+
+        bodyParam = new FacebookParameterVM();
+        bodyParam.setText(ofertas.getOrigem());
+        bodyParam.setType("text");
+        bodyParameters.add(bodyParam);
+
+        bodyParam = new FacebookParameterVM();
+        bodyParam.setText(ofertas.getDestino());
         bodyParam.setType("text");
         bodyParameters.add(bodyParam);
 
@@ -193,7 +267,16 @@ public class FacebookController {
 
         message.getTemplate().setComponents(componets);
 
-        sendNotification(message);
+        var facebookMessage = sendNotification(message);
+
+        if (facebookMessage != null && facebookMessage.getError() == null) {
+            var newMessageBatch = new WhatsMessageBatchDTO();
+            newMessageBatch.setStatus(WhatsStatus.CLOSED);
+            newMessageBatch.setWaidTo(facebookMessage.getMessages().get(0).getId());
+            newMessageBatch.setPerfilID(ofertasDTO.getPerfil().getId().intValue());
+            newMessageBatch.setTipo(WhatsAppType.CREATE_OFFER);
+            whatsMessageBatchService.save(newMessageBatch);
+        }
     }
 
     public FacebookSendResponse sendRequestCargo(SolicitacaoDTO solicitacao) {
@@ -429,23 +512,13 @@ public class FacebookController {
         FacebookInteractiveVM interactive = new FacebookInteractiveVM();
         interactive.setType("list");
 
-        FacebookParameterVM header = new FacebookParameterVM();
-        header.setType("text");
-        header.setText("Olá " + requested.getOfertas().getPerfil().getNome());
-        interactive.setHeader(header);
+        //        FacebookParameterVM header = new FacebookParameterVM();
+        //        header.setType("text");
+        //        header.setText("Olá " + requested.getOfertas().getPerfil().getNome());
+        //        interactive.setHeader(header);
 
         Map<String, String> body = new HashMap<>();
-        body.put(
-            "text",
-            "Nós encontramos " +
-            ofertas.size() +
-            " indicações de transporte para sua viagem de " +
-            requested.getOfertas().getOrigem() +
-            " para " +
-            requested.getOfertas().getDestino() +
-            " no dia " +
-            requested.getOfertas().getDataFechamento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-        );
+        body.put("text", "Para acessar a lista de inidicações clique em \"Ver Lista\" abaixo.");
         interactive.setBody(body);
 
         Map<String, String> footer = new HashMap<>();
@@ -453,10 +526,10 @@ public class FacebookController {
         interactive.setFooter(footer);
 
         FacebookActionsVM actions = new FacebookActionsVM();
-        actions.setButton("Ver Opções");
+        actions.setButton("Ver Lista");
 
         FacebookSectionsVM sectionsVM = new FacebookSectionsVM();
-        sectionsVM.setTitle("Opções");
+        sectionsVM.setTitle("Indicações");
 
         List<FacebookRowsVM> rows = new ArrayList<>();
 
@@ -466,7 +539,8 @@ public class FacebookController {
             row.setTitle(
                 ofertasDTO.getDataFechamento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + " | vagas: " + ofertasDTO.getQuantidade()
             );
-            String text = "de: " + ofertasDTO.getOrigem() + " para: " + ofertasDTO.getDestino();
+            String text =
+                "de: " + ofertasDTO.getOrigem() + " para: " + ofertasDTO.getDestino() + "Responsável:" + ofertasDTO.getPerfil().getNome();
             if (text.length() > 70) {
                 row.setDescription(text.substring(0, 70));
             } else {
@@ -609,17 +683,6 @@ public class FacebookController {
         message.setContacts(facebookContactVMS);
 
         return sendNotification(message);
-    }
-
-    private FacebookSendResponse sendNotification(FacebookMessageVM message) {
-        try {
-            var body = facebookApiProxy.createMessage("whatsapp", Constants.FACEBOOK_TOKEN, message);
-            return body;
-        } catch (Exception ex) {
-            log.error(ex.getMessage());
-        }
-
-        return null;
     }
 
     public FacebookSendResponse sendDoneMatch(SolicitacaoDTO solicitacao) {
@@ -772,6 +835,150 @@ public class FacebookController {
         message.getTemplate().setComponents(componets);
 
         return sendNotification(message);
+    }
+
+    public void sendRedirectMessage(FacebookResponse facebookResponse, Optional<PerfilDTO> perfil) {
+        try {
+            var nomeContato = "Não Cadastrado";
+            var numeroContato = "Não foi Localizado";
+            var emailContato = "Não Cadastrado";
+            var codigoSistema = "Não Cadastrado";
+            var mensagemContato = facebookResponse
+                .getEntry()
+                .get(0)
+                .getChanges()
+                .get(0)
+                .getValue()
+                .getMessages()
+                .get(0)
+                .getText()
+                .getBody();
+
+            if (perfil.isPresent()) {
+                var perfilDTO = perfil.get();
+                numeroContato = perfilDTO.getWaId();
+                nomeContato = perfilDTO.getNome();
+                codigoSistema = perfilDTO.getId().toString();
+                emailContato = perfilDTO.getUser().getLogin();
+            } else {
+                var contact = facebookResponse.getEntry().get(0).getChanges().get(0).getValue().getContacts().get(0);
+                if (contact.getProfile().isEmpty()) {
+                    nomeContato = contact.getWaId();
+                } else {
+                    nomeContato = contact.getProfile().get("name");
+                }
+                numeroContato = contact.getWaId();
+            }
+
+            var message = new FacebookMessageVM();
+            message.setMessagingProduct("whatsapp");
+            message.setRecipientType("individual");
+
+            if (numeroContato.equals("553197460910") || numeroContato.equals("5531997460910")) {
+                log.warn("O número de telefone não pode ser o mesmo para não dar loop infinito.");
+                return;
+            }
+
+            message.setPhoneWhatsApp("5531997460910");
+            message.setType("template");
+
+            message.setTemplate(getTemplate("redirect_message_support"));
+
+            List<FacebookComponetsVM> componets = new ArrayList<>();
+
+            /*
+                  ---------------- Body ----------
+            */
+
+            FacebookComponetsVM body = new FacebookComponetsVM();
+            body.setType("body");
+            List<FacebookParameterVM> bodyParameters = new ArrayList<>();
+
+            FacebookParameterVM bodyParam = new FacebookParameterVM();
+            bodyParam.setText(nomeContato);
+            bodyParam.setType("text");
+            bodyParameters.add(bodyParam);
+
+            bodyParam = new FacebookParameterVM();
+            bodyParam.setText(numeroContato);
+            bodyParam.setType("text");
+            bodyParameters.add(bodyParam);
+
+            bodyParam = new FacebookParameterVM();
+            bodyParam.setText(mensagemContato);
+            bodyParam.setType("text");
+            bodyParameters.add(bodyParam);
+
+            bodyParam = new FacebookParameterVM();
+            bodyParam.setText(codigoSistema);
+            bodyParam.setType("text");
+            bodyParameters.add(bodyParam);
+
+            bodyParam = new FacebookParameterVM();
+            bodyParam.setText(emailContato);
+            bodyParam.setType("text");
+            bodyParameters.add(bodyParam);
+
+            bodyParam = new FacebookParameterVM();
+            bodyParam.setText(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
+            bodyParam.setType("text");
+            bodyParameters.add(bodyParam);
+
+            body.setParameters(bodyParameters);
+
+            componets.add(body);
+
+            message.getTemplate().setComponents(componets);
+
+            sendNotification(message);
+
+            sendRedirectAlert(numeroContato);
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+        }
+    }
+
+    public void sendRedirectAlert(String phone) {
+        try {
+            var message = new FacebookMessageVM();
+            message.setMessagingProduct("whatsapp");
+            message.setRecipientType("individual");
+            message.setPhoneWhatsApp(phone);
+            message.setType("template");
+
+            message.setTemplate(getTemplate("redirect_message_info"));
+
+            sendNotification(message);
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+        }
+    }
+
+    public void sendAlertUser(String phone) {
+        try {
+            var message = new FacebookMessageVM();
+            message.setMessagingProduct("whatsapp");
+            message.setRecipientType("individual");
+            message.setPhoneWhatsApp(phone);
+            message.setType("template");
+
+            message.setTemplate(getTemplate("redirect_error_message"));
+
+            sendNotification(message);
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+        }
+    }
+
+    private FacebookSendResponse sendNotification(FacebookMessageVM message) {
+        try {
+            var body = facebookApiProxy.createMessage("whatsapp", Constants.FACEBOOK_TOKEN, message);
+            return body;
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+        }
+
+        return null;
     }
 
     private FacebookTemplateVM getTemplate(String name) {

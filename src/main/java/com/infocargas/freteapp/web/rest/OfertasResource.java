@@ -2,10 +2,7 @@ package com.infocargas.freteapp.web.rest;
 
 import com.infocargas.freteapp.domain.enumeration.StatusOferta;
 import com.infocargas.freteapp.repository.OfertasRepository;
-import com.infocargas.freteapp.service.OfertasQueryService;
-import com.infocargas.freteapp.service.OfertasService;
-import com.infocargas.freteapp.service.PerfilService;
-import com.infocargas.freteapp.service.UserService;
+import com.infocargas.freteapp.service.*;
 import com.infocargas.freteapp.service.criteria.OfertasCriteria;
 import com.infocargas.freteapp.service.dto.OfertasDTO;
 import com.infocargas.freteapp.service.dto.PerfilDTO;
@@ -53,6 +50,8 @@ public class OfertasResource {
 
     private final OfertasQueryService ofertasQueryService;
 
+    private final RotasOfertasService rotasOfertasService;
+
     private final UserService userService;
 
     private final PerfilService perfilService;
@@ -61,12 +60,14 @@ public class OfertasResource {
         OfertasService ofertasService,
         OfertasRepository ofertasRepository,
         OfertasQueryService ofertasQueryService,
+        RotasOfertasService rotasOfertasService,
         UserService userService,
         PerfilService perfilService
     ) {
         this.ofertasService = ofertasService;
         this.ofertasRepository = ofertasRepository;
         this.ofertasQueryService = ofertasQueryService;
+        this.rotasOfertasService = rotasOfertasService;
         this.userService = userService;
         this.perfilService = perfilService;
     }
@@ -113,6 +114,10 @@ public class OfertasResource {
         ofertasDTO.setStatus(StatusOferta.AGUARDANDO_PROPOSTA);
 
         OfertasDTO result = ofertasService.createPortal(ofertasDTO);
+
+        if (result.getId() != null) {
+            rotasOfertasService.saveNewRoute(result);
+        }
 
         return ResponseEntity
             .created(new URI("/api/ofertas/" + result.getId()))
@@ -171,6 +176,9 @@ public class OfertasResource {
         }
 
         OfertasDTO result = ofertasService.updatePortal(ofertasDTO);
+
+        rotasOfertasService.updateRoute(result);
+
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, ofertasDTO.getId().toString()))

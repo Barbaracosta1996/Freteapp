@@ -1,26 +1,16 @@
 package com.infocargas.freteapp.web.rest;
 
-import com.google.gson.Gson;
-import com.infocargas.freteapp.domain.enumeration.StatusOferta;
-import com.infocargas.freteapp.domain.enumeration.TipoOferta;
 import com.infocargas.freteapp.repository.RotasOfertasRepository;
-import com.infocargas.freteapp.service.OfertasService;
 import com.infocargas.freteapp.service.RotasOfertasQueryService;
 import com.infocargas.freteapp.service.RotasOfertasService;
 import com.infocargas.freteapp.service.criteria.RotasOfertasCriteria;
-import com.infocargas.freteapp.service.dto.OfertasDTO;
 import com.infocargas.freteapp.service.dto.RotasOfertasDTO;
-import com.infocargas.freteapp.service.dto.routes.GoogleLegs;
-import com.infocargas.freteapp.service.dto.routes.GoogleRoutes;
-import com.infocargas.freteapp.utils.GeoUtils;
 import com.infocargas.freteapp.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -59,8 +49,7 @@ public class RotasOfertasResource {
     public RotasOfertasResource(
         RotasOfertasService rotasOfertasService,
         RotasOfertasRepository rotasOfertasRepository,
-        RotasOfertasQueryService rotasOfertasQueryService,
-        OfertasService ofertasService
+        RotasOfertasQueryService rotasOfertasQueryService
     ) {
         this.rotasOfertasService = rotasOfertasService;
         this.rotasOfertasRepository = rotasOfertasRepository;

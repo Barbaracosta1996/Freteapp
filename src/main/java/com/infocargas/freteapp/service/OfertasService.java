@@ -3,8 +3,6 @@ package com.infocargas.freteapp.service;
 import com.infocargas.freteapp.controller.FacebookController;
 import com.infocargas.freteapp.domain.Ofertas;
 import com.infocargas.freteapp.domain.enumeration.StatusOferta;
-import com.infocargas.freteapp.domain.enumeration.TipoOferta;
-import com.infocargas.freteapp.proxy.FacebookApiProxy;
 import com.infocargas.freteapp.repository.OfertasRepository;
 import com.infocargas.freteapp.service.dto.OfertasDTO;
 import com.infocargas.freteapp.service.mapper.OfertasMapper;
@@ -32,19 +30,11 @@ public class OfertasService {
 
     private final OfertasMapper ofertasMapper;
 
-    private final RotasOfertasService rotasOfertasService;
-
     private final FacebookController facebookController;
 
-    public OfertasService(
-        OfertasRepository ofertasRepository,
-        OfertasMapper ofertasMapper,
-        RotasOfertasService rotasOfertasService,
-        FacebookController facebookController
-    ) {
+    public OfertasService(OfertasRepository ofertasRepository, OfertasMapper ofertasMapper, FacebookController facebookController) {
         this.ofertasRepository = ofertasRepository;
         this.ofertasMapper = ofertasMapper;
-        this.rotasOfertasService = rotasOfertasService;
         this.facebookController = facebookController;
     }
 
@@ -64,11 +54,6 @@ public class OfertasService {
     public OfertasDTO createPortal(OfertasDTO ofertasDTO) {
         OfertasDTO ofertas = save(ofertasDTO);
         facebookController.createRegistrationOffer(ofertasDTO);
-
-        if (ofertas.getId() != null) {
-            rotasOfertasService.saveNewRoute(ofertas);
-        }
-
         return ofertas;
     }
 
@@ -76,7 +61,6 @@ public class OfertasService {
         OfertasDTO ofertas = save(ofertasDTO);
 
         if (ofertas.getStatus() == StatusOferta.AGUARDANDO_PROPOSTA) {
-            rotasOfertasService.updateRoute(ofertas);
             facebookController.sendOneMessage(
                 ofertas.getPerfil().getUser().getPhone(),
                 String.format(

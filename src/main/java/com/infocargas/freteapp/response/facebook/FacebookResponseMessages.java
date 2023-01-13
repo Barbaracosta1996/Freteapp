@@ -6,6 +6,8 @@ public class FacebookResponseMessages {
 
     private Map<String, String> context;
 
+    private FacebookResponseText text;
+
     private String from;
 
     private String id;
@@ -72,5 +74,13 @@ public class FacebookResponseMessages {
 
     public void setButton(FacebookButton button) {
         this.button = button;
+    }
+
+    public FacebookResponseText getText() {
+        return text;
+    }
+
+    public void setText(FacebookResponseText text) {
+        this.text = text;
     }
 }

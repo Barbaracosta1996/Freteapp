@@ -48,9 +48,9 @@ spring:
       # it can be set to any label, branch or commit of the configuration source Git repository
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/freteapp
-    username: postgres
-    password: 1234
+    url: jdbc:postgresql://${DATABASE_HOST:localhost}/${DATABASE_NAME:freteapp}
+    username: ${DATABASE_USER:postgres}
+    password: ${DATABASE_PASS:1234}
     hikari:
       poolName: Hikari
       auto-commit: false

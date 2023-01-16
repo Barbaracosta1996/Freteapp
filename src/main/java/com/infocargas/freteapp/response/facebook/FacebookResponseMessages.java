@@ -1,6 +1,7 @@
 package com.infocargas.freteapp.response.facebook;
 
 import java.util.Map;
+import liquibase.pro.packaged.B;
 
 public class FacebookResponseMessages {
 

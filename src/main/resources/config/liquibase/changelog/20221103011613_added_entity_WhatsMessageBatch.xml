@@ -44,6 +44,16 @@
         <dropDefaultValue tableName="whats_message_batch" columnName="created_date" columnDataType="${datetimeType}"/>
     </changeSet>
 
+    <changeSet id="1673642349379-1" author="samuel">
+        <addColumn tableName="whats_message_batch">
+            <column name="status_message" type="VARCHAR(255)"/>
+            <column name="date_read_status" type="timestamp with time zone"/>
+            <column name="date_delivery_status" type="timestamp with time zone"/>
+            <column name="date_sent_status" type="timestamp with time zone"/>
+        </addColumn>
+    </changeSet>
+
+
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
 
     <!--

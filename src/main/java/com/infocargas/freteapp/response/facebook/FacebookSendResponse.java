@@ -46,6 +46,8 @@ public class FacebookSendResponse {
         this.error = error;
     }
 
+    public Boolean success;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

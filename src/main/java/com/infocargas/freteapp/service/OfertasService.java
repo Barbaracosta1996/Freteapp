@@ -4,8 +4,12 @@ import com.infocargas.freteapp.controller.FacebookController;
 import com.infocargas.freteapp.domain.Ofertas;
 import com.infocargas.freteapp.domain.enumeration.StatusOferta;
 import com.infocargas.freteapp.repository.OfertasRepository;
+import com.infocargas.freteapp.repository.RotasOfertasRepository;
 import com.infocargas.freteapp.service.dto.OfertasDTO;
+import com.infocargas.freteapp.service.dto.RotasOfertasDTO;
 import com.infocargas.freteapp.service.mapper.OfertasMapper;
+import com.infocargas.freteapp.service.mapper.RotasOfertasMapper;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -32,10 +36,24 @@ public class OfertasService {
 
     private final FacebookController facebookController;
 
-    public OfertasService(OfertasRepository ofertasRepository, OfertasMapper ofertasMapper, FacebookController facebookController) {
+    private final GooglePlacesServices googlePlacesServices;
+    private final RotasOfertasRepository rotasOfertasRepository;
+    private final RotasOfertasMapper rotasOfertasMapper;
+
+    public OfertasService(
+        OfertasRepository ofertasRepository,
+        OfertasMapper ofertasMapper,
+        FacebookController facebookController,
+        GooglePlacesServices googlePlacesServices,
+        RotasOfertasRepository rotasOfertasRepository,
+        RotasOfertasMapper rotasOfertasMapper
+    ) {
         this.ofertasRepository = ofertasRepository;
         this.ofertasMapper = ofertasMapper;
         this.facebookController = facebookController;
+        this.googlePlacesServices = googlePlacesServices;
+        this.rotasOfertasRepository = rotasOfertasRepository;
+        this.rotasOfertasMapper = rotasOfertasMapper;
     }
 
     /**
@@ -53,8 +71,21 @@ public class OfertasService {
 
     public OfertasDTO createPortal(OfertasDTO ofertasDTO) {
         OfertasDTO ofertas = save(ofertasDTO);
+        saveNewRoute(ofertas);
         facebookController.createRegistrationOffer(ofertasDTO);
         return ofertas;
+    }
+
+    public void saveNewRoute(OfertasDTO ofertasDTO) {
+        try {
+            RotasOfertasDTO rotasOfertasDTO = new RotasOfertasDTO();
+            rotasOfertasDTO.setOfertas(ofertasDTO);
+            String routes = googlePlacesServices.getRouteDirections(ofertasDTO);
+            rotasOfertasDTO.setRotas(routes);
+            rotasOfertasRepository.save(rotasOfertasMapper.toEntity(rotasOfertasDTO));
+        } catch (UnirestException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public OfertasDTO updatePortal(OfertasDTO ofertasDTO) {

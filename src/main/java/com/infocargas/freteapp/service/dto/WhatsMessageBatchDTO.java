@@ -1,11 +1,15 @@
 package com.infocargas.freteapp.service.dto;
 
+import com.infocargas.freteapp.domain.enumeration.MessageFacebookWPStatus;
 import com.infocargas.freteapp.domain.enumeration.TipoOferta;
 import com.infocargas.freteapp.domain.enumeration.WhatsAppType;
 import com.infocargas.freteapp.domain.enumeration.WhatsStatus;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.*;
 
 /**
@@ -34,6 +38,15 @@ public class WhatsMessageBatchDTO implements Serializable {
     private ZonedDateTime notificationDate;
 
     private ZonedDateTime createdDate;
+
+    @Enumerated(EnumType.STRING)
+    private MessageFacebookWPStatus statusMessage;
+
+    private ZonedDateTime dateReadStatus;
+
+    private ZonedDateTime dateDeliveryStatus;
+
+    private ZonedDateTime dateSentStatus;
 
     public Long getId() {
         return id;
@@ -105,6 +118,38 @@ public class WhatsMessageBatchDTO implements Serializable {
 
     public void setCreatedDate(ZonedDateTime createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public MessageFacebookWPStatus getStatusMessage() {
+        return statusMessage;
+    }
+
+    public void setStatusMessage(MessageFacebookWPStatus statusMessage) {
+        this.statusMessage = statusMessage;
+    }
+
+    public ZonedDateTime getDateReadStatus() {
+        return dateReadStatus;
+    }
+
+    public void setDateReadStatus(ZonedDateTime dateReadStatus) {
+        this.dateReadStatus = dateReadStatus;
+    }
+
+    public ZonedDateTime getDateDeliveryStatus() {
+        return dateDeliveryStatus;
+    }
+
+    public void setDateDeliveryStatus(ZonedDateTime dateDeliveryStatus) {
+        this.dateDeliveryStatus = dateDeliveryStatus;
+    }
+
+    public ZonedDateTime getDateSentStatus() {
+        return dateSentStatus;
+    }
+
+    public void setDateSentStatus(ZonedDateTime dateSentStatus) {
+        this.dateSentStatus = dateSentStatus;
     }
 
     @Override

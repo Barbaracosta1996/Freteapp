@@ -6,7 +6,7 @@ import com.infocargas.freteapp.domain.enumeration.TipoOferta;
 import com.infocargas.freteapp.domain.enumeration.WhatsAppType;
 import com.infocargas.freteapp.domain.enumeration.WhatsStatus;
 import com.infocargas.freteapp.proxy.FacebookApiProxy;
-import com.infocargas.freteapp.response.facebook.FacebookResponse;
+import com.infocargas.freteapp.response.facebook.FacebookResponseChange;
 import com.infocargas.freteapp.response.facebook.FacebookSendResponse;
 import com.infocargas.freteapp.service.WhatsMessageBatchService;
 import com.infocargas.freteapp.service.dto.*;
@@ -16,13 +16,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 
 @Controller
 public class FacebookController {
-
-    private final Environment environment;
 
     private final Logger log = LoggerFactory.getLogger(FacebookController.class);
 
@@ -30,12 +27,7 @@ public class FacebookController {
 
     private final WhatsMessageBatchService whatsMessageBatchService;
 
-    public FacebookController(
-        Environment environment,
-        FacebookApiProxy facebookApiProxy,
-        WhatsMessageBatchService whatsMessageBatchService
-    ) {
-        this.environment = environment;
+    public FacebookController(FacebookApiProxy facebookApiProxy, WhatsMessageBatchService whatsMessageBatchService) {
         this.facebookApiProxy = facebookApiProxy;
         this.whatsMessageBatchService = whatsMessageBatchService;
     }
@@ -837,22 +829,13 @@ public class FacebookController {
         return sendNotification(message);
     }
 
-    public void sendRedirectMessage(FacebookResponse facebookResponse, Optional<PerfilDTO> perfil) {
+    public void sendRedirectMessage(FacebookResponseChange facebookResponse, Optional<PerfilDTO> perfil) {
         try {
             var nomeContato = "Não Cadastrado";
             var numeroContato = "Não foi Localizado";
             var emailContato = "Não Cadastrado";
             var codigoSistema = "Não Cadastrado";
-            var mensagemContato = facebookResponse
-                .getEntry()
-                .get(0)
-                .getChanges()
-                .get(0)
-                .getValue()
-                .getMessages()
-                .get(0)
-                .getText()
-                .getBody();
+            var mensagemContato = facebookResponse.getValue().getMessages().get(0).getText().getBody();
 
             if (perfil.isPresent()) {
                 var perfilDTO = perfil.get();
@@ -861,7 +844,7 @@ public class FacebookController {
                 codigoSistema = perfilDTO.getId().toString();
                 emailContato = perfilDTO.getUser().getLogin();
             } else {
-                var contact = facebookResponse.getEntry().get(0).getChanges().get(0).getValue().getContacts().get(0);
+                var contact = facebookResponse.getValue().getContacts().get(0);
                 if (contact.getProfile().isEmpty()) {
                     nomeContato = contact.getWaId();
                 } else {
@@ -991,5 +974,16 @@ public class FacebookController {
         templateVM.setLanguage(language);
 
         return templateVM;
+    }
+
+    public void updateMessageStatus(FacebookResponseChange facebookResponse, String status) {
+        if (facebookResponse.getValue() != null && facebookResponse.getValue().getMessages() != null) {
+            FacebookMessageVM message = new FacebookMessageVM();
+            message.setMessagingProduct("whatsapp");
+            message.setStatus(status);
+            message.setMessageId(facebookResponse.getValue().getMessages().get(0).getId());
+
+            sendNotification(message);
+        }
     }
 }

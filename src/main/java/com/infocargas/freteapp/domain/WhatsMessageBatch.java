@@ -1,5 +1,6 @@
 package com.infocargas.freteapp.domain;
 
+import com.infocargas.freteapp.domain.enumeration.MessageFacebookWPStatus;
 import com.infocargas.freteapp.domain.enumeration.TipoOferta;
 import com.infocargas.freteapp.domain.enumeration.WhatsAppType;
 import com.infocargas.freteapp.domain.enumeration.WhatsStatus;
@@ -56,6 +57,19 @@ public class WhatsMessageBatch implements Serializable {
 
     @Column(name = "created_date")
     private ZonedDateTime createdDate;
+
+    @Column(name = "status_message")
+    @Enumerated(EnumType.STRING)
+    private MessageFacebookWPStatus statusMessage;
+
+    @Column(name = "date_read_status")
+    private ZonedDateTime dateReadStatus;
+
+    @Column(name = "date_delivery_status")
+    private ZonedDateTime dateDeliveryStatus;
+
+    @Column(name = "date_sent_status")
+    private ZonedDateTime dateSentStatus;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -172,6 +186,38 @@ public class WhatsMessageBatch implements Serializable {
         return this;
     }
 
+    public MessageFacebookWPStatus getStatusMessage() {
+        return statusMessage;
+    }
+
+    public void setStatusMessage(MessageFacebookWPStatus statusMessage) {
+        this.statusMessage = statusMessage;
+    }
+
+    public ZonedDateTime getDateReadStatus() {
+        return dateReadStatus;
+    }
+
+    public void setDateReadStatus(ZonedDateTime dateReadStatus) {
+        this.dateReadStatus = dateReadStatus;
+    }
+
+    public ZonedDateTime getDateDeliveryStatus() {
+        return dateDeliveryStatus;
+    }
+
+    public void setDateDeliveryStatus(ZonedDateTime dateDeliveryStatus) {
+        this.dateDeliveryStatus = dateDeliveryStatus;
+    }
+
+    public ZonedDateTime getDateSentStatus() {
+        return dateSentStatus;
+    }
+
+    public void setDateSentStatus(ZonedDateTime dateSentStatus) {
+        this.dateSentStatus = dateSentStatus;
+    }
+
     public void setCreatedDate(ZonedDateTime createdDate) {
         this.createdDate = createdDate;
     }
@@ -214,5 +260,20 @@ public class WhatsMessageBatch implements Serializable {
     @PrePersist
     public void updateCreateDate() {
         this.createdDate = ZonedDateTime.now();
+    }
+
+    @PreUpdate
+    private void updateStatus() {
+        if (this.statusMessage == null) {
+            this.statusMessage = MessageFacebookWPStatus.NOTFOUND;
+        }
+
+        if (this.statusMessage == MessageFacebookWPStatus.SENT) {
+            this.dateSentStatus = ZonedDateTime.now();
+        } else if (this.statusMessage == MessageFacebookWPStatus.DELIVERY) {
+            this.dateDeliveryStatus = ZonedDateTime.now();
+        } else {
+            this.dateReadStatus = ZonedDateTime.now();
+        }
     }
 }

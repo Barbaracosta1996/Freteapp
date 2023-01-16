@@ -18,7 +18,11 @@ import org.springframework.stereotype.Repository;
 public interface WhatsMessageBatchRepository extends JpaRepository<WhatsMessageBatch, Long>, JpaSpecificationExecutor<WhatsMessageBatch> {
     Optional<WhatsMessageBatch> findByWaidToAndStatus(String waid, WhatsStatus status);
 
+    List<WhatsMessageBatch> findByWaidTo(String waid);
+
     List<WhatsMessageBatch> findByPerfilIDAndStatus(Integer perfil, WhatsStatus status);
+
+    List<WhatsMessageBatch> findByOfertaIdAndStatus(Long ofertaId, WhatsStatus status);
 
     @Query(
         value = "select * FROM whats_message_batch w WHERE w.status = ?1 AND (EXTRACT('epoch' FROM now() - w.notification_date - interval '3 hours') / 60) > ?2",

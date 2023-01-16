@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -100,7 +99,7 @@ public class FindNearRouteSchedule {
                     !Objects.equals(o.getOfertas().getPerfil().getId(), perfilId) &&
                     !o.getOfertas().getTipoOferta().equals(rotasOfertas.getOfertas().getTipoOferta())
                 )
-                .collect(Collectors.toList());
+                .toList();
 
             allRoutes.forEach(oferta -> {
                 if (oferta.getId().equals(rotasOfertas.getId())) {
@@ -122,41 +121,29 @@ public class FindNearRouteSchedule {
                     .getSteps()
                     .forEach(googleSteps -> {
                         if (origem.get() == null) {
-                            double result1 = GeoUtils.geoDistanceInKm(
-                                googleSteps.getStart_location(),
-                                gRoutesOferta[0].getLegs().get(0).getStart_location()
-                            );
-                            //                            double result2 = GeoUtils.geoDistanceInKm(
-                            //                                googleSteps.getEnd_location(),
-                            //                                gRoutesOferta[0].getLegs().get(0).getStart_location()
-                            //                            );
-
-                            if (result1 > 0.0 && result1 <= 100.0) {
-                                origem.set(result1);
-                            }
-                            //                          } else if (result2 > 0.0 && result2 <= 100) {
-                            //                                origem.set(result2);
-                            //                            }
+                            gRoutesOferta[0].getLegs()
+                                .forEach(distance -> {
+                                    double result1 = GeoUtils.geoDistanceInKm(
+                                        googleSteps.getStart_location(),
+                                        distance.getStart_location()
+                                    );
+                                    if (result1 > 0.0 && result1 <= 100.0) {
+                                        origem.set(result1);
+                                    }
+                                });
                         }
 
                         if (destino.get() == null) {
-                            //                            double result1 = GeoUtils.geoDistanceInKm(
-                            //                                googleSteps.getStart_location(),
-                            //                                gRoutesOferta[0].getLegs().get(0).getEnd_location()
-                            //                            );
-                            double result2 = GeoUtils.geoDistanceInKm(
-                                googleSteps.getEnd_location(),
-                                gRoutesOferta[0].getLegs().get(0).getEnd_location()
-                            );
-
-                            //                            if (result1 > 0.0 && result1 <= 100.0) {
-                            //                                destino.set(result1);
-                            //                            } else
-                            if (result2 > 0.0 && result2 <= 100.0) {
-                                destino.set(result2);
-                            }
+                            gRoutesOferta[0].getLegs()
+                                .forEach(distance -> {
+                                    double result2 = GeoUtils.geoDistanceInKm(googleSteps.getEnd_location(), distance.getEnd_location());
+                                    if (result2 > 0.0 && result2 <= 100.0) {
+                                        destino.set(result2);
+                                    }
+                                });
                         }
                     });
+
                 if ((origem.get() != null && origem.get() <= 100) && (destino.get() != null && destino.get() <= 100)) {
                     selected.add(oferta.getOfertas());
                 }
@@ -191,80 +178,79 @@ public class FindNearRouteSchedule {
 
         log.info("Stop scanning nears route to users.....");
     }
-
-    public ResponseEntity<List<OfertasDTO>> getNearRoute(@PathVariable Long id) {
-        Optional<RotasOfertasDTO> dto = ofertasService.findByIdOferta(id);
-        List<OfertasDTO> selected = new ArrayList<>();
-        Gson g = new Gson();
-
-        if (dto.isPresent()) {
-            RotasOfertasDTO rotasOfertasDTO = dto.get();
-            GoogleRoutes[] gRoutesArr = g.fromJson(rotasOfertasDTO.getRotas(), GoogleRoutes[].class);
-
-            GoogleRoutes gRoutes = gRoutesArr[0];
-
-            List<RotasOfertasDTO> allRoutes = ofertasService.findAllNotPerfilId(
-                rotasOfertasDTO.getOfertas().getPerfil().getId(),
-                rotasOfertasDTO.getOfertas().getTipoOferta() == TipoOferta.CARGA ? TipoOferta.VAGAS : TipoOferta.CARGA,
-                StatusOferta.AGUARDANDO_PROPOSTA
-            );
-
-            allRoutes.forEach(oferta -> {
-                if (oferta.getId().equals(rotasOfertasDTO.getId())) {
-                    return;
-                }
-
-                GoogleRoutes[] gRoutesOferta = g.fromJson(oferta.getRotas(), GoogleRoutes[].class);
-
-                GoogleLegs googleLegs = gRoutes.getLegs().get(0);
-
-                AtomicReference<Double> origem = new AtomicReference<>();
-                AtomicReference<Double> destino = new AtomicReference<>();
-
-                googleLegs
-                    .getSteps()
-                    .forEach(googleSteps -> {
-                        if (origem.get() == null) {
-                            double result1 = GeoUtils.geoDistanceInKm(
-                                googleSteps.getStart_location(),
-                                gRoutesOferta[0].getLegs().get(0).getStart_location()
-                            );
-                            double result2 = GeoUtils.geoDistanceInKm(
-                                googleSteps.getEnd_location(),
-                                gRoutesOferta[0].getLegs().get(0).getStart_location()
-                            );
-
-                            if (result1 > 0.0 && result1 <= 100.0) {
-                                origem.set(result1);
-                            } else if (result2 > 0.0 && result2 <= 100) {
-                                origem.set(result2);
-                            }
-                        }
-
-                        if (destino.get() == null) {
-                            double result1 = GeoUtils.geoDistanceInKm(
-                                googleSteps.getStart_location(),
-                                gRoutesOferta[0].getLegs().get(0).getEnd_location()
-                            );
-                            double result2 = GeoUtils.geoDistanceInKm(
-                                googleSteps.getEnd_location(),
-                                gRoutesOferta[0].getLegs().get(0).getEnd_location()
-                            );
-
-                            if (result1 > 0.0 && result1 <= 100.0) {
-                                destino.set(result1);
-                            } else if (result2 > 0.0 && result2 <= 100.0) {
-                                destino.set(result2);
-                            }
-                        }
-                    });
-
-                if ((origem.get() != null && origem.get() <= 100) && (destino.get() != null && destino.get() <= 100)) {
-                    selected.add(oferta.getOfertas());
-                }
-            });
-        }
-
-        return ResponseEntity.ok(selected);
-    }
+    //    public ResponseEntity<List<OfertasDTO>> getNearRoute(@PathVariable Long id) {
+    //        Optional<RotasOfertasDTO> dto = ofertasService.findByIdOferta(id);
+    //        List<OfertasDTO> selected = new ArrayList<>();
+    //        Gson g = new Gson();
+    //
+    //        if (dto.isPresent()) {
+    //            RotasOfertasDTO rotasOfertasDTO = dto.get();
+    //            GoogleRoutes[] gRoutesArr = g.fromJson(rotasOfertasDTO.getRotas(), GoogleRoutes[].class);
+    //
+    //            GoogleRoutes gRoutes = gRoutesArr[0];
+    //
+    //            List<RotasOfertasDTO> allRoutes = ofertasService.findAllNotPerfilId(
+    //                rotasOfertasDTO.getOfertas().getPerfil().getId(),
+    //                rotasOfertasDTO.getOfertas().getTipoOferta() == TipoOferta.CARGA ? TipoOferta.VAGAS : TipoOferta.CARGA,
+    //                StatusOferta.AGUARDANDO_PROPOSTA
+    //            );
+    //
+    //            allRoutes.forEach(oferta -> {
+    //                if (oferta.getId().equals(rotasOfertasDTO.getId())) {
+    //                    return;
+    //                }
+    //
+    //                GoogleRoutes[] gRoutesOferta = g.fromJson(oferta.getRotas(), GoogleRoutes[].class);
+    //
+    //                GoogleLegs googleLegs = gRoutes.getLegs().get(0);
+    //
+    //                AtomicReference<Double> origem = new AtomicReference<>();
+    //                AtomicReference<Double> destino = new AtomicReference<>();
+    //
+    //                googleLegs
+    //                    .getSteps()
+    //                    .forEach(googleSteps -> {
+    //                        if (origem.get() == null) {
+    //                            double result1 = GeoUtils.geoDistanceInKm(
+    //                                googleSteps.getStart_location(),
+    //                                gRoutesOferta[0].getLegs().get(0).getStart_location()
+    //                            );
+    //                            double result2 = GeoUtils.geoDistanceInKm(
+    //                                googleSteps.getEnd_location(),
+    //                                gRoutesOferta[0].getLegs().get(0).getStart_location()
+    //                            );
+    //
+    //                            if (result1 > 0.0 && result1 <= 100.0) {
+    //                                origem.set(result1);
+    //                            } else if (result2 > 0.0 && result2 <= 100) {
+    //                                origem.set(result2);
+    //                            }
+    //                        }
+    //
+    //                        if (destino.get() == null) {
+    //                            double result1 = GeoUtils.geoDistanceInKm(
+    //                                googleSteps.getStart_location(),
+    //                                gRoutesOferta[0].getLegs().get(0).getEnd_location()
+    //                            );
+    //                            double result2 = GeoUtils.geoDistanceInKm(
+    //                                googleSteps.getEnd_location(),
+    //                                gRoutesOferta[0].getLegs().get(0).getEnd_location()
+    //                            );
+    //
+    //                            if (result1 > 0.0 && result1 <= 100.0) {
+    //                                destino.set(result1);
+    //                            } else if (result2 > 0.0 && result2 <= 100.0) {
+    //                                destino.set(result2);
+    //                            }
+    //                        }
+    //                    });
+    //
+    //                if ((origem.get() != null && origem.get() <= 100) && (destino.get() != null && destino.get() <= 100)) {
+    //                    selected.add(oferta.getOfertas());
+    //                }
+    //            });
+    //        }
+    //
+    //        return ResponseEntity.ok(selected);
+    //    }
 }

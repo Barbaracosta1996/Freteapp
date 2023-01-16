@@ -58,6 +58,11 @@ public class FacebookMessageVM {
 
     private List<FacebookContactVM> contacts;
 
+    private String status;
+
+    @JsonProperty("message_id")
+    private String messageId;
+
     public String getMessagingProduct() {
         return messagingProduct;
     }
@@ -130,6 +135,58 @@ public class FacebookMessageVM {
         this.messageBody = messageBody;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
+    }
+
+    @Override
+    public String toString() {
+        return (
+            "FacebookMessageVM{" +
+            "messagingProduct='" +
+            messagingProduct +
+            '\'' +
+            ", recipientType='" +
+            recipientType +
+            '\'' +
+            ", phoneWhatsApp='" +
+            phoneWhatsApp +
+            '\'' +
+            ", type='" +
+            type +
+            '\'' +
+            ", template=" +
+            template +
+            ", interactive=" +
+            interactive +
+            ", componets=" +
+            componets +
+            ", messageBody=" +
+            messageBody +
+            ", contacts=" +
+            contacts +
+            ", status='" +
+            status +
+            '\'' +
+            ", messageId='" +
+            messageId +
+            '\'' +
+            '}'
+        );
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -154,7 +211,12 @@ public class FacebookMessageVM {
             getInteractive() != null ? !getInteractive().equals(messageVM.getInteractive()) : messageVM.getInteractive() != null
         ) return false;
         if (getComponets() != null ? !getComponets().equals(messageVM.getComponets()) : messageVM.getComponets() != null) return false;
-        return getContacts() != null ? getContacts().equals(messageVM.getContacts()) : messageVM.getContacts() == null;
+        if (
+            getMessageBody() != null ? !getMessageBody().equals(messageVM.getMessageBody()) : messageVM.getMessageBody() != null
+        ) return false;
+        if (getContacts() != null ? !getContacts().equals(messageVM.getContacts()) : messageVM.getContacts() != null) return false;
+        if (getStatus() != null ? !getStatus().equals(messageVM.getStatus()) : messageVM.getStatus() != null) return false;
+        return getMessageId() != null ? getMessageId().equals(messageVM.getMessageId()) : messageVM.getMessageId() == null;
     }
 
     @Override
@@ -166,7 +228,10 @@ public class FacebookMessageVM {
         result = 31 * result + (getTemplate() != null ? getTemplate().hashCode() : 0);
         result = 31 * result + (getInteractive() != null ? getInteractive().hashCode() : 0);
         result = 31 * result + (getComponets() != null ? getComponets().hashCode() : 0);
+        result = 31 * result + (getMessageBody() != null ? getMessageBody().hashCode() : 0);
         result = 31 * result + (getContacts() != null ? getContacts().hashCode() : 0);
+        result = 31 * result + (getStatus() != null ? getStatus().hashCode() : 0);
+        result = 31 * result + (getMessageId() != null ? getMessageId().hashCode() : 0);
         return result;
     }
 }

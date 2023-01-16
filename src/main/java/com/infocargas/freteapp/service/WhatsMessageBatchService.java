@@ -113,8 +113,20 @@ public class WhatsMessageBatchService {
     }
 
     @Transactional(readOnly = true)
+    public List<WhatsMessageBatchDTO> findByMessageIdWithoutStatus(String waIdTo) {
+        log.debug("Request to get WhatsMessageBatch : {}", waIdTo);
+        return whatsMessageBatchMapper.toDto(whatsMessageBatchRepository.findByWaidTo(waIdTo));
+    }
+
+    @Transactional(readOnly = true)
     public List<WhatsMessageBatchDTO> findByNearRouteStatus(Integer perfilId, WhatsStatus status) {
         var lista = whatsMessageBatchRepository.findByPerfilIDAndStatus(perfilId, status);
+        return whatsMessageBatchMapper.toDto(lista);
+    }
+
+    @Transactional(readOnly = true)
+    public List<WhatsMessageBatchDTO> findByNearRouteStatusByOferta(Long ofertaId, WhatsStatus status) {
+        var lista = whatsMessageBatchRepository.findByOfertaIdAndStatus(ofertaId, status);
         return whatsMessageBatchMapper.toDto(lista);
     }
 

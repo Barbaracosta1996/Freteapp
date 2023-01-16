@@ -1,5 +1,7 @@
 package com.infocargas.freteapp.response.facebook;
 
+import java.util.List;
+
 public class FacebookResponseChange {
 
     private String field;

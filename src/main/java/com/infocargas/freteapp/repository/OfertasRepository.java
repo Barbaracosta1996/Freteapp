@@ -16,4 +16,6 @@ public interface OfertasRepository extends JpaRepository<Ofertas, Long>, JpaSpec
     List<Ofertas> findByPerfilUserId(Long id);
 
     List<Ofertas> findAllByStatusAndDataFechamentoLessThanEqual(StatusOferta statusOferta, ZonedDateTime data);
+
+    List<Ofertas> findAllByStatus(StatusOferta statusOferta);
 }

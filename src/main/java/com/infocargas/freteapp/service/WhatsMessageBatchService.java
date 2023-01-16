@@ -132,7 +132,7 @@ public class WhatsMessageBatchService {
 
     @Transactional(readOnly = true)
     public List<WhatsMessageBatchDTO> findByRouteStatus(WhatsStatus status) {
-        var lista = whatsMessageBatchRepository.findWith30Minutes(status.name(), 31);
+        var lista = whatsMessageBatchRepository.findWith30Minutes(status.name(), 30);
         return whatsMessageBatchMapper.toDto(lista);
     }
 

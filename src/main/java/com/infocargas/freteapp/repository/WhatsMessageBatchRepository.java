@@ -25,7 +25,7 @@ public interface WhatsMessageBatchRepository extends JpaRepository<WhatsMessageB
     List<WhatsMessageBatch> findByOfertaIdAndStatus(Long ofertaId, WhatsStatus status);
 
     @Query(
-        value = "select * FROM whats_message_batch w WHERE w.status = ?1 AND (EXTRACT('epoch' FROM now() - w.notification_date - interval '3 hours') / 60) > ?2",
+        value = "select * FROM whats_message_batch w WHERE w.status = ?1 AND (EXTRACT('epoch' FROM now() - w.created_date + interval '3 hours') / 60) > ?2",
         nativeQuery = true
     )
     List<WhatsMessageBatch> findWith30Minutes(String status, int minute);

@@ -225,7 +225,6 @@ public class CallbacksService {
         if (buttonIndication.getPayload() != null && buttonIndication.getPayload().equals("Sim")) {
             var ofertasPerfil = rotasOfertasService.findByIdOferta(message.getOfertaId());
             ofertasPerfil.ifPresent(rotasOfertasDTO -> {
-                List<RotasOfertasDTO> ofertasList = rotasOfertasService.findAllByStatusAndDate(StatusOferta.AGUARDANDO_PROPOSTA);
                 List<OfertasDTO> ofertas = getNearRoute(rotasOfertasDTO.getOfertas().getId());
                 var response = facebookController.sendNearsRouteNotifcation(ofertas, rotasOfertasDTO);
                 if (response.getError() == null) {
@@ -365,9 +364,9 @@ public class CallbacksService {
                         var newMessageBatch = new WhatsMessageBatchDTO();
                         newMessageBatch.setStatus(WhatsStatus.OPEN);
                         newMessageBatch.setWaidTo(response.getMessages().get(0).getId());
-                        newMessageBatch.setTipoOferta(ofertaPerfil.get().getOfertas().getTipoOferta());
-                        newMessageBatch.setOfertaId(ofertaPerfil.get().getOfertas().getId());
-                        newMessageBatch.setPerfilID(ofertaPerfil.get().getOfertas().getPerfil().getId().intValue());
+                        newMessageBatch.setTipoOferta(ofertasDTO.getOfertas().getTipoOferta());
+                        newMessageBatch.setOfertaId(ofertasDTO.getOfertas().getId());
+                        newMessageBatch.setPerfilID(ofertasDTO.getOfertas().getPerfil().getId().intValue());
                         newMessageBatch.setTipo(WhatsAppType.LIST_ALERT);
                         whatsMessageBatchService.save(newMessageBatch);
                     }

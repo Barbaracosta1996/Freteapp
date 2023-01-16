@@ -1,41 +1,52 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {TipoOferta} from "../../../entities/enumerations/tipo-oferta.model";
-import {IOfertas} from "../../../entities/ofertas/ofertas.model";
-import {EntityArrayResponseType, OfertasService} from "../../../entities/ofertas/service/ofertas.service";
-import {combineLatest, Observable, switchMap, tap} from "rxjs";
-import {ActivatedRoute, Data, ParamMap, Router} from "@angular/router";
-import {ITEMS_PER_PAGE, TOTAL_COUNT_RESPONSE_HEADER} from "../../../config/pagination.constants";
-import {ASC, DESC} from "../../../config/navigation.constants";
-import {HttpHeaders} from "@angular/common/http";
-import {FilterOptions, IFilterOptions} from "../../../shared/filter/filter.model";
-import {TipoTransporteOferta} from "../../../entities/enumerations/tipo-transporte-oferta.model";
-import {StatusOferta} from "../../../entities/enumerations/status-oferta.model";
-import {AppService} from "../../../core/app/app.service";
+import { Component, Input, OnInit } from '@angular/core';
+import { TipoOferta } from '../../../entities/enumerations/tipo-oferta.model';
+import { IOfertas } from '../../../entities/ofertas/ofertas.model';
+import { EntityArrayResponseType, OfertasService } from '../../../entities/ofertas/service/ofertas.service';
+import { combineLatest, Observable, switchMap, tap } from 'rxjs';
+import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
+import { ITEMS_PER_PAGE, TOTAL_COUNT_RESPONSE_HEADER } from '../../../config/pagination.constants';
+import { ASC, DESC } from '../../../config/navigation.constants';
+import { HttpHeaders } from '@angular/common/http';
+import { FilterOptions, IFilterOptions } from '../../../shared/filter/filter.model';
+import { TipoTransporteOferta } from '../../../entities/enumerations/tipo-transporte-oferta.model';
+import { StatusOferta } from '../../../entities/enumerations/status-oferta.model';
+import { AppService } from '../../../core/app/app.service';
 
 @Component({
   selector: 'jhi-grid-ofertas',
   templateUrl: './grid-ofertas.component.html',
-  styleUrls: ['./grid-ofertas.component.scss']
+  styleUrls: ['./grid-ofertas.component.scss'],
 })
 export class GridOfertasComponent implements OnInit {
-
   @Input()
   tipoOferta = 'VAGAS';
 
   ofertas?: IOfertas[];
   isLoading = false;
 
+  filtroStatus = 'AGUARDANDO_PROPOSTA';
+
   predicate = 'id';
   ascending = true;
   filters: IFilterOptions = new FilterOptions();
+
+  filter = [
+    { value: 'AGUARDANDO_PROPOSTA', name: 'Aguardando Proposta' },
+    { value: 'ATENDIDA', name: 'Atendida' },
+    { value: 'ATENDIDA_INFOCARGAS', name: 'Atendida Infocargas' },
+    { value: 'CANCELED', name: 'Cancelada' },
+  ];
 
   itemsPerPage = ITEMS_PER_PAGE;
   totalItems = 0;
   page = 0;
 
-  constructor(private ofertasService: OfertasService,
-              protected activatedRoute: ActivatedRoute,
-              public router: Router, private appService: AppService) { }
+  constructor(
+    private ofertasService: OfertasService,
+    protected activatedRoute: ActivatedRoute,
+    public router: Router,
+    private appService: AppService
+  ) {}
 
   ngOnInit(): void {
     this.loadOfertas();
@@ -66,9 +77,7 @@ export class GridOfertasComponent implements OnInit {
     );
   }
 
-  protected fillComponentAttributeFromRoute(params: ParamMap, data: Data): void {
-
-  }
+  protected fillComponentAttributeFromRoute(params: ParamMap, data: Data): void {}
 
   protected onResponseSuccess(response: EntityArrayResponseType): void {
     this.fillComponentAttributesFromResponseHeader(response.headers);
@@ -102,8 +111,9 @@ export class GridOfertasComponent implements OnInit {
       });
     }
 
-    queryObject["tipoOferta.equals"] = this.tipoOferta === TipoOferta.VAGAS ? 'VAGAS' : 'CARGA';
-    queryObject["userId.equals"] = this.appService.account?.id.toString();
+    queryObject['tipoOferta.equals'] = this.tipoOferta === TipoOferta.VAGAS ? 'VAGAS' : 'CARGA';
+    queryObject['status.equals'] = this.filtroStatus;
+    queryObject['userId.equals'] = this.appService.account?.id.toString();
 
     return this.ofertasService.query(queryObject).pipe(tap(() => (this.isLoading = false)));
   }
@@ -120,19 +130,21 @@ export class GridOfertasComponent implements OnInit {
       });
     }
 
-    this.router.navigate(['./'], {
-      relativeTo: this.activatedRoute,
-      queryParams: queryParamsObj,
-    }).then();
+    this.router
+      .navigate(['./'], {
+        relativeTo: this.activatedRoute,
+        queryParams: queryParamsObj,
+      })
+      .then();
   }
 
-  getTipoTransport(tipoTransporte: any): string{
+  getTipoTransport(tipoTransporte: any): string {
     if (tipoTransporte === TipoTransporteOferta.CEGONHA) {
-      return 'Cegonha'
-    } else if (tipoTransporte === TipoTransporteOferta.GUINCHO){
-      return 'Guincho'
+      return 'Cegonha';
+    } else if (tipoTransporte === TipoTransporteOferta.GUINCHO) {
+      return 'Guincho';
     }
-    return 'Reboque'
+    return 'Reboque';
   }
 
   protected getSortQueryParam(predicate = this.predicate, ascending = this.ascending): string[] {
@@ -147,13 +159,12 @@ export class GridOfertasComponent implements OnInit {
   getStatusOferta(status: any): string {
     if (status === StatusOferta.AGUARDANDO_PROPOSTA) {
       return 'Aguardando Proposta';
-    } else if (status === StatusOferta.ATENDIDA){
+    } else if (status === StatusOferta.ATENDIDA) {
       return 'Atendida';
-    } else if (status === StatusOferta.ATENDIDA_INFOCARGAS){
+    } else if (status === StatusOferta.ATENDIDA_INFOCARGAS) {
       return 'Atendida Via App';
     } else {
       return 'Viagem Cancelada';
     }
   }
-
 }

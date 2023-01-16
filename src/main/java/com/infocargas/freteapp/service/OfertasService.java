@@ -157,6 +157,12 @@ public class OfertasService {
         return ofertasMapper.toDto(ofertasRepository.findAllByStatusAndDataFechamentoLessThanEqual(status, ZonedDateTime.now()));
     }
 
+    @Transactional(readOnly = true)
+    public List<OfertasDTO> findAllByStatus(StatusOferta status) {
+        log.debug("Request to get all Ofertas");
+        return ofertasMapper.toDto(ofertasRepository.findAllByStatus(status));
+    }
+
     /**
      * Get one ofertas by id.
      *

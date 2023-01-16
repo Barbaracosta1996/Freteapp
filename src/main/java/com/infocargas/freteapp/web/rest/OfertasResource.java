@@ -115,10 +115,6 @@ public class OfertasResource {
 
         OfertasDTO result = ofertasService.createPortal(ofertasDTO);
 
-        if (result.getId() != null) {
-            rotasOfertasService.saveNewRoute(result);
-        }
-
         return ResponseEntity
             .created(new URI("/api/ofertas/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
@@ -133,10 +129,6 @@ public class OfertasResource {
             throw new BadRequestAlertException("A new ofertas cannot already have an ID", ENTITY_NAME, "idexists");
         }
 
-        //        UserDTO userDTO = userService.getUserWithAuthoritiesByLogin(ofertasDTO.getPerfil().getUser().getLogin());
-        //        PerfilDTO perfilDTO = perfilService.findByUserDTO();
-
-        //        ofertasDTO.setPerfil();
         ofertasDTO.setDataPostagem(ZonedDateTime.now());
         ofertasDTO.setStatus(StatusOferta.AGUARDANDO_PROPOSTA);
 

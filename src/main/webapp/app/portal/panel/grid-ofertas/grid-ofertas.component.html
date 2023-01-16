@@ -1,4 +1,18 @@
 <div class="card">
+  <div class="m-3">
+    <h5>Filtro Status</h5>
+    <p-dropdown
+      [options]="filter"
+      [(ngModel)]="filtroStatus"
+      filterBy="name"
+      optionLabel="name"
+      optionValue="value"
+      (onChange)="loadOfertas()"
+      placeholder="Selecione um filtro"
+      [showClear]="true"
+    ></p-dropdown>
+  </div>
+
   <p-table
     [value]="ofertas!"
     [paginator]="true"

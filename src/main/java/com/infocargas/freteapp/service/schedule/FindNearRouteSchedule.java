@@ -3,7 +3,6 @@ package com.infocargas.freteapp.service.schedule;
 import com.google.gson.Gson;
 import com.infocargas.freteapp.controller.FacebookController;
 import com.infocargas.freteapp.domain.enumeration.StatusOferta;
-import com.infocargas.freteapp.domain.enumeration.TipoOferta;
 import com.infocargas.freteapp.domain.enumeration.WhatsAppType;
 import com.infocargas.freteapp.domain.enumeration.WhatsStatus;
 import com.infocargas.freteapp.service.PerfilService;
@@ -19,14 +18,11 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @Service
 public class FindNearRouteSchedule {
@@ -62,7 +58,7 @@ public class FindNearRouteSchedule {
         });
     }
 
-    @Scheduled(fixedDelayString = "PT35M")
+    @Scheduled(fixedDelayString = "PT31M")
     public void updateStatusOferta() {
         var whatsStatus = this.whatsMessageBatchService.findByRouteStatus(WhatsStatus.OPEN);
         whatsStatus.forEach(whats -> {
@@ -178,79 +174,4 @@ public class FindNearRouteSchedule {
 
         log.info("Stop scanning nears route to users.....");
     }
-    //    public ResponseEntity<List<OfertasDTO>> getNearRoute(@PathVariable Long id) {
-    //        Optional<RotasOfertasDTO> dto = ofertasService.findByIdOferta(id);
-    //        List<OfertasDTO> selected = new ArrayList<>();
-    //        Gson g = new Gson();
-    //
-    //        if (dto.isPresent()) {
-    //            RotasOfertasDTO rotasOfertasDTO = dto.get();
-    //            GoogleRoutes[] gRoutesArr = g.fromJson(rotasOfertasDTO.getRotas(), GoogleRoutes[].class);
-    //
-    //            GoogleRoutes gRoutes = gRoutesArr[0];
-    //
-    //            List<RotasOfertasDTO> allRoutes = ofertasService.findAllNotPerfilId(
-    //                rotasOfertasDTO.getOfertas().getPerfil().getId(),
-    //                rotasOfertasDTO.getOfertas().getTipoOferta() == TipoOferta.CARGA ? TipoOferta.VAGAS : TipoOferta.CARGA,
-    //                StatusOferta.AGUARDANDO_PROPOSTA
-    //            );
-    //
-    //            allRoutes.forEach(oferta -> {
-    //                if (oferta.getId().equals(rotasOfertasDTO.getId())) {
-    //                    return;
-    //                }
-    //
-    //                GoogleRoutes[] gRoutesOferta = g.fromJson(oferta.getRotas(), GoogleRoutes[].class);
-    //
-    //                GoogleLegs googleLegs = gRoutes.getLegs().get(0);
-    //
-    //                AtomicReference<Double> origem = new AtomicReference<>();
-    //                AtomicReference<Double> destino = new AtomicReference<>();
-    //
-    //                googleLegs
-    //                    .getSteps()
-    //                    .forEach(googleSteps -> {
-    //                        if (origem.get() == null) {
-    //                            double result1 = GeoUtils.geoDistanceInKm(
-    //                                googleSteps.getStart_location(),
-    //                                gRoutesOferta[0].getLegs().get(0).getStart_location()
-    //                            );
-    //                            double result2 = GeoUtils.geoDistanceInKm(
-    //                                googleSteps.getEnd_location(),
-    //                                gRoutesOferta[0].getLegs().get(0).getStart_location()
-    //                            );
-    //
-    //                            if (result1 > 0.0 && result1 <= 100.0) {
-    //                                origem.set(result1);
-    //                            } else if (result2 > 0.0 && result2 <= 100) {
-    //                                origem.set(result2);
-    //                            }
-    //                        }
-    //
-    //                        if (destino.get() == null) {
-    //                            double result1 = GeoUtils.geoDistanceInKm(
-    //                                googleSteps.getStart_location(),
-    //                                gRoutesOferta[0].getLegs().get(0).getEnd_location()
-    //                            );
-    //                            double result2 = GeoUtils.geoDistanceInKm(
-    //                                googleSteps.getEnd_location(),
-    //                                gRoutesOferta[0].getLegs().get(0).getEnd_location()
-    //                            );
-    //
-    //                            if (result1 > 0.0 && result1 <= 100.0) {
-    //                                destino.set(result1);
-    //                            } else if (result2 > 0.0 && result2 <= 100.0) {
-    //                                destino.set(result2);
-    //                            }
-    //                        }
-    //                    });
-    //
-    //                if ((origem.get() != null && origem.get() <= 100) && (destino.get() != null && destino.get() <= 100)) {
-    //                    selected.add(oferta.getOfertas());
-    //                }
-    //            });
-    //        }
-    //
-    //        return ResponseEntity.ok(selected);
-    //    }
 }

@@ -9,6 +9,8 @@ import com.infocargas.freteapp.service.dto.RotasOfertasDTO;
 import com.infocargas.freteapp.service.mapper.RotasOfertasMapper;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.time.ZonedDateTime;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalAmount;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -128,7 +130,7 @@ public class RotasOfertasService {
         log.debug("Request to get all RotasOfertas");
         List<RotasOfertas> lista = rotasOfertasRepository.findAllByOfertasStatusAndOfertasDataFechamentoGreaterThanEqual(
             status,
-            ZonedDateTime.now()
+            ZonedDateTime.now().minusHours(72)
         );
         return rotasOfertasMapper.toDto(lista);
     }
